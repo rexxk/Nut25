@@ -27,10 +27,11 @@ project("Nut25")
 
 # NutLib static library
 
+set(NutLib_SOURCE_DIR "NutLib/src")
+
 add_subdirectory(NutLib)
 
-
-set(NutLib_SOURCE_DIR "NutLib/src")
+target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR})
 
 
 # Sandbox
