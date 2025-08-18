@@ -23,7 +23,13 @@ FetchContent_MakeAvailable(glfw)
 project("Nut25")
 
 
+# glad static library
 
+set(glad_SOURCE_DIR "NutLib/vendor/glad")
+
+add_library(glad ${glad_SOURCE_DIR}/src/glad.c)
+
+target_include_directories(glad PRIVATE ${glad_SOURCE_DIR}/include)
 
 # NutLib static library
 
@@ -31,7 +37,8 @@ set(NutLib_SOURCE_DIR "NutLib/src")
 
 add_subdirectory(NutLib)
 
-target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR})
+target_link_directories(NutLib PRIVATE glad glfw)
+target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include)
 
 
 # Sandbox
