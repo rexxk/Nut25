@@ -1,13 +1,46 @@
 #include <print>
 
+#include "EntryPoint.h"
 #include "NutLib.h"
 
 
-auto main() -> int
+
+
+class SandboxLayer : public Nut::Layer
 {
-	Nut::Application application{};
+public:
+	SandboxLayer(const std::string& debugName)
+		: Layer(debugName)
+	{
 
-	std::println("Nut25");
+	}
 
-	return 0;
+	virtual auto OnAttach() -> void override
+	{
+		std::println("Attaching {} layer", m_DebugName);
+	}
+
+	virtual auto OnDetach() -> void override
+	{
+		std::println("Detaching {} layer", m_DebugName);
+	}
+
+};
+
+
+
+class SandboxApp : public Nut::Application
+{
+public:
+	SandboxApp()
+	{
+		AttachLayer(CreateRef<SandboxLayer>("Sandbox"));
+	}
+
+};
+
+
+Ref<Nut::Application> CreateApplication()
+{
+	return CreateRef<SandboxApp>();
 }
