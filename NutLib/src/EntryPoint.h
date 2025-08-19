@@ -13,7 +13,7 @@ auto main() -> int
 	Ref<Nut::Application> app = CreateApplication();
 
 
-
+	app->Run();
 
 
 	return 0;

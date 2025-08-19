@@ -29,10 +29,12 @@ namespace Nut
 	class Window
 	{
 	public:
-		static Ref<Window> Create(const WindowSpecification& spec);
+		static auto Create(const WindowSpecification& spec) -> Ref<Window>;
 
 		Window(const WindowSpecification& spec);
 		~Window();
+
+		auto HandleEvents() -> void;
 
 	private:
 		WindowSpecification m_Specification{};

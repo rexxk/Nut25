@@ -10,6 +10,14 @@ namespace Nut
 	Application::Application(const ApplicationSettings& settings)
 		: m_Settings(settings)
 	{
+		if (s_Instance != nullptr)
+		{
+			std::println("Application object already exists");
+			return;
+		}
+
+		s_Instance = this;
+
 		std::println("Application constructor");
 
 		std::println("Settings: Fullscreen - {}", m_Settings.Fullscreen);
@@ -29,6 +37,14 @@ namespace Nut
 	auto Application::Run() -> void
 	{
 		std::println("Application::Run");
+
+		SetRunState(true);
+
+		while (m_IsRunning)
+		{
+			m_Window->HandleEvents();
+
+		}
 	}
 
 

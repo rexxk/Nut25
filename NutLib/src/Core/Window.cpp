@@ -1,5 +1,7 @@
 #include "Core/Window.h"
 
+#include "Core/Application.h"
+
 #include "Core/Base.h"
 
 #include <glad/glad.h>
@@ -13,7 +15,7 @@ namespace Nut
 {
 
 
-	Ref<Window> Window::Create(const WindowSpecification& spec)
+	auto Window::Create(const WindowSpecification& spec) -> Ref<Window>
 	{
 		return CreateRef<Window>(spec);
 	}
@@ -35,12 +37,23 @@ namespace Nut
 		m_Handle = glfwCreateWindow(static_cast<int>(m_Specification.Width), static_cast<int>(m_Specification.Height), m_Specification.Title.c_str(), nullptr, nullptr);
 
 		glfwShowWindow(m_Handle);
+
+		glfwSetWindowCloseCallback(m_Handle, [](GLFWwindow* window)
+			{
+				Application::Get().SetRunState(false);
+			});
 	}
 
 
 	Window::~Window()
 	{
 		glfwDestroyWindow(m_Handle);
+	}
+
+
+	auto Window::HandleEvents() -> void
+	{
+		glfwPollEvents();
 	}
 
 }
