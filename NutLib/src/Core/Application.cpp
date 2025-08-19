@@ -7,9 +7,22 @@ namespace Nut
 {
 
 
-	Application::Application()
+	Application::Application(const ApplicationSettings& settings)
+		: m_Settings(settings)
 	{
 		std::println("Application constructor");
+
+		std::println("Settings: Fullscreen - {}", m_Settings.Fullscreen);
+	
+
+		WindowSpecification windowSpec{};
+		windowSpec.Width = 800;
+		windowSpec.Height = 600;
+		windowSpec.Title = "Sandbox";
+		windowSpec.Fullscreen = settings.Fullscreen;
+
+		m_Window = Window::Create(windowSpec);
+	
 	}
 
 

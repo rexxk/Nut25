@@ -38,6 +38,7 @@ set(NutLib_SOURCE_DIR "NutLib/src")
 add_subdirectory(NutLib)
 
 target_link_directories(NutLib PRIVATE glad glfw)
+target_link_libraries(NutLib PRIVATE glad glfw)
 target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include)
 
 
@@ -46,4 +47,4 @@ target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR
 add_subdirectory(Sandbox)
 
 target_link_libraries(Sandbox PRIVATE NutLib)
-target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR})
+target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include)

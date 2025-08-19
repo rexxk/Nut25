@@ -32,7 +32,8 @@ public:
 class SandboxApp : public Nut::Application
 {
 public:
-	SandboxApp()
+	SandboxApp(const Nut::ApplicationSettings& settings)
+		: Nut::Application(settings)
 	{
 		AttachLayer(CreateRef<SandboxLayer>("Sandbox"));
 	}
@@ -42,5 +43,7 @@ public:
 
 Ref<Nut::Application> CreateApplication()
 {
-	return CreateRef<SandboxApp>();
+	Nut::ApplicationSettings settings{ .Fullscreen = true };
+
+	return CreateRef<SandboxApp>(settings);
 }
