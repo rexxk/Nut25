@@ -1,8 +1,8 @@
 #include "Core/Window.h"
 
 #include "Core/Application.h"
-
 #include "Core/Base.h"
+#include "Events/EventHandler.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -40,7 +40,8 @@ namespace Nut
 
 		glfwSetWindowCloseCallback(m_Handle, [](GLFWwindow* window)
 			{
-				Application::Get().SetRunState(false);
+				Ref<WindowClosedEvent> event = CreateRef<WindowClosedEvent>();
+				EventHandler::AddEvent(event);
 			});
 	}
 

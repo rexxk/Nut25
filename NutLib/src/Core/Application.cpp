@@ -1,4 +1,5 @@
 #include "Core/Application.h"
+#include "Events/EventHandler.h"
 
 #include <print>
 
@@ -31,6 +32,12 @@ namespace Nut
 
 		m_Window = Window::Create(windowSpec);
 	
+
+		EventHandler::Subscribe(EventType::WindowClose, [&](Ref<Event> event)
+			{
+				Ref<WindowClosedEvent> e = std::dynamic_pointer_cast<WindowClosedEvent>(event);
+				m_IsRunning = false;
+			});
 	}
 
 
@@ -38,11 +45,12 @@ namespace Nut
 	{
 		std::println("Application::Run");
 
-		SetRunState(true);
+		m_IsRunning = true;
 
 		while (m_IsRunning)
 		{
 			m_Window->HandleEvents();
+			EventHandler::Poll();
 
 		}
 	}

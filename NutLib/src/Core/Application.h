@@ -20,18 +20,12 @@ namespace Nut
 	class Application
 	{
 	public:
-		static Ref<Window> Create(const ApplicationSettings& settings);
-
 		Application(const ApplicationSettings& settings);
-
 
 		auto Run() -> void;
 
-		auto SetRunState(bool state) -> void { m_IsRunning = state; }
-
 		auto AttachLayer(Ref<Nut::Layer> layer) -> void;
 		auto DetachLayer(Ref<Nut::Layer> layer) -> void;
-
 
 		static auto Get() -> Application& { return *s_Instance; }
 
