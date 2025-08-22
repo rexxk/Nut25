@@ -27,7 +27,7 @@ project("Nut25")
 
 set(glad_SOURCE_DIR "NutLib/vendor/glad")
 
-add_library(glad ${glad_SOURCE_DIR}/src/glad.c)
+add_library(glad ${PROJECT_SOURCE_DIR}/${glad_SOURCE_DIR}/src/glad.c)
 
 target_include_directories(glad PRIVATE ${glad_SOURCE_DIR}/include)
 
