@@ -13,7 +13,7 @@ namespace Nut
 	enum class EventType
 	{
 		None,
-		WindowClose,
+		WindowClose, WindowSize,
 	};
 
 
@@ -54,5 +54,27 @@ namespace Nut
 
 	};
 
+
+	class WindowResizedEvent : public Event
+	{
+	public:
+		WindowResizedEvent(int width, int height)
+			: Event(), m_Width(width), m_Height(height)
+		{
+			m_Type = EventType::WindowSize;
+		}
+
+		virtual auto Print() -> void override
+		{
+			std::println("WindowResizedEvent - {}x{}", m_Width, m_Height);
+		}
+
+		auto Width() -> int { return m_Width; }
+		auto Height() -> int { return m_Height; }
+
+	private:
+		int m_Width{};
+		int m_Height{};
+	};
 
 }

@@ -43,6 +43,12 @@ namespace Nut
 				Ref<WindowClosedEvent> event = CreateRef<WindowClosedEvent>();
 				EventHandler::AddEvent(event);
 			});
+
+		glfwSetWindowSizeCallback(m_Handle, [](GLFWwindow* window, int width, int height)
+			{
+				Ref<WindowResizedEvent> event = CreateRef<WindowResizedEvent>(width, height);
+				EventHandler::AddEvent(event);
+			});
 	}
 
 
