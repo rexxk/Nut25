@@ -53,7 +53,7 @@ public:
 
 Ref<Nut::Application> CreateApplication()
 {
-	Nut::ApplicationSettings settings{ .Fullscreen = true };
+	Nut::ApplicationSettings settings{ .Width = 1280, .Height = 720, .Fullscreen = false };
 
 	return CreateRef<SandboxApp>(settings);
 }

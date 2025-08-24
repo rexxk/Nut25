@@ -27,7 +27,7 @@ namespace Nut
 
 	Ref<RendererContext> RendererContext::Create(int32_t windowWidth, int32_t windowHeight)
 	{
-		LOG_CORE_INFO(std::format("RenderContext created, size {},{}", windowWidth, windowHeight));
+		LOG_CORE_INFO("RenderContext created, size {},{}", windowWidth, windowHeight);
 
 		return CreateRef<RendererContext>(windowWidth, windowHeight);
 	}

@@ -13,6 +13,9 @@ namespace Nut
 
 	struct ApplicationSettings
 	{
+		int Width{ 800 };
+		int Height{ 600 };
+
 		bool Fullscreen{ false };
 	};
 

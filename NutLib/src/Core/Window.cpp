@@ -56,7 +56,7 @@ namespace Nut
 
 		glfwMakeContextCurrent(m_Handle);
 		glfwShowWindow(m_Handle);
-		
+
 		gladLoadGL();
 
 		m_RendererContext = RendererContext::Create(m_Specification.Width, m_Specification.Height);

@@ -25,8 +25,8 @@ namespace Nut
 	
 
 		WindowSpecification windowSpec{};
-		windowSpec.Width = 800;
-		windowSpec.Height = 600;
+		windowSpec.Width = settings.Width;
+		windowSpec.Height = settings.Height;
 		windowSpec.Title = "Sandbox";
 		windowSpec.Fullscreen = settings.Fullscreen;
 
