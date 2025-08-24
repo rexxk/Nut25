@@ -5,6 +5,7 @@
 #include "Events/EventHandler.h"
 
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <exception>
@@ -26,17 +27,33 @@ namespace Nut
 		: m_Specification(spec)
 	{
 
-		gladLoadGL();
-
 		if (glfwInit() == GLFW_FALSE)
 		{
 			std::println("Failed to initialize GLFW");
 			return;
 		}
 
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 		m_Handle = glfwCreateWindow(static_cast<int>(m_Specification.Width), static_cast<int>(m_Specification.Height), m_Specification.Title.c_str(), nullptr, nullptr);
 
+		if (m_Handle == nullptr)
+		{
+			std::println("Failed to create window");
+			return;
+		}
+
+		glfwMakeContextCurrent(m_Handle);
 		glfwShowWindow(m_Handle);
+		
+		gladLoadGL();
+
+		glViewport(0, 0, m_Specification.Width, m_Specification.Height);
 
 		glfwSetWindowCloseCallback(m_Handle, [](GLFWwindow* window)
 			{
@@ -61,6 +78,11 @@ namespace Nut
 	auto Window::HandleEvents() -> void
 	{
 		glfwPollEvents();
+	}
+
+	auto Window::Swap() -> void
+	{
+		glfwSwapBuffers(m_Handle);
 	}
 
 }

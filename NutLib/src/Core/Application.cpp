@@ -59,6 +59,13 @@ namespace Nut
 			m_Window->HandleEvents();
 			EventHandler::Poll();
 
+			for (auto& layer : m_LayerStack)
+			{
+				layer->OnUpdate();
+			}
+
+
+			m_Window->Swap();
 		}
 	}
 

@@ -36,6 +36,8 @@ namespace Nut
 
 		auto HandleEvents() -> void;
 
+		auto Swap() -> void;
+
 	private:
 		WindowSpecification m_Specification{};
 

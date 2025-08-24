@@ -25,6 +25,11 @@ public:
 		std::println("Detaching {} layer", m_DebugName);
 	}
 
+	virtual auto OnUpdate() -> void override
+	{
+		Nut::Renderer::Clear();
+	}
+
 };
 
 
