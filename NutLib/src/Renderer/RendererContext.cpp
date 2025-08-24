@@ -1,8 +1,11 @@
 #include "Renderer/RendererContext.h"
 
+#include "Core/Log.h"
 #include "Events/EventHandler.h"
 
 #include <cstdint>
+#include <format>
+#include <print>
 
 #include <glad/glad.h>
 
@@ -24,6 +27,8 @@ namespace Nut
 
 	Ref<RendererContext> RendererContext::Create(int32_t windowWidth, int32_t windowHeight)
 	{
+		LOG_CORE_INFO(std::format("RenderContext created, size {},{}", windowWidth, windowHeight));
+
 		return CreateRef<RendererContext>(windowWidth, windowHeight);
 	}
 

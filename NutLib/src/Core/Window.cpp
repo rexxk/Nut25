@@ -40,12 +40,18 @@ namespace Nut
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		m_Handle = glfwCreateWindow(static_cast<int>(m_Specification.Width), static_cast<int>(m_Specification.Height), m_Specification.Title.c_str(), nullptr, nullptr);
+		m_Handle = glfwCreateWindow(m_Specification.Width, m_Specification.Height, m_Specification.Title.c_str(), nullptr, nullptr);
 
 		if (m_Handle == nullptr)
 		{
 			std::println("Failed to create window");
 			return;
+		}
+
+		if (m_Specification.Fullscreen)
+		{
+			glfwMaximizeWindow(m_Handle);
+			glfwGetWindowSize(m_Handle, &m_Specification.Width, &m_Specification.Height);
 		}
 
 		glfwMakeContextCurrent(m_Handle);
@@ -65,6 +71,11 @@ namespace Nut
 			{
 				Ref<WindowResizedEvent> event = CreateRef<WindowResizedEvent>(width, height);
 				EventHandler::AddEvent(event);
+			});
+
+		glfwSetWindowMaximizeCallback(m_Handle, [](GLFWwindow* window, int maximized)
+			{
+
 			});
 	}
 

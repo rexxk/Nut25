@@ -17,8 +17,8 @@ namespace Nut
 
 	struct WindowSpecification
 	{
-		uint32_t Width{ 1280 };
-		uint32_t Height{ 720 };
+		int32_t Width{ 1280 };
+		int32_t Height{ 720 };
 
 		bool Fullscreen{ false };
 		bool VSync{ false };
