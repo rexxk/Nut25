@@ -18,6 +18,8 @@ public:
 	virtual auto OnAttach() -> void override
 	{
 		std::println("Attaching {} layer", m_DebugName);
+
+		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 	}
 
 	virtual auto OnDetach() -> void override
@@ -27,9 +29,12 @@ public:
 
 	virtual auto OnUpdate() -> void override
 	{
-		Nut::Renderer::Clear();
+		m_RendererContext->BeginScene();
 	}
 
+
+private:
+	Ref<Nut::RendererContext> m_RendererContext;
 };
 
 

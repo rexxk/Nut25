@@ -2,6 +2,8 @@
 
 #include "Core/Base.h"
 
+#include "Renderer/RendererContext.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -38,8 +40,12 @@ namespace Nut
 
 		auto Swap() -> void;
 
+		auto GetRendererContext() -> Ref<RendererContext> { return m_RendererContext; }
+
 	private:
 		WindowSpecification m_Specification{};
+
+		Ref<RendererContext> m_RendererContext{};
 
 		GLFWwindow* m_Handle{ nullptr };
 	};

@@ -53,7 +53,7 @@ namespace Nut
 		
 		gladLoadGL();
 
-		glViewport(0, 0, m_Specification.Width, m_Specification.Height);
+		m_RendererContext = RendererContext::Create(m_Specification.Width, m_Specification.Height);
 
 		glfwSetWindowCloseCallback(m_Handle, [](GLFWwindow* window)
 			{
@@ -71,6 +71,8 @@ namespace Nut
 
 	Window::~Window()
 	{
+		glfwMakeContextCurrent(nullptr);
+
 		glfwDestroyWindow(m_Handle);
 	}
 

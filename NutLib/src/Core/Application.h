@@ -27,6 +27,7 @@ namespace Nut
 		auto AttachLayer(Ref<Nut::Layer> layer) -> void;
 		auto DetachLayer(Ref<Nut::Layer> layer) -> void;
 
+		auto GetWindow() -> Ref<Window> { return m_Window; }
 		static auto Get() -> Application& { return *s_Instance; }
 
 	private:
