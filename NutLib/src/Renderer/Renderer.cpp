@@ -8,4 +8,10 @@ namespace Nut
 {
 
 
+	auto Renderer::DrawTriangle() -> void
+	{
+
+	}
+
+
 }

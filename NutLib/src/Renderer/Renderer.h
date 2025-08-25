@@ -8,7 +8,8 @@ namespace Nut
 	class Renderer
 	{
 	public:
-		static auto Clear() -> void;
+		static auto DrawTriangle() -> void;
+
 	};
 
 }

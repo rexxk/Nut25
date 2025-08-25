@@ -41,12 +41,6 @@ namespace Nut
 				m_IsRunning = false;
 			});
 
-		EventHandler::Subscribe(EventType::WindowSize, [&](Ref<Event> event)
-			{
-				Ref<WindowResizedEvent> e = std::dynamic_pointer_cast<WindowResizedEvent>(event);
-
-				e->Print();
-			});
 	}
 
 
