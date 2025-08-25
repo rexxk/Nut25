@@ -27,7 +27,7 @@ public:
 		std::println("Detaching {} layer", m_DebugName);
 	}
 
-	virtual auto OnUpdate() -> void override
+	virtual auto OnUpdate(double timestep) -> void override
 	{
 		m_RendererContext->BeginScene();
 	}

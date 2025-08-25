@@ -27,7 +27,7 @@ namespace Nut
 
 	}
 
-	auto Layer::OnUpdate() -> void
+	auto Layer::OnUpdate(double timestep) -> void
 	{
 
 	}

@@ -10,6 +10,7 @@ target_sources(NutLib PUBLIC
 	LayerStack.h
 	LayerStack.cpp
 	Log.h
+	Timer.h
 	Window.h
 	Window.cpp
 )

@@ -15,7 +15,7 @@ namespace Nut
 		virtual auto OnAttach() -> void;
 		virtual auto OnDetach() -> void;
 
-		virtual auto OnUpdate() -> void;
+		virtual auto OnUpdate(double timestep) -> void;
 
 	protected:
 		std::string m_DebugName{};
