@@ -3,6 +3,8 @@
 #include "EntryPoint.h"
 #include "NutLib.h"
 
+#include <print>
+#include <vector>
 
 
 
@@ -20,6 +22,21 @@ public:
 		std::println("Attaching {} layer", m_DebugName);
 
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
+
+
+		std::vector<float> vertices{
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		};
+
+		std::vector<uint32_t> indices{
+			0, 1, 2,
+		};
+
+		m_VertexData = Nut::Buffer(vertices.data(), vertices.size() * sizeof(float));
+		m_IndexData = Nut::Buffer(indices.data(), indices.size() * sizeof(uint32_t));
+
 	}
 
 	virtual auto OnDetach() -> void override
@@ -35,6 +52,9 @@ public:
 
 private:
 	Ref<Nut::RendererContext> m_RendererContext;
+
+	Ref<Nut::Buffer> m_VertexData;
+	Ref<Nut::Buffer> m_IndexData;
 };
 
 
