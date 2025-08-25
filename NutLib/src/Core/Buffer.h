@@ -14,14 +14,15 @@ namespace Nut
 	{
 	public:
 
-		inline static auto Create(const void* data, size_t size) -> Ref<Buffer>
+		inline static auto Create(const void* data, size_t size, size_t stride) -> Ref<Buffer>
 		{
-			return CreateRef<Buffer>(data, size);
+			return CreateRef<Buffer>(data, size, stride);
 		}
 
-		Buffer(const void* data, size_t size)
+		Buffer(const void* data, size_t size, size_t stride)
+			: m_Size(size), m_Stride(stride)
 		{
-			SetData(data, size);
+			SetData(data, size * stride);
 		}
 
 		~Buffer()
@@ -56,10 +57,13 @@ namespace Nut
 		}
 
 		auto Data() const -> const void* { return m_Pointer; }
+		auto Count() const -> const size_t { return m_Size; }
+		auto Size() const -> const size_t { return m_Size * m_Stride; }
 
 	private:
 		unsigned char* m_Pointer{ nullptr };
 		size_t m_Size{ 0 };
+		size_t m_Stride{ 0 };
 	};
 
 

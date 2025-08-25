@@ -34,8 +34,12 @@ public:
 			0, 1, 2,
 		};
 
-		m_VertexData = Nut::Buffer(vertices.data(), vertices.size() * sizeof(float));
-		m_IndexData = Nut::Buffer(indices.data(), indices.size() * sizeof(uint32_t));
+		m_VertexData = Nut::Buffer::Create(vertices.data(), vertices.size(), sizeof(float));
+		m_IndexData = Nut::Buffer::Create(indices.data(), indices.size(), sizeof(uint32_t));
+
+		Ref<Nut::VertexBuffer> vb = Nut::VertexBuffer::Create(m_VertexData);
+		Ref<Nut::IndexBuffer> ib = Nut::IndexBuffer::Create(m_IndexData);
+
 
 	}
 

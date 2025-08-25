@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
+#include "Core/Buffer.h"
 
 #include <glad/glad.h>
 
@@ -14,9 +15,12 @@ namespace Nut
 	class VertexBuffer
 	{
 	public:
-		static auto Create() -> Ref<VertexBuffer>;
+		static auto Create(Ref<Buffer> buffer) -> Ref<VertexBuffer>;
 
-		VertexBuffer();
+		VertexBuffer(Ref<Buffer> buffer);
+		~VertexBuffer();
+
+		auto SetData(Ref<Buffer> buffer) -> void;
 
 		auto Handle() const -> GLuint { return m_Handle; }
 
@@ -28,9 +32,12 @@ namespace Nut
 	class IndexBuffer
 	{
 	public:
-		static auto Create() -> Ref<IndexBuffer>;
+		static auto Create(Ref<Buffer> buffer) -> Ref<IndexBuffer>;
 
-		IndexBuffer();
+		IndexBuffer(Ref<Buffer> buffer);
+		~IndexBuffer();
+
+		auto SetData(Ref<Buffer> buffer) -> void;
 
 		auto Handle() const -> GLuint { return m_Handle; }
 

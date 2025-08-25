@@ -6,4 +6,5 @@
 #include "Core/Application.h"
 #include "Core/Layer.h"
 
+#include "Renderer/OpenGLBuffer.h"
 #include "Renderer/Renderer.h"
