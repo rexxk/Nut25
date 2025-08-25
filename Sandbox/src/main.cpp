@@ -37,9 +37,13 @@ public:
 		m_VertexData = Nut::Buffer::Create(vertices.data(), vertices.size(), sizeof(float));
 		m_IndexData = Nut::Buffer::Create(indices.data(), indices.size(), sizeof(uint32_t));
 
+
 		Ref<Nut::VertexBuffer> vb = Nut::VertexBuffer::Create(m_VertexData);
 		Ref<Nut::IndexBuffer> ib = Nut::IndexBuffer::Create(m_IndexData);
 
+		auto mesh = Nut::Mesh::Create({ vb }, ib);
+
+		m_TestEntity = Nut::Entity::Create(mesh);
 
 	}
 
@@ -57,8 +61,10 @@ public:
 private:
 	Ref<Nut::RendererContext> m_RendererContext;
 
-	Ref<Nut::Buffer> m_VertexData;
-	Ref<Nut::Buffer> m_IndexData;
+	Ref<Nut::Buffer> m_VertexData{ nullptr };
+	Ref<Nut::Buffer> m_IndexData{ nullptr };
+
+	Ref<Nut::Entity> m_TestEntity{ nullptr };
 };
 
 
