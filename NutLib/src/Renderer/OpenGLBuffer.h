@@ -39,6 +39,8 @@ namespace Nut
 
 		auto SetData(Ref<Buffer> buffer) -> void;
 
+		auto IndexCount() const -> uint32_t { return m_IndexCount; }
+
 		auto Handle() const -> GLuint { return m_Handle; }
 
 	private:

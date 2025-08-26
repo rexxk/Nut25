@@ -19,4 +19,9 @@ namespace Nut
 	}
 
 
+	auto Entity::Draw() -> void
+	{
+		m_Mesh->Draw();
+	}
+
 }

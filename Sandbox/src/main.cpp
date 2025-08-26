@@ -45,6 +45,7 @@ public:
 
 		m_TestEntity = Nut::Entity::Create(mesh);
 
+		m_Scene.AddEntity(m_TestEntity);
 	}
 
 	virtual auto OnDetach() -> void override
@@ -55,6 +56,8 @@ public:
 	virtual auto OnUpdate(double timestep) -> void override
 	{
 		m_RendererContext->BeginScene();
+
+		m_Scene.Draw();
 	}
 
 
@@ -65,6 +68,8 @@ private:
 	Ref<Nut::Buffer> m_IndexData{ nullptr };
 
 	Ref<Nut::Entity> m_TestEntity{ nullptr };
+
+	Nut::Scene m_Scene;
 };
 
 

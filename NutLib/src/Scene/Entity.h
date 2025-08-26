@@ -17,6 +17,8 @@ namespace Nut
 
 		Entity(Ref<Mesh> mesh);
 
+		auto Draw() -> void;
+
 	private:
 		Ref<Mesh> m_Mesh;
 
