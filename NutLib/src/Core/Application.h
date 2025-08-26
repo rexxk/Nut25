@@ -16,6 +16,7 @@ namespace Nut
 		int Width{ 800 };
 		int Height{ 600 };
 
+		bool VSync{ false };
 		bool Fullscreen{ false };
 	};
 

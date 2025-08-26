@@ -31,6 +31,7 @@ namespace Nut
 		windowSpec.Height = settings.Height;
 		windowSpec.Title = "Sandbox";
 		windowSpec.Fullscreen = settings.Fullscreen;
+		windowSpec.VSync = settings.VSync;
 
 		m_Window = Window::Create(windowSpec);
 	

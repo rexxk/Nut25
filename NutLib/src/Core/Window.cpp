@@ -95,6 +95,8 @@ namespace Nut
 
 	auto Window::Swap() -> void
 	{
+		glfwSwapInterval(static_cast<int32_t>(m_Specification.VSync));
+
 		glfwSwapBuffers(m_Handle);
 	}
 
