@@ -24,17 +24,17 @@ public:
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 
 
-		std::vector<float> vertices{
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		std::vector<Nut::Vertex> vertices{
+			{ .Position{ -0.5f, -0.5f, 0.0f }, .Color{ 1.0f, 0.0f, 0.0f, 1.0f }},
+			{ .Position{  0.5f, -0.5f, 0.0f }, .Color{ 0.0f, 1.0f, 0.0f, 1.0f }},
+			{ .Position{  0.0f,  0.5f, 0.0f }, .Color{ 0.0f, 0.0f, 1.0f, 1.0f }},
 		};
 
 		std::vector<uint32_t> indices{
 			0, 1, 2,
 		};
 
-		m_VertexData = Nut::Buffer::Create(vertices.data(), vertices.size(), sizeof(float));
+		m_VertexData = Nut::Buffer::Create(vertices.data(), vertices.size(), sizeof(Nut::Vertex));
 		m_IndexData = Nut::Buffer::Create(indices.data(), indices.size(), sizeof(uint32_t));
 
 

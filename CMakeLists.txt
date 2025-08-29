@@ -17,6 +17,8 @@ cmake_policy(SET CMP0079 NEW)
 FetchContent_Declare(glfw GIT_REPOSITORY https://github.com/glfw/glfw GIT_TAG master)
 FetchContent_MakeAvailable(glfw)
 
+FetchContent_Declare(glm GIT_REPOSITORY https://github.com/g-truc/glm GIT_TAG master)
+FetchContent_MakeAvailable(glm)
 
 # Project
 
@@ -39,7 +41,7 @@ add_subdirectory(NutLib)
 
 target_link_directories(NutLib PRIVATE glad glfw)
 target_link_libraries(NutLib PRIVATE glad glfw)
-target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include)
+target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR})
 
 
 # Sandbox
@@ -47,4 +49,4 @@ target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR
 add_subdirectory(Sandbox)
 
 target_link_libraries(Sandbox PRIVATE NutLib)
-target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include)
+target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR})
