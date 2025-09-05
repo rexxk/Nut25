@@ -6,6 +6,8 @@ target_sources(NutLib PRIVATE
 	Mesh.cpp
 	OpenGLBuffer.h
 	OpenGLBuffer.cpp
+	OpenGLShader.h
+	OpenGLShader.cpp
 	Renderer.h
 	Renderer.cpp
 	RendererContext.h
