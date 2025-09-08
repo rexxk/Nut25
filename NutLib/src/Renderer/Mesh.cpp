@@ -35,13 +35,20 @@ namespace Nut
 			glEnableVertexArrayAttrib(m_VAO, i);
 
 			glVertexArrayAttribFormat(m_VAO, i, layoutInfo.Count, layoutInfo.Type, GL_FALSE, stride);
+//			glVertexArrayAttribFormat(m_VAO, i, layoutInfo.Count, layoutInfo.Type, GL_FALSE, stride);
 
 			glVertexArrayAttribBinding(m_VAO, i, 0);
 
 			stride += layoutInfo.Size;
 		}
 
-		glVertexArrayVertexBuffer(m_VAO, 0, m_VertexBuffers[0]->Handle(), 0, sizeof(Vertex));
+		uint32_t i = 0;
+
+		for (auto& vertexBuffer : m_VertexBuffers)
+		{
+			glVertexArrayVertexBuffer(m_VAO, i++, vertexBuffer->Handle(), 0, sizeof(Vertex));
+		}
+
 		glVertexArrayElementBuffer(m_VAO, m_IndexBuffer->Handle());
 
 	}
