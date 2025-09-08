@@ -11,6 +11,9 @@ namespace Nut
 {
 
 
+	static std::unordered_map<std::string, Ref<OpenGLShader>> s_Shaders{};
+
+
 	auto DomainToString(OpenGLShader::Domain domain) -> std::string
 	{
 		switch (domain)
@@ -35,6 +38,49 @@ namespace Nut
 		}
 
 		return GL_NONE;
+	}
+
+	auto EnumTypeToLength(GLenum type) -> uint32_t
+	{
+		switch (type)
+		{
+			case GL_FLOAT: return sizeof(GLfloat);
+			case GL_FLOAT_VEC2: return 2 * sizeof(GLfloat);
+			case GL_FLOAT_VEC3: return 3 * sizeof(GLfloat);
+			case GL_FLOAT_VEC4: return 4 * sizeof(GLfloat);
+			case GL_FLOAT_MAT2: return 2 * 2 * sizeof(GLfloat);
+			case GL_FLOAT_MAT3: return 3 * 3 * sizeof(GLfloat);
+			case GL_FLOAT_MAT4: return 4 * 4 * sizeof(GLfloat);
+			case GL_FLOAT_MAT2x3: return 2 * 3 * sizeof(GLfloat);
+			case GL_FLOAT_MAT2x4: return 2 * 4 * sizeof(GLfloat);
+			case GL_FLOAT_MAT3x2: return 3 * 2 * sizeof(GLfloat);
+			case GL_FLOAT_MAT3x4: return 3 * 4 * sizeof(GLfloat);
+			case GL_FLOAT_MAT4x2: return 4 * 2 * sizeof(GLfloat);
+			case GL_FLOAT_MAT4x3: return 4 * 3 * sizeof(GLfloat);
+			case GL_INT: return sizeof(GLint);
+			case GL_INT_VEC2: return 2 * sizeof(GLint);
+			case GL_INT_VEC3: return 3 * sizeof(GLint);
+			case GL_INT_VEC4: return 4 * sizeof(GLint);
+			case GL_UNSIGNED_INT: return sizeof(GLuint);
+			case GL_UNSIGNED_INT_VEC2: return 2 * sizeof(GLuint);
+			case GL_UNSIGNED_INT_VEC3: return 3 * sizeof(GLuint);
+			case GL_UNSIGNED_INT_VEC4: return 4 * sizeof(GLuint);
+			case GL_DOUBLE: return sizeof(GLdouble);
+			case GL_DOUBLE_VEC2: return 2 * sizeof(GLdouble);
+			case GL_DOUBLE_VEC3: return 3 * sizeof(GLdouble);
+			case GL_DOUBLE_VEC4: return 4 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT2: return 2 * 2 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT3: return 3 * 3 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT4: return 4 * 4 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT2x3: return 2 * 3 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT2x4: return 2 * 4 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT3x2: return 3 * 2 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT3x4: return 3 * 4 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT4x2: return 4 * 2 * sizeof(GLdouble);
+			case GL_DOUBLE_MAT4x3: return 4 * 3 * sizeof(GLdouble);
+		}
+
+		return 4;
 	}
 
 	std::unordered_map<OpenGLShader::Domain, std::string> s_FlatShaderSources{
@@ -90,7 +136,7 @@ namespace Nut
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& shaderName, const std::unordered_map<Domain, std::string>& shaderSources)
-		: m_ShaderSources(shaderSources)
+		: m_ShaderSources(shaderSources), m_Name(shaderName)
 	{
 		LOG_CORE_INFO("Compiling shader: {}", shaderName);
 
@@ -99,13 +145,15 @@ namespace Nut
 
 	OpenGLShader::~OpenGLShader()
 	{
-		if (m_ProgramID != -1)
+		if (m_ProgramID != 0u)
 			glDeleteProgram(m_ProgramID);
 	}
 
 	auto OpenGLShader::Reload() -> void
 	{
 		CompileAndLink();
+		FindUniforms();
+		FindAttributes();
 	}
 
 	auto OpenGLShader::CompileAndLink() -> void
@@ -145,7 +193,7 @@ namespace Nut
 			shaders.push_back(shader);
 		}
 
-		if (m_ProgramID != -1)
+		if (m_ProgramID != 0u)
 			glDeleteProgram(m_ProgramID);
 
 		m_ProgramID = glCreateProgram();
@@ -180,9 +228,116 @@ namespace Nut
 
 	}
 
+	auto OpenGLShader::FindUniforms() -> void
+	{
+		if (!m_UniformInfos.empty())
+			m_UniformInfos.clear();
+
+		GLint uniformCount{ 0 };
+		glGetProgramiv(m_ProgramID, GL_ACTIVE_UNIFORMS, &uniformCount);
+
+		if (uniformCount == 0)
+			return;
+
+		GLint maxNameLength{ 0 };
+		glGetProgramiv(m_ProgramID, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxNameLength);
+
+		auto uniformName = CreateScope<char[]>(maxNameLength);
+
+		GLsizei length{ 0 };
+		GLsizei count{ 0 };
+		GLenum type{ GL_NONE };
+
+		for (auto i = 0; i < uniformCount; i++)
+		{
+			glGetActiveUniform(m_ProgramID, i, maxNameLength, &length, &count, &type, uniformName.get());
+
+			ShaderUniformInfo uniformInfo{};
+			uniformInfo.Location = glGetUniformLocation(m_ProgramID, uniformName.get());
+			uniformInfo.Count = count;
+
+			std::string name = uniformName.get();
+			LOG_CORE_INFO(" - Uniform found: {}", name);
+//			LOG_CORE_INFO(" - Uniform found: {}", uniformName.get());
+
+			m_UniformInfos.emplace(std::make_pair(std::string(uniformName.get(), length), uniformInfo));
+		}
+	}
+	
+	auto OpenGLShader::FindAttributes() -> void
+	{
+		if (!m_Layout.empty())
+			m_Layout.clear();
+
+		GLint attributeCount{ 0 };
+		glGetProgramiv(m_ProgramID, GL_ACTIVE_ATTRIBUTES, &attributeCount);
+
+		if (attributeCount == 0)
+			return;
+
+		GLint maxNameLength{ 0 };
+		glGetProgramiv(m_ProgramID, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxNameLength);
+
+		auto attributeName = CreateScope<char[]>(maxNameLength);
+
+		GLsizei length{ 0 };
+		GLsizei size{ 0 };
+		GLenum type{ GL_NONE };
+
+		for (auto i = 0; i < attributeCount; i++)
+		{
+			glGetActiveAttrib(m_ProgramID, i, maxNameLength, &length, &size, &type, attributeName.get());
+
+			auto location = glGetAttribLocation(m_ProgramID, attributeName.get());
+
+			ShaderLayoutInfo layoutInfo{ };
+			layoutInfo.Count = size;
+			layoutInfo.Type = type;
+			layoutInfo.Size = EnumTypeToLength(type);
+
+			m_Layout[location] = layoutInfo;
+
+			std::string name = attributeName.get();
+			LOG_CORE_INFO(" - Attribute found: {} @ location {}", name, location);
+		}
+
+	}
+
 	auto OpenGLShader::Bind() const -> void
 	{
 		glUseProgram(m_ProgramID);
+	}
+
+	auto OpenGLShader::ReleaseBinding() -> void
+	{
+		glUseProgram(0u);
+	}
+
+
+
+
+	auto ShaderLibrary::Add(Ref<OpenGLShader> shader) -> void
+	{
+		if (!s_Shaders.contains(shader->GetName()))
+		{
+			s_Shaders[shader->GetName()] = shader;
+		}
+	}
+
+	auto ShaderLibrary::Delete(const std::string& name) -> void
+	{
+		if (s_Shaders.contains(name))
+		{
+			s_Shaders.erase(name);
+		}
+	}
+
+	auto ShaderLibrary::Get(const std::string& name) -> Ref<OpenGLShader>
+	{
+		if (s_Shaders.contains(name))
+			return s_Shaders[name];
+
+		return nullptr;
 	}
 
 }

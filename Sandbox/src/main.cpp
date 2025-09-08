@@ -23,7 +23,7 @@ public:
 
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 
-		m_FlatShader = Nut::OpenGLShader::LoadFlatShader();
+		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadFlatShader());
 
 		std::vector<Nut::Vertex> vertices{
 			{ .Position{ -0.5f, -0.5f, 0.0f }, .Color{ 1.0f, 0.0f, 0.0f, 1.0f }},
@@ -42,7 +42,7 @@ public:
 		Ref<Nut::VertexBuffer> vb = Nut::VertexBuffer::Create(m_VertexData);
 		Ref<Nut::IndexBuffer> ib = Nut::IndexBuffer::Create(m_IndexData);
 
-		auto mesh = Nut::Mesh::Create({ vb }, ib);
+		auto mesh = Nut::Mesh::Create({ vb }, ib, "FlatShader");
 
 		m_TestEntity = Nut::Entity::Create(mesh);
 
@@ -69,8 +69,6 @@ private:
 	Ref<Nut::Buffer> m_IndexData{ nullptr };
 
 	Ref<Nut::Entity> m_TestEntity{ nullptr };
-
-	Ref<Nut::OpenGLShader> m_FlatShader{ nullptr };
 
 	Nut::Scene m_Scene;
 };

@@ -13,6 +13,21 @@
 namespace Nut
 {
 
+
+
+	struct ShaderUniformInfo
+	{
+		GLint Location{ -1 };
+		GLsizei Count{ 0 };
+	};
+
+	struct ShaderLayoutInfo
+	{
+		GLsizei Count{ 0 };
+		GLsizei Size{ 0 };
+		GLenum Type{ GL_NONE };
+	};
+
 	class OpenGLShader
 	{
 	public:
@@ -38,17 +53,35 @@ namespace Nut
 
 		auto ID() const -> const GLuint { return m_ProgramID; }
 
-		auto GetName() const -> std::string_view { return m_Name; }
+		auto GetName() const -> std::string { return m_Name; }
+		auto GetLayout() const -> std::unordered_map<GLint, ShaderLayoutInfo> const { return m_Layout; }
+
+		static auto ReleaseBinding() -> void;
 
 	private:
 		auto CompileAndLink() -> void;
+		auto FindUniforms() -> void;
+		auto FindAttributes() -> void;
 
 	private:
-		GLuint m_ProgramID{ -1u };
+		GLuint m_ProgramID{ 0u };
 
 		std::string m_Name{};
 
 		std::unordered_map<Domain, std::string> m_ShaderSources{};
+		std::unordered_map<std::string, ShaderUniformInfo> m_UniformInfos{};
+		std::unordered_map<GLint, ShaderLayoutInfo> m_Layout{};
+	};
+
+
+	class ShaderLibrary
+	{
+	public:
+		static auto Add(Ref<OpenGLShader> shader) -> void;
+		static auto Delete(const std::string& name) -> void;
+
+		static auto Get(const std::string& name) -> Ref<OpenGLShader>;
+
 	};
 
 }

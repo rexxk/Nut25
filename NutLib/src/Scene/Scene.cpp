@@ -1,5 +1,6 @@
 #include "Scene/Scene.h"
 
+#include "Renderer/OpenGLShader.h"
 #include "Scene/Entity.h"
 
 #include <vector>
@@ -26,6 +27,10 @@ namespace Nut
 
 	auto Scene::Draw() -> void
 	{
+		OpenGLShader::ReleaseBinding();
+
+		ShaderLibrary::Get("FlatShader")->Bind();
+
 		for (auto& entity : s_SceneData.Entities)
 		{
 			entity->Draw();

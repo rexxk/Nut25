@@ -26,8 +26,9 @@ namespace Nut
 
 	auto VertexBuffer::SetData(Ref<Buffer> buffer) -> void
 	{
-		glNamedBufferStorage(m_Handle, buffer->Size(), buffer->Data(), GL_ARRAY_BUFFER);
-		glNamedBufferSubData(m_Handle, 0, buffer->Size(), buffer->Data());
+//		glNamedBufferStorage(m_Handle, buffer->Size(), buffer->Data(), GL_ARRAY_BUFFER);
+//		glNamedBufferSubData(m_Handle, 0, buffer->Size(), buffer->Data());
+		glNamedBufferData(m_Handle, buffer->Size(), buffer->Data(), GL_STATIC_DRAW);
 	}
 
 
@@ -52,8 +53,9 @@ namespace Nut
 
 	auto IndexBuffer::SetData(Ref<Buffer> buffer) -> void
 	{
-		glNamedBufferStorage(m_Handle, buffer->Size(), buffer->Data(), GL_ELEMENT_ARRAY_BUFFER);
-		glNamedBufferSubData(m_Handle, 0, buffer->Size(), buffer->Data());
+//		glNamedBufferStorage(m_Handle, buffer->Size(), buffer->Data(), GL_ELEMENT_ARRAY_BUFFER);
+//		glNamedBufferSubData(m_Handle, 0, buffer->Size(), buffer->Data());
+		glNamedBufferData(m_Handle, buffer->Size(), buffer->Data(), GL_STATIC_DRAW);
 	}
 
 }
