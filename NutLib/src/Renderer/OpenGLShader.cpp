@@ -176,14 +176,17 @@ namespace Nut
 				#version 450 core
 
 				layout(location = 0) in vec3 a_Position;
-				layout(location = 1) in vec4 a_Color;
+				layout(location = 1) in vec3 a_Normal;
+				layout(location = 2) in vec4 a_Color;
 
+				out vec3 v_Normal;
 				out vec4 v_Color;
 
-				void main()
+				void main() 
 				{
 					gl_Position = vec4(a_Position, 1.0);
 					v_Color = a_Color;
+					v_Normal = a_Normal;
 				}
 			)"
 		},
@@ -193,11 +196,14 @@ namespace Nut
 				#version 450 core
 
 				out vec4 o_Color;
+				in vec3 v_Normal;
 				in vec4 v_Color;
 
 				void main()
 				{
-					o_Color = v_Color;
+					vec3 normal = v_Normal;
+					normal *= -1.0;
+					o_Color = v_Color + vec4(normal, 1.0);
 				}
 
 			)"

@@ -30,6 +30,9 @@ namespace Nut
 
 		for (auto i = 0; i < layout.size(); i++)
 		{
+			if (layout.find(i) == layout.end())
+				continue;
+
 			auto& layoutInfo = layout.at(i);
 
 			glEnableVertexArrayAttrib(m_VAO, i);
