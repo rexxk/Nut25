@@ -3,6 +3,8 @@
 
 #include "Core/Log.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <string>
 #include <unordered_map>
 
@@ -177,14 +179,18 @@ namespace Nut
 
 				layout(location = 0) in vec3 a_Position;
 				layout(location = 1) in vec3 a_Normal;
-				layout(location = 2) in vec4 a_Color;
+				layout(location = 2) in vec2 a_TexCoord;
+				layout(location = 3) in vec4 a_Color;
 
+				out vec2 v_TexCoord;
 				out vec3 v_Normal;
 				out vec4 v_Color;
 
 				void main() 
 				{
 					gl_Position = vec4(a_Position, 1.0);
+
+					v_TexCoord = a_TexCoord;
 					v_Color = a_Color;
 					v_Normal = a_Normal;
 				}
@@ -196,14 +202,20 @@ namespace Nut
 				#version 450 core
 
 				out vec4 o_Color;
+				in vec2 v_TexCoord;
 				in vec3 v_Normal;
 				in vec4 v_Color;
+
+				uniform sampler2D u_Texture;
 
 				void main()
 				{
 					vec3 normal = v_Normal;
 					normal *= -1.0;
-					o_Color = v_Color + vec4(normal, 1.0);
+
+					vec4 tex = texture(u_Texture, v_TexCoord);
+
+					o_Color = tex + v_Color + vec4(normal, 1.0);
 				}
 
 			)"
@@ -405,6 +417,29 @@ namespace Nut
 		glUseProgram(0u);
 	}
 
+	auto OpenGLShader::SetUniform(const std::string& uniformName, int32_t value) -> void
+	{
+		auto location = m_UniformInfos[uniformName].Location;
+		glUniform1i(location, value);
+	}
+
+	auto OpenGLShader::SetUniform(const std::string& uniformName, const glm::vec3& value) -> void
+	{
+		auto location = m_UniformInfos[uniformName].Location;
+		glUniform3fv(location, 1, glm::value_ptr(value));
+	}
+
+	auto OpenGLShader::SetUniform(const std::string& uniformName, const glm::vec4& value) -> void
+	{
+		auto location = m_UniformInfos[uniformName].Location;
+		glUniform4fv(location, 1, glm::value_ptr(value));
+	}
+
+	auto OpenGLShader::SetUniform(const std::string& uniformName, const glm::mat4& value) -> void
+	{
+		auto location = m_UniformInfos[uniformName].Location;
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
 
 
 
@@ -431,5 +466,6 @@ namespace Nut
 
 		return nullptr;
 	}
+
 
 }

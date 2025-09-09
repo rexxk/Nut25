@@ -14,4 +14,6 @@ target_sources(NutLib PRIVATE
 	Renderer.cpp
 	RendererContext.h
 	RendererContext.cpp
+	Texture.h
+	Texture.cpp
 )

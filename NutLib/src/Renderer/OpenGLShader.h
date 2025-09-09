@@ -3,6 +3,7 @@
 #include "Core/Base.h"
 
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 #include <filesystem>
 #include <string>
@@ -55,6 +56,11 @@ namespace Nut
 
 		auto GetName() const -> std::string { return m_Name; }
 		auto GetLayout() const -> std::unordered_map<GLint, ShaderLayoutInfo> const { return m_Layout; }
+
+		auto SetUniform(const std::string& uniformName, int32_t value) -> void;
+		auto SetUniform(const std::string& uniformName, const glm::vec3& value) -> void;
+		auto SetUniform(const std::string& uniformName, const glm::vec4& value) -> void;
+		auto SetUniform(const std::string& uniformName, const glm::mat4& value) -> void;
 
 		static auto ReleaseBinding() -> void;
 

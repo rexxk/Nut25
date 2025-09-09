@@ -38,7 +38,6 @@ namespace Nut
 			glEnableVertexArrayAttrib(m_VAO, i);
 
 			glVertexArrayAttribFormat(m_VAO, i, layoutInfo.Count, layoutInfo.Type, GL_FALSE, stride);
-//			glVertexArrayAttribFormat(m_VAO, i, layoutInfo.Count, layoutInfo.Type, GL_FALSE, stride);
 
 			glVertexArrayAttribBinding(m_VAO, i, 0);
 
