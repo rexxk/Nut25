@@ -51,5 +51,7 @@ target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR
 
 add_subdirectory(Sandbox)
 
+set_property(TARGET Sandbox PROPERTY DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Sandbox")
+
 target_link_libraries(Sandbox PRIVATE NutLib)
 target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR} ${stbimage_SOURCE_DIR})

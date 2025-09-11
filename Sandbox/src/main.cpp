@@ -45,8 +45,9 @@ public:
 		auto mesh = Nut::Mesh::Create({ vb }, ib, "FlatShader");
 
 		Nut::TextureSpecification texSpec{};
-		texSpec.Filepath = "C:/Programming/Private/Nut25/Sandbox/Assets/Textures/texture.png";
-		texSpec.Format = GL_RGBA;
+		texSpec.Filepath = "Assets/Textures/texture.png";
+//		texSpec.Filepath = "C:/Programming/Private/Nut25/Sandbox/Assets/Textures/texture.png";
+//		texSpec.Format = GL_RGBA;
 //		texSpec.UnitTexture = true;
 //		texSpec.Color = glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f };
 		
