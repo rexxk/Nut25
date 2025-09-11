@@ -251,6 +251,10 @@ namespace Nut
 	{
 		if (m_ProgramID != 0u)
 			glDeleteProgram(m_ProgramID);
+
+		for (auto& shader : m_Shaders)
+			glDeleteShader(shader);
+
 	}
 
 	auto OpenGLShader::Reload() -> void
@@ -262,8 +266,6 @@ namespace Nut
 
 	auto OpenGLShader::CompileAndLink() -> void
 	{
-		std::vector<GLuint> shaders{};
-
 		for (auto &[domain, source] : m_ShaderSources)
 		{
 			std::string domainString = DomainToString(domain);
@@ -294,7 +296,7 @@ namespace Nut
 				return;
 			}
 
-			shaders.push_back(shader);
+			m_Shaders.push_back(shader);
 		}
 
 		if (m_ProgramID != 0u)
@@ -302,7 +304,7 @@ namespace Nut
 
 		m_ProgramID = glCreateProgram();
 
-		for (auto& shader : shaders)
+		for (auto& shader : m_Shaders)
 		{
 			glAttachShader(m_ProgramID, shader);
 		}
@@ -325,9 +327,9 @@ namespace Nut
 		}
 
 
-		for (auto& shader : shaders)
+		for (auto& shader : m_Shaders)
 		{
-			glDeleteShader(shader);
+			glDetachShader(m_ProgramID, shader);
 		}
 
 	}

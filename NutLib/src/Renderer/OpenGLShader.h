@@ -77,6 +77,8 @@ namespace Nut
 		std::unordered_map<Domain, std::string> m_ShaderSources{};
 		std::unordered_map<std::string, ShaderUniformInfo> m_UniformInfos{};
 		std::unordered_map<GLint, ShaderLayoutInfo> m_Layout{};
+
+		std::vector<GLuint> m_Shaders{};
 	};
 
 

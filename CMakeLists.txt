@@ -20,6 +20,9 @@ FetchContent_MakeAvailable(glfw)
 FetchContent_Declare(glm GIT_REPOSITORY https://github.com/g-truc/glm GIT_TAG master)
 FetchContent_MakeAvailable(glm)
 
+FetchContent_Declare(stbimage GIT_REPOSITORY https://github.com/nothings/stb GIT_TAG master)
+FetchContent_MakeAvailable(stbimage)
+
 # Project
 
 project("Nut25")
@@ -41,7 +44,7 @@ add_subdirectory(NutLib)
 
 target_link_directories(NutLib PRIVATE glad glfw)
 target_link_libraries(NutLib PRIVATE glad glfw)
-target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR})
+target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR} ${stbimage_SOURCE_DIR})
 
 
 # Sandbox
@@ -49,4 +52,4 @@ target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR
 add_subdirectory(Sandbox)
 
 target_link_libraries(Sandbox PRIVATE NutLib)
-target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR})
+target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR} ${stbimage_SOURCE_DIR})

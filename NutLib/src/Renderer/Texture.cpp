@@ -1,8 +1,13 @@
 #include "Renderer/Texture.h"
 
 
+#include "Core/Log.h"
+
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 
 namespace Nut
@@ -17,14 +22,38 @@ namespace Nut
 	 
 	Texture2D::Texture2D(const TextureSpecification& specification)
 	{
-		glGenTextures(1, &m_ID);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
 
 		if (specification.UnitTexture)
 		{
 
 			glTextureStorage2D(m_ID, 1, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, 1, 1);
 			glTextureSubImage2D(m_ID, 0, 0, 0, 1, 1, specification.Format, GL_FLOAT, glm::value_ptr(specification.Color));
+
+			LOG_CORE_INFO("Unit texture created");
 		}
+		else
+		{
+			int32_t imageWidth{ 0 };
+			int32_t imageHeight{ 0 };
+			int32_t imageBitsPerPixel{ 0 };
+
+			stbi_set_flip_vertically_on_load(true);
+			stbi_uc* imagePixels = stbi_load(specification.Filepath.string().c_str(), &imageWidth, &imageHeight, &imageBitsPerPixel, 4);
+
+			if (imagePixels == nullptr)
+			{
+				std::string filename = specification.Filepath.string();
+				LOG_CORE_ERROR("Failed to load texture: {}", filename);
+				return;
+			}
+
+			glTextureStorage2D(m_ID, 1, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, imageWidth, imageHeight);
+			glTextureSubImage2D(m_ID, 0, 0, 0, imageWidth, imageHeight, specification.Format, GL_UNSIGNED_BYTE, imagePixels);
+
+			stbi_image_free(imagePixels);
+		}
+
 
 		glGenerateTextureMipmap(m_ID);
 	}

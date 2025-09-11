@@ -44,7 +44,16 @@ public:
 
 		auto mesh = Nut::Mesh::Create({ vb }, ib, "FlatShader");
 
-		m_TestEntity = Nut::Entity::Create(mesh);
+		Nut::TextureSpecification texSpec{};
+		texSpec.Filepath = "C:/Programming/Private/Nut25/Sandbox/Assets/Textures/texture.png";
+		texSpec.Format = GL_RGBA;
+//		texSpec.UnitTexture = true;
+//		texSpec.Color = glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f };
+		
+
+		Ref<Nut::Texture2D> texture = Nut::Texture2D::Create(texSpec);
+
+		m_TestEntity = Nut::Entity::Create(mesh, texture);
 
 		m_Scene.AddEntity(m_TestEntity);
 	}

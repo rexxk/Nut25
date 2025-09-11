@@ -38,7 +38,7 @@ namespace Nut
 	}
 
 	IndexBuffer::IndexBuffer(Ref<Buffer> buffer)
-		: m_IndexCount(buffer->Count())
+		: m_IndexCount(static_cast<uint32_t>(buffer->Count()))
 	{
 		glCreateBuffers(1, &m_Handle);
 
