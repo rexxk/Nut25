@@ -24,6 +24,8 @@ namespace Nut
 
 		bool UnitTexture{ false };
 		glm::vec4 Color{ 1.0f, 0.0f, 1.0f, 1.0f };
+
+		bool FramebufferAttachment{ false };
 	};
 
 
