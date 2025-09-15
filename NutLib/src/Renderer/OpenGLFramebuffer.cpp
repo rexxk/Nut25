@@ -5,6 +5,17 @@
 namespace Nut
 {
 
+	auto FramebufferAttachmentTypeToEnum(FramebufferAttachmentType type) -> GLenum
+	{
+		switch (type)
+		{
+			case FramebufferAttachmentType::Color: return GL_COLOR_ATTACHMENT0;
+			case FramebufferAttachmentType::Depth: return GL_DEPTH_ATTACHMENT;
+		}
+
+		return GL_NONE;
+	}
+
 
 	auto OpenGLFramebuffer::Create(const FramebufferSpecification& specification) -> Ref<OpenGLFramebuffer>
 	{
@@ -27,9 +38,10 @@ namespace Nut
 			textureSpec.Format = attachmentSpec.Format;
 
 			m_Attachments[attachmentSpec.Type] = Texture2D::Create(textureSpec);
+
+			glNamedFramebufferTexture(m_ID, FramebufferAttachmentTypeToEnum(attachmentSpec.Type), m_Attachments[attachmentSpec.Type]->ID(), 0);
 		}
 
-//		glNamedFramebufferTexture()
 
 	}
 

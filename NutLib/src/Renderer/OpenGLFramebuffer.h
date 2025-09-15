@@ -42,6 +42,9 @@ namespace Nut
 		OpenGLFramebuffer(const FramebufferSpecification& specification);
 		~OpenGLFramebuffer();
 
+		auto GetColorAttachment() -> Ref<Texture2D> { return m_Attachments[FramebufferAttachmentType::Color]; }
+		auto GetDepthAttachment() -> Ref<Texture2D> { return m_Attachments[FramebufferAttachmentType::Depth]; }
+
 		auto ID() const -> const GLuint { return m_ID; }
 
 	private:

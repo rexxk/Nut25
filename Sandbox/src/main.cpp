@@ -23,8 +23,6 @@ public:
 
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 
-		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadFlatShader());
-
 		std::vector<Nut::Vertex> vertices{
 			{ .Position{ -0.5f, -0.5f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{ 0.0f, 0.0f }, .Color{ 1.0f, 0.0f, 0.0f, 1.0f }},
 			{ .Position{  0.5f, -0.5f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{ 1.0f, 0.0f }, .Color{ 0.0f, 1.0f, 0.0f, 1.0f }},

@@ -8,6 +8,7 @@
 
 #include "Renderer/Mesh.h"
 #include "Renderer/OpenGLBuffer.h"
+#include "Renderer/OpenGLFramebuffer.h"
 #include "Renderer/OpenGLShader.h"
 #include "Renderer/Renderer.h"
 

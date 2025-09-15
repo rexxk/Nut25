@@ -16,6 +16,30 @@ namespace Nut
 		return CreateRef<Mesh>(vertexBuffers, indexBuffer, shaderName);
 	}
 
+	auto Mesh::CreateRectangle(const std::string& shaderName) -> Ref<Mesh>
+	{
+		std::vector<Vertex> vertices
+		{
+			{ .Position{-0.5f, -0.5f, 0.0f}, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{0.0f, 0.0f}},
+			{ .Position{ 0.5f, -0.5f, 0.0f}, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{1.0f, 0.0f}},
+			{ .Position{ 0.5f,  0.5f, 0.0f}, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{1.0f, 1.0f}},
+			{ .Position{-0.5f,  0.5f, 0.0f}, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{0.0f, 1.0f}},
+		};
+
+		std::vector<uint32_t> indices
+		{
+			0, 1, 2, 2, 3, 0,
+		};
+
+		Ref<Buffer> vertexBuffer = Buffer::Create(vertices.data(), vertices.size(), sizeof(Vertex));
+		Ref<Buffer> indexBuffer = Buffer::Create(indices.data(), indices.size(), sizeof(uint32_t));
+
+		Ref<VertexBuffer> vb = VertexBuffer::Create(vertexBuffer);
+		Ref<IndexBuffer> ib = IndexBuffer::Create(indexBuffer);
+
+		return CreateRef<Mesh>(std::vector<Ref<VertexBuffer>>{vb}, ib, shaderName);
+
+	}
 
 	Mesh::Mesh(const std::vector<Ref<VertexBuffer>>& vertexBuffers, Ref<IndexBuffer> indexBuffer, const std::string& shaderName)
 		: m_VertexBuffers(vertexBuffers), m_IndexBuffer(indexBuffer)
