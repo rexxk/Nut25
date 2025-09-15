@@ -40,13 +40,19 @@ namespace Nut
 
 		{
 			Nut::FramebufferAttachment colorAttachment{};
-			colorAttachment.Type = Nut::FramebufferAttachmentType::Color;
-			colorAttachment.Format = GL_RGBA;
+			colorAttachment.Type = FramebufferAttachmentType::Color;
+			colorAttachment.Format = GL_RGBA8;
 			
 			framebufferSpec.Attachments.emplace_back(colorAttachment);
+
+			Nut::FramebufferAttachment depthAttachment{};
+			depthAttachment.Type = FramebufferAttachmentType::Depth;
+			depthAttachment.Format = GL_DEPTH_COMPONENT32F;
+
+			framebufferSpec.Attachments.emplace_back(depthAttachment);
 		}
 
-		s_SceneData.FlatFramebuffer = Nut::OpenGLFramebuffer::Create(framebufferSpec);
+		s_SceneData.FlatFramebuffer = OpenGLFramebuffer::Create(framebufferSpec);
 
 		s_SceneData.DrawRectangle = Mesh::CreateRectangle("FlatShader");
 

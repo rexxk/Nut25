@@ -75,13 +75,12 @@ namespace Nut
 			m_Attachments[attachmentSpec.Type].reset(new Texture2D(textureSpec));
 
 			glNamedFramebufferTexture(m_ID, FramebufferAttachmentTypeToEnum(attachmentSpec.Type), m_Attachments[attachmentSpec.Type]->ID(), 0);
-
-			if (glCheckNamedFramebufferStatus(m_ID, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			{
-				LOG_CORE_ERROR("Framebuffer is not complete!");
-			}
 		}
 
+		if (glCheckNamedFramebufferStatus(m_ID, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		{
+			LOG_CORE_ERROR("Framebuffer is not complete!");
+		}
 
 	}
 

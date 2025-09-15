@@ -23,6 +23,9 @@ FetchContent_MakeAvailable(glm)
 FetchContent_Declare(stbimage GIT_REPOSITORY https://github.com/nothings/stb GIT_TAG master)
 FetchContent_MakeAvailable(stbimage)
 
+FetchContent_Declare(imgui GIT_REPOSITORY https://github.com/ocornut/imgui GIT_TAG docking)
+FetchContent_MakeAvailable(imgui)
+
 # Project
 
 project("Nut25")
@@ -36,15 +39,28 @@ add_library(glad ${PROJECT_SOURCE_DIR}/${glad_SOURCE_DIR}/src/glad.c)
 
 target_include_directories(glad PRIVATE ${glad_SOURCE_DIR}/include)
 
+# imgui static library
+
+add_library(imgui ${imgui_SOURCE_DIR}/imgui.cpp
+				  ${imgui_SOURCE_DIR}/imgui_demo.cpp
+				  ${imgui_SOURCE_DIR}/imgui_draw.cpp
+				  ${imgui_SOURCE_DIR}/imgui_tables.cpp
+				  ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+				  ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+				  ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+)
+
+target_include_directories(imgui PRIVATE ${imgui_SOURCE_DIR} ${glfw_SOURCE_DIR}/include)
+
 # NutLib static library
 
 set(NutLib_SOURCE_DIR "NutLib/src")
 
 add_subdirectory(NutLib)
 
-target_link_directories(NutLib PRIVATE glad glfw)
-target_link_libraries(NutLib PRIVATE glad glfw)
-target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR} ${stbimage_SOURCE_DIR})
+target_link_directories(NutLib PRIVATE glad glfw imgui)
+target_link_libraries(NutLib PRIVATE glad glfw imgui)
+target_include_directories(NutLib PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR} ${stbimage_SOURCE_DIR} ${imgui_SOURCE_DIR})
 
 
 # Sandbox
@@ -54,4 +70,4 @@ add_subdirectory(Sandbox)
 set_property(TARGET Sandbox PROPERTY DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Sandbox")
 
 target_link_libraries(Sandbox PRIVATE NutLib)
-target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR} ${stbimage_SOURCE_DIR})
+target_include_directories(Sandbox PRIVATE ${NutLib_SOURCE_DIR} ${glad_SOURCE_DIR}/include ${glfw_SOURCE_DIR}/include ${glm_SOURCE_DIR} ${stbimage_SOURCE_DIR} ${imgui_SOURCE_DIR})
