@@ -1,5 +1,9 @@
 #include "Renderer/OpenGLFramebuffer.h"
 
+#include "Core/Log.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 namespace Nut
@@ -40,6 +44,11 @@ namespace Nut
 			m_Attachments[attachmentSpec.Type] = Texture2D::Create(textureSpec);
 
 			glNamedFramebufferTexture(m_ID, FramebufferAttachmentTypeToEnum(attachmentSpec.Type), m_Attachments[attachmentSpec.Type]->ID(), 0);
+
+			if (glCheckNamedFramebufferStatus(m_ID, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			{
+				LOG_CORE_ERROR("Framebuffer is not complete!");
+			}
 		}
 
 
@@ -51,5 +60,19 @@ namespace Nut
 			glDeleteFramebuffers(1, &m_ID);
 	}
 
+	auto OpenGLFramebuffer::Clear() -> void
+	{
+		glm::vec4 clearColor{ 1.0f, 0.0f, 1.0f, 1.0f };
+		float clearDepth = 0.0f;
+
+		for (auto& [type, attachment] : m_Attachments)
+		{
+			switch (type)
+			{
+			case FramebufferAttachmentType::Color: glClearNamedFramebufferfv(m_ID, GL_COLOR, 0, glm::value_ptr(clearColor)); break;
+			case FramebufferAttachmentType::Depth: glClearNamedFramebufferfv(m_ID, GL_DEPTH, 0, &clearDepth);  break;
+			}
+		}
+	}
 
 }

@@ -2,6 +2,7 @@
 
 #include "Core/Log.h"
 #include "Events/EventHandler.h"
+#include "Renderer/OpenGLShader.h"
 
 #include <cstdint>
 #include <format>
@@ -28,6 +29,8 @@ namespace Nut
 	Ref<RendererContext> RendererContext::Create(int32_t windowWidth, int32_t windowHeight)
 	{
 		LOG_CORE_INFO("RenderContext created, size {},{}", windowWidth, windowHeight);
+
+		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadFlatShader());
 
 		return CreateRef<RendererContext>(windowWidth, windowHeight);
 	}

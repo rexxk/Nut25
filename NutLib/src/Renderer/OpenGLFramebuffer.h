@@ -45,6 +45,8 @@ namespace Nut
 		auto GetColorAttachment() -> Ref<Texture2D> { return m_Attachments[FramebufferAttachmentType::Color]; }
 		auto GetDepthAttachment() -> Ref<Texture2D> { return m_Attachments[FramebufferAttachmentType::Depth]; }
 
+		auto Clear() -> void;
+
 		auto ID() const -> const GLuint { return m_ID; }
 
 	private:

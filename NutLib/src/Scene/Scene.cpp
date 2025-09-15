@@ -31,9 +31,7 @@ namespace Nut
 
 
 	Scene::Scene()
-	{
-		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadFlatShader());
-		
+	{		
 		s_SceneData.NearestSampler = Sampler::Create(GL_NEAREST);
 
 		Nut::FramebufferSpecification framebufferSpec{};
@@ -69,8 +67,10 @@ namespace Nut
 
 			glViewport(0, 0, 256, 256);
 
-			glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			s_SceneData.FlatFramebuffer->Clear();
+
+//			glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+//			glClear(GL_COLOR_BUFFER_BIT);
 
 
 			shader->SetUniform("u_Texture", 0);
