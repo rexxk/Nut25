@@ -17,6 +17,7 @@ namespace Nut
 	{
 	public:
 		static auto Create(const std::vector<Ref<VertexBuffer>>& vertexBuffers, Ref<IndexBuffer> indexBuffer, const std::string& shader) -> Ref<Mesh>;
+		static auto CreateTriangle(const std::string& shaderName) -> Ref<Mesh>;
 		static auto CreateRectangle(const std::string& shaderName) -> Ref<Mesh>;
 
 		Mesh(const std::vector<Ref<VertexBuffer>>& vertexBuffers, Ref<IndexBuffer> indexBuffer, const std::string& shader);

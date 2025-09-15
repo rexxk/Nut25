@@ -16,6 +16,27 @@ namespace Nut
 		return CreateRef<Mesh>(vertexBuffers, indexBuffer, shaderName);
 	}
 
+	auto Mesh::CreateTriangle(const std::string& shaderName) -> Ref<Mesh>
+	{
+		std::vector<Nut::Vertex> vertices{
+			{.Position{ -0.5f, -0.5f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{ 0.0f, 0.0f }, .Color{ 1.0f, 0.0f, 0.0f, 1.0f }},
+			{.Position{  0.5f, -0.5f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{ 1.0f, 0.0f }, .Color{ 0.0f, 1.0f, 0.0f, 1.0f }},
+			{.Position{  0.0f,  0.5f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{ 1.0f, 1.0f }, .Color{ 0.0f, 0.0f, 1.0f, 1.0f }},
+		};
+
+		std::vector<uint32_t> indices{
+			0, 1, 2,
+		};
+
+		Ref<Buffer> vertexBuffer = Nut::Buffer::Create(vertices.data(), vertices.size(), sizeof(Nut::Vertex));
+		Ref<Buffer> indexBuffer = Nut::Buffer::Create(indices.data(), indices.size(), sizeof(uint32_t));
+
+		Ref<Nut::VertexBuffer> vb = Nut::VertexBuffer::Create(vertexBuffer);
+		Ref<Nut::IndexBuffer> ib = Nut::IndexBuffer::Create(indexBuffer);
+
+		return CreateRef<Mesh>(std::vector<Ref<VertexBuffer>>{vb}, ib, shaderName);
+	}
+
 	auto Mesh::CreateRectangle(const std::string& shaderName) -> Ref<Mesh>
 	{
 		std::vector<Vertex> vertices

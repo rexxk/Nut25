@@ -65,10 +65,17 @@ namespace Nut
 
 	}
 
+	auto Scene::Update(double ts) -> void
+	{
+
+	}
 
 	auto Scene::Draw() -> void
 	{
 		OpenGLShader::ReleaseBinding();
+
+		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
+		glViewport(0, 0, windowWidth, windowHeight);
 
 		{
 			auto shader = ShaderLibrary::Get("FlatShader");
@@ -78,14 +85,7 @@ namespace Nut
 
 			glBindFramebuffer(GL_FRAMEBUFFER, s_SceneData.FlatFramebuffer->ID());
 
-			auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
-			glViewport(0, 0, windowWidth, windowHeight);
-
 			s_SceneData.FlatFramebuffer->Clear();
-
-//			glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
-//			glClear(GL_COLOR_BUFFER_BIT);
-
 
 			shader->SetUniform("u_Texture", 0);
 

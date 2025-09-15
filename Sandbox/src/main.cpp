@@ -23,24 +23,8 @@ public:
 
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 
-		std::vector<Nut::Vertex> vertices{
-			{ .Position{ -0.5f, -0.5f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{ 0.0f, 0.0f }, .Color{ 1.0f, 0.0f, 0.0f, 1.0f }},
-			{ .Position{  0.5f, -0.5f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{ 1.0f, 0.0f }, .Color{ 0.0f, 1.0f, 0.0f, 1.0f }},
-			{ .Position{  0.0f,  0.5f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .TexCoord{ 1.0f, 1.0f }, .Color{ 0.0f, 0.0f, 1.0f, 1.0f }},
-		};
 
-		std::vector<uint32_t> indices{
-			0, 1, 2,
-		};
-
-		m_VertexData = Nut::Buffer::Create(vertices.data(), vertices.size(), sizeof(Nut::Vertex));
-		m_IndexData = Nut::Buffer::Create(indices.data(), indices.size(), sizeof(uint32_t));
-
-
-		Ref<Nut::VertexBuffer> vb = Nut::VertexBuffer::Create(m_VertexData);
-		Ref<Nut::IndexBuffer> ib = Nut::IndexBuffer::Create(m_IndexData);
-
-		auto mesh = Nut::Mesh::Create({ vb }, ib, "FlatShader");
+		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
 
 		Nut::TextureSpecification texSpec{};
 		texSpec.Filepath = "Assets/Textures/texture.png";
@@ -66,6 +50,7 @@ public:
 	{
 		m_RendererContext->BeginScene();
 
+		m_Scene.Update(timestep);
 		m_Scene.Draw();
 	}
 

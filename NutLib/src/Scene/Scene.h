@@ -14,6 +14,7 @@ namespace Nut
 	public:
 		Scene();
 
+		auto Update(double ts) -> void;
 		auto Draw() -> void;
 
 		auto AddEntity(Ref<Entity> entity) -> void;
