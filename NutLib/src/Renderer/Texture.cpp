@@ -35,7 +35,7 @@ namespace Nut
 		else if (specification.FramebufferAttachment)
 		{
 			glTextureStorage2D(m_ID, 1, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, specification.Width, specification.Height);
-			glTextureSubImage2D(m_ID, 0, 0, 0, specification.Width, specification.Height, specification.Format, GL_UNSIGNED_BYTE, nullptr);
+//			glTextureSubImage2D(m_ID, 0, 0, 0, specification.Width, specification.Height, specification.Format, GL_UNSIGNED_BYTE, nullptr);
 		}
 		else
 		{

@@ -30,6 +30,8 @@ namespace Nut
 		uint32_t Width{ 1u };
 		uint32_t Height{ 1u };
 
+		bool Resizeable{ true };
+
 		std::vector<FramebufferAttachment> Attachments{};
 	};
 
@@ -48,6 +50,9 @@ namespace Nut
 		auto Clear() -> void;
 
 		auto ID() const -> const GLuint { return m_ID; }
+
+	private:
+		auto Resize() -> void;
 
 	private:
 		GLuint m_ID{ 0 };

@@ -42,7 +42,7 @@ namespace Nut
 			Nut::FramebufferAttachment colorAttachment{};
 			colorAttachment.Type = Nut::FramebufferAttachmentType::Color;
 			colorAttachment.Format = GL_RGBA;
-
+			
 			framebufferSpec.Attachments.emplace_back(colorAttachment);
 		}
 

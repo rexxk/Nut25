@@ -1,6 +1,7 @@
 #include "Renderer/OpenGLFramebuffer.h"
 
 #include "Core/Log.h"
+#include "Events/EventHandler.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -30,18 +31,48 @@ namespace Nut
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& specification)
 		: m_Specification(specification)
 	{
+		Resize();
+
+		if (m_Specification.Resizeable)
+		{
+			EventHandler::Subscribe(EventType::WindowSize, [&](Ref<Event> event)
+				{
+					Ref<WindowResizedEvent> e = std::dynamic_pointer_cast<WindowResizedEvent>(event);
+
+					m_Specification.Width = static_cast<uint32_t>(e->Width());
+					m_Specification.Height = static_cast<uint32_t>(e->Height());
+
+					Resize();
+				});
+		}
+	}
+
+	OpenGLFramebuffer::~OpenGLFramebuffer()
+	{
+		if (m_ID != 0)
+			glDeleteFramebuffers(1, &m_ID);
+	}
+
+	auto OpenGLFramebuffer::Resize() -> void
+	{
+		if (m_ID != 0)
+			glDeleteFramebuffers(1, &m_ID);
+
+		if (!m_Attachments.empty())
+			m_Attachments.clear();
+
 		glCreateFramebuffers(1, &m_ID);
 
-		for (auto& attachmentSpec : specification.Attachments)
+		for (auto& attachmentSpec : m_Specification.Attachments)
 		{
 			TextureSpecification textureSpec{};
 			textureSpec.FramebufferAttachment = true;
 
-			textureSpec.Width = specification.Width;
-			textureSpec.Height = specification.Height;
+			textureSpec.Width = m_Specification.Width;
+			textureSpec.Height = m_Specification.Height;
 			textureSpec.Format = attachmentSpec.Format;
 
-			m_Attachments[attachmentSpec.Type] = Texture2D::Create(textureSpec);
+			m_Attachments[attachmentSpec.Type].reset(new Texture2D(textureSpec));
 
 			glNamedFramebufferTexture(m_ID, FramebufferAttachmentTypeToEnum(attachmentSpec.Type), m_Attachments[attachmentSpec.Type]->ID(), 0);
 
@@ -52,12 +83,6 @@ namespace Nut
 		}
 
 
-	}
-
-	OpenGLFramebuffer::~OpenGLFramebuffer()
-	{
-		if (m_ID != 0)
-			glDeleteFramebuffers(1, &m_ID);
 	}
 
 	auto OpenGLFramebuffer::Clear() -> void
