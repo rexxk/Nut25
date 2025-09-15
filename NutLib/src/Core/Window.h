@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 
 #include <cstdint>
+#include <tuple>
 #include <string>
 
 
@@ -39,6 +40,8 @@ namespace Nut
 		auto HandleEvents() -> void;
 
 		auto Swap() -> void;
+
+		auto GetSize() const -> const std::pair<int32_t, int32_t> { return std::make_pair(m_Specification.Width, m_Specification.Height); }
 
 		auto GetRendererContext() -> Ref<RendererContext> { return m_RendererContext; }
 

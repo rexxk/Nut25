@@ -1,5 +1,7 @@
 #include "Scene/Scene.h"
 
+#include "Core/Application.h"
+#include "Core/Window.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/OpenGLFramebuffer.h"
 #include "Renderer/OpenGLShader.h"
@@ -24,6 +26,8 @@ namespace Nut
 		Ref<Sampler> NearestSampler{ nullptr };
 
 		Ref<OpenGLFramebuffer> FlatFramebuffer{ nullptr };
+	
+		Ref<Window> Window{ nullptr };
 	};
 
 
@@ -32,11 +36,14 @@ namespace Nut
 
 	Scene::Scene()
 	{		
+		s_SceneData.Window = Application::Get().GetWindow();
+		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
+
 		s_SceneData.NearestSampler = Sampler::Create(GL_NEAREST);
 
 		Nut::FramebufferSpecification framebufferSpec{};
-		framebufferSpec.Width = 256;
-		framebufferSpec.Height = 256;
+		framebufferSpec.Width = static_cast<uint32_t>(windowWidth);
+		framebufferSpec.Height = static_cast<uint32_t>(windowHeight);
 
 		{
 			Nut::FramebufferAttachment colorAttachment{};
@@ -71,7 +78,8 @@ namespace Nut
 
 			glBindFramebuffer(GL_FRAMEBUFFER, s_SceneData.FlatFramebuffer->ID());
 
-			glViewport(0, 0, 256, 256);
+			auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
+			glViewport(0, 0, windowWidth, windowHeight);
 
 			s_SceneData.FlatFramebuffer->Clear();
 
