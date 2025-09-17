@@ -6,6 +6,7 @@
 #include "Renderer/OpenGLFramebuffer.h"
 #include "Renderer/OpenGLShader.h"
 #include "Renderer/Texture.h"
+#include "Scene/Camera.h"
 #include "Scene/Entity.h"
 
 #include <vector>
@@ -28,16 +29,26 @@ namespace Nut
 		Ref<OpenGLFramebuffer> FlatFramebuffer{ nullptr };
 	
 		Ref<Window> Window{ nullptr };
+
+		Ref<Camera> SceneCamera{ nullptr };
 	};
 
 
 	static SceneData s_SceneData;
 
 
+	auto Camera::Create(const glm::vec3& position, const glm::vec3& rotation, int32_t canvasWidth, int32_t canvasHeight) -> Ref<Camera>
+	{
+		return CreateRef<Camera>(position, rotation, canvasWidth, canvasHeight);
+	}
+
+
 	Scene::Scene()
 	{		
 		s_SceneData.Window = Application::Get().GetWindow();
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
+
+		s_SceneData.SceneCamera = Camera::Create(glm::vec3{ 3.0f, 3.0f, -5.0f }, glm::vec3{ 0.0f }, windowWidth, windowHeight);
 
 		s_SceneData.NearestSampler = Sampler::Create(GL_NEAREST);
 
@@ -87,6 +98,7 @@ namespace Nut
 
 			s_SceneData.FlatFramebuffer->Clear();
 
+			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
 			shader->SetUniform("u_Texture", 0);
 
 			for (auto& entity : s_SceneData.Entities)

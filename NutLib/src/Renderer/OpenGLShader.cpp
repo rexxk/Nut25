@@ -187,9 +187,11 @@ namespace Nut
 				out vec4 v_Color;
 				out float v_Zpos;
 
+				uniform mat4 u_ViewProjection;
+
 				void main() 
 				{
-					gl_Position = vec4(a_Position, 1.0);
+					gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 
 					v_TexCoord = a_TexCoord;
 					v_Color = a_Color;

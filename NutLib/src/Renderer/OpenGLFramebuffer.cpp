@@ -93,8 +93,8 @@ namespace Nut
 		{
 			switch (type)
 			{
-			case FramebufferAttachmentType::Color: glClearNamedFramebufferfv(m_ID, GL_COLOR, 0, glm::value_ptr(clearColor)); break;
-			case FramebufferAttachmentType::Depth: glClearNamedFramebufferfv(m_ID, GL_DEPTH, 0, &clearDepth);  break;
+				case FramebufferAttachmentType::Color: glClearNamedFramebufferfv(m_ID, GL_COLOR, 0, glm::value_ptr(clearColor)); break;
+				case FramebufferAttachmentType::Depth: glClearNamedFramebufferfv(m_ID, GL_DEPTH, 0, &clearDepth);  break;
 			}
 		}
 	}
