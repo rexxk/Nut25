@@ -31,6 +31,7 @@ namespace Nut
 		LOG_CORE_INFO("RenderContext created, size {},{}", windowWidth, windowHeight);
 
 		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadFlatShader());
+		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadCompositionShader());
 
 		return CreateRef<RendererContext>(windowWidth, windowHeight);
 	}

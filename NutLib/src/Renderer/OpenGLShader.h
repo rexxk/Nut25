@@ -43,6 +43,7 @@ namespace Nut
 	public:
 		static auto LoadFromFile(const std::filesystem::path& vertexShaderFile, const std::filesystem::path& fragmentShaderPath) -> Ref<OpenGLShader>;
 		static auto LoadFlatShader() -> Ref<OpenGLShader>;
+		static auto LoadCompositionShader() -> Ref<OpenGLShader>;
 
 		OpenGLShader(const std::filesystem::path& vertexShaderFile, const std::filesystem::path& framgentShaderPath);
 		OpenGLShader(const std::string& shaderName, const std::unordered_map<Domain, std::string>& shaderSources);

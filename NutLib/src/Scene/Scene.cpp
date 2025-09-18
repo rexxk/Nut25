@@ -27,10 +27,10 @@ namespace Nut
 		Ref<Sampler> NearestSampler{ nullptr };
 
 		Ref<OpenGLFramebuffer> FlatFramebuffer{ nullptr };
-	
-		Ref<Window> Window{ nullptr };
 
 		Ref<Camera> SceneCamera{ nullptr };
+
+		Ref<Window> Window{ nullptr };
 	};
 
 
@@ -109,12 +109,13 @@ namespace Nut
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-
 		{
-			s_SceneData.FlatFramebuffer->GetColorAttachment()->BindToSlot(0);
+			ShaderLibrary::Get("CompositionShader")->Bind();
 
+			s_SceneData.FlatFramebuffer->GetColorAttachment()->BindToSlot(0);
 			s_SceneData.DrawRectangle->Draw();
 		}
+
 
 
 	}
