@@ -49,6 +49,7 @@ namespace Nut
 		glm::mat4 ViewProjectionMatrix;
 	};
 
+	static ViewProjectionUniform s_ViewProjectionUniform;
 
 	auto Camera::Create(const glm::vec3& position, const glm::vec3& rotation, int32_t canvasWidth, int32_t canvasHeight) -> Ref<Camera>
 	{
@@ -63,11 +64,8 @@ namespace Nut
 
 		s_SceneData.SceneCamera = Camera::Create(glm::vec3{ 3.0f, 3.0f, -5.0f }, glm::vec3{ 0.0f }, windowWidth, windowHeight);
 
-		ViewProjectionUniform viewProjectionUniform{ .ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix() };
-		s_SceneBuffers.ViewProjectionBuffer = Buffer::Create((const void*)&viewProjectionUniform, 1, sizeof(ViewProjectionUniform));
-
-		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(s_SceneBuffers.ViewProjectionBuffer);
-
+		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
+		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
 
 		s_SceneData.NearestSampler = Sampler::Create(GL_NEAREST);
 
@@ -97,8 +95,8 @@ namespace Nut
 
 	auto Scene::Update(double ts) -> void
 	{
-		ViewProjectionUniform viewProjectionUniform{ .ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix() };
-		s_SceneBuffers.ViewProjectionBuffer->SetData((const void*)&viewProjectionUniform, sizeof(ViewProjectionUniform));
+		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
+		s_SceneData.ViewProjectionUniformBuffer->SetData(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
 	}
 
 	auto Scene::Draw() -> void

@@ -64,11 +64,23 @@ namespace Nut
 		return CreateRef<UniformBuffer>(buffer);
 	}
 
+	auto UniformBuffer::Create(const void* data, uint32_t size) -> Ref<UniformBuffer>
+	{
+		return CreateRef<UniformBuffer>(data, size);
+	}
+
 	UniformBuffer::UniformBuffer(Ref<Buffer> buffer)
 	{
 		glCreateBuffers(1, &m_Handle);
 
 		SetData(buffer);
+	}
+
+	UniformBuffer::UniformBuffer(const void* data, uint32_t size)
+	{
+		glCreateBuffers(1, &m_Handle);
+
+		SetData(data, size);
 	}
 
 	UniformBuffer::~UniformBuffer()
@@ -80,6 +92,11 @@ namespace Nut
 	auto UniformBuffer::SetData(Ref<Buffer> buffer) -> void
 	{
 		glNamedBufferData(m_Handle, buffer->Size(), buffer->Data(), GL_STATIC_DRAW);
+	}
+
+	auto UniformBuffer::SetData(const void* data, uint32_t size) -> void
+	{
+		glNamedBufferData(m_Handle, size, data, GL_STATIC_DRAW);
 	}
 
 	auto UniformBuffer::Bind() const -> void
