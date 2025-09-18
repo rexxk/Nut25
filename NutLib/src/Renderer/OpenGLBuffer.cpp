@@ -58,4 +58,33 @@ namespace Nut
 		glNamedBufferData(m_Handle, buffer->Size(), buffer->Data(), GL_STATIC_DRAW);
 	}
 
+
+	auto UniformBuffer::Create(Ref<Buffer> buffer) -> Ref<UniformBuffer>
+	{
+		return CreateRef<UniformBuffer>(buffer);
+	}
+
+	UniformBuffer::UniformBuffer(Ref<Buffer> buffer)
+	{
+		glCreateBuffers(1, &m_Handle);
+
+		SetData(buffer);
+	}
+
+	UniformBuffer::~UniformBuffer()
+	{
+		if (m_Handle != 0)
+			glDeleteBuffers(1, &m_Handle);
+	}
+
+	auto UniformBuffer::SetData(Ref<Buffer> buffer) -> void
+	{
+		glNamedBufferData(m_Handle, buffer->Size(), buffer->Data(), GL_STATIC_DRAW);
+	}
+
+	auto UniformBuffer::Bind() const -> void
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, m_Handle);
+	}
+
 }

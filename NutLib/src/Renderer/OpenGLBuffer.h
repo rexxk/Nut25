@@ -49,4 +49,22 @@ namespace Nut
 		uint32_t m_IndexCount{ 0 };
 	};
 
+
+	class UniformBuffer
+	{
+	public:
+		static auto Create(Ref<Buffer> buffer) -> Ref<UniformBuffer>;
+
+		UniformBuffer(Ref<Buffer> buffer);
+		~UniformBuffer();
+
+		auto SetData(Ref<Buffer> buffer) -> void;
+
+		auto Bind() const -> void;
+
+		auto Handle() const -> const GLuint { return m_Handle; }
+
+	private:
+		GLuint m_Handle{ 0 };
+	};
 }

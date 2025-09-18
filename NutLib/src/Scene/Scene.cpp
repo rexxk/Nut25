@@ -29,12 +29,25 @@ namespace Nut
 		Ref<OpenGLFramebuffer> FlatFramebuffer{ nullptr };
 
 		Ref<Camera> SceneCamera{ nullptr };
+		Ref<UniformBuffer> ViewProjectionUniformBuffer{ nullptr };
 
 		Ref<Window> Window{ nullptr };
 	};
 
-
 	static SceneData s_SceneData;
+
+	struct SceneBuffers
+	{
+		Ref<Buffer> ViewProjectionBuffer{ nullptr };
+	};
+
+	static SceneBuffers s_SceneBuffers;
+
+
+	struct ViewProjectionUniform
+	{
+		glm::mat4 ViewProjectionMatrix;
+	};
 
 
 	auto Camera::Create(const glm::vec3& position, const glm::vec3& rotation, int32_t canvasWidth, int32_t canvasHeight) -> Ref<Camera>
@@ -49,6 +62,12 @@ namespace Nut
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
 
 		s_SceneData.SceneCamera = Camera::Create(glm::vec3{ 3.0f, 3.0f, -5.0f }, glm::vec3{ 0.0f }, windowWidth, windowHeight);
+
+		ViewProjectionUniform viewProjectionUniform{ .ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix() };
+		s_SceneBuffers.ViewProjectionBuffer = Buffer::Create((const void*)&viewProjectionUniform, 1, sizeof(ViewProjectionUniform));
+
+		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(s_SceneBuffers.ViewProjectionBuffer);
+
 
 		s_SceneData.NearestSampler = Sampler::Create(GL_NEAREST);
 
@@ -78,7 +97,8 @@ namespace Nut
 
 	auto Scene::Update(double ts) -> void
 	{
-
+		ViewProjectionUniform viewProjectionUniform{ .ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix() };
+		s_SceneBuffers.ViewProjectionBuffer->SetData((const void*)&viewProjectionUniform, sizeof(ViewProjectionUniform));
 	}
 
 	auto Scene::Draw() -> void
@@ -98,7 +118,8 @@ namespace Nut
 
 			s_SceneData.FlatFramebuffer->Clear();
 
-			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
+			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(ViewProjectionUniform));
+//			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
 			shader->SetUniform("u_Texture", 0);
 
 			for (auto& entity : s_SceneData.Entities)
