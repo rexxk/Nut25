@@ -84,7 +84,7 @@ namespace Nut
 
 			glVertexArrayAttribFormat(m_VAO, i, layoutInfo.Count, layoutInfo.Type, GL_FALSE, stride);
 
-			glVertexArrayAttribBinding(m_VAO, i, 0);
+			glVertexArrayAttribBinding(m_VAO, i, layoutInfo.VertexBufferPosition);
 
 			stride += layoutInfo.Size;
 		}

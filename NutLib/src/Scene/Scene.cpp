@@ -43,6 +43,12 @@ namespace Nut
 
 	static SceneBuffers s_SceneBuffers;
 
+	struct SceneDrawData
+	{
+		std::unordered_map<uint32_t, glm::mat4> InstanceMap;
+	};
+
+	static SceneDrawData s_SceneDrawData;
 
 	struct ViewProjectionUniform
 	{
@@ -97,10 +103,14 @@ namespace Nut
 	{
 		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
 		s_SceneData.ViewProjectionUniformBuffer->SetData(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
+
+
 	}
 
 	auto Scene::Draw() -> void
 	{
+		s_SceneDrawData.InstanceMap.clear();
+
 		OpenGLShader::ReleaseBinding();
 
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();

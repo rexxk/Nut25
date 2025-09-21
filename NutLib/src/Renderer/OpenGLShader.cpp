@@ -442,6 +442,8 @@ namespace Nut
 		GLsizei size{ 0 };
 		GLenum type{ GL_NONE };
 
+		uint32_t vertexBufferPosition{ 0 };
+
 		for (auto i = 0; i < attributeCount; i++)
 		{
 			glGetActiveAttrib(m_ProgramID, i, maxNameLength, &length, &size, &type, attributeName.get());
@@ -452,6 +454,14 @@ namespace Nut
 			layoutInfo.Count = EnumTypeToCount(type);
 			layoutInfo.Type = EnumTypeToGLType(type);
 			layoutInfo.Size = EnumTypeToLength(type);
+
+			if (type == GL_FLOAT_MAT4)
+			{
+				vertexBufferPosition++;
+				layoutInfo.IsMatrix = true;
+			}
+
+			layoutInfo.VertexBufferPosition = vertexBufferPosition;
 
 			m_Layout[location] = layoutInfo;
 

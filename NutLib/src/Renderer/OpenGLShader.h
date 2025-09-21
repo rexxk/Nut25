@@ -27,6 +27,10 @@ namespace Nut
 		GLsizei Count{ 0 };
 		GLsizei Size{ 0 };
 		GLenum Type{ GL_NONE };
+
+		uint32_t VertexBufferPosition{ 0 };
+
+		bool IsMatrix{ false };
 	};
 
 	class OpenGLShader
