@@ -29,7 +29,7 @@ namespace Nut
 
 		Entity(Ref<Mesh> mesh, Ref<Texture2D> teture);
 
-		auto& GetTransform() -> EntityTransform { return m_Transform; }
+		auto GetTransform() -> EntityTransform& { return m_Transform; }
 
 		auto Draw() -> void;
 
