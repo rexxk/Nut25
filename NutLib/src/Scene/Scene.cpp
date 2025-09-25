@@ -116,7 +116,7 @@ namespace Nut
 
 		for (auto& entity : s_SceneData.Entities)
 		{
-			s_SceneDrawData.InstanceMap[entity->GetMesh()->MeshID()].push_back(entity->GetTransform().TransformMatrix);
+			s_SceneDrawData.InstanceMap[entity->EntityID()].push_back(entity->GetTransform().TransformMatrix);
 		}
 
 
@@ -139,10 +139,16 @@ namespace Nut
 //			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
 			shader->SetUniform("u_Texture", 0);
 
-			for (auto& entity : s_SceneData.Entities)
+
+			for (auto& [entityID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
-				entity->Draw();
+				Renderer::DrawInstanced(entity, transformMatrices);
 			}
+
+//			for (auto& entity : s_SceneData.Entities)
+//			{
+//				entity->Draw();
+//			}
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
@@ -151,6 +157,8 @@ namespace Nut
 			ShaderLibrary::Get("CompositionShader")->Bind();
 
 			s_SceneData.FlatFramebuffer->GetColorAttachment()->BindToSlot(0);
+
+			Renderer::DrawMesh(s_SceneData.DrawRectangle);
 //			s_SceneData.DrawRectangle->Draw();
 		}
 
