@@ -6,6 +6,8 @@
 
 #include <glm/glm.hpp>
 
+#include "Core/UUID.h"
+
 
 namespace Nut
 {
@@ -33,12 +35,19 @@ namespace Nut
 
 		auto Draw() -> void;
 
+		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
+		auto EntityID() const -> const UUID { return m_EntityID; }
+
+		auto GetMesh() -> Ref<Mesh> { return m_Mesh; }
+
 	private:
 		Ref<Mesh> m_Mesh{ nullptr };
 
 		Ref<Texture2D> m_Texture{ nullptr };
 
 		EntityTransform m_Transform{};
+
+		UUID m_EntityID{};
 	};
 
 

@@ -24,7 +24,8 @@ public:
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 
 
-		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
+//		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
+		auto mesh = Nut::Mesh::CreateTriangle();
 
 		Nut::TextureSpecification texSpec{};
 		texSpec.Filepath = "Assets/Textures/texture.png";

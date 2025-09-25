@@ -1,8 +1,10 @@
 #include "Scene/Scene.h"
 
 #include "Core/Application.h"
+#include "Core/UUID.h"
 #include "Core/Window.h"
 #include "Renderer/Mesh.h"
+#include "Renderer/OpenGLBuffer.h"
 #include "Renderer/OpenGLFramebuffer.h"
 #include "Renderer/OpenGLShader.h"
 #include "Renderer/Texture.h"
@@ -45,7 +47,7 @@ namespace Nut
 
 	struct SceneDrawData
 	{
-		std::unordered_map<uint32_t, glm::mat4> InstanceMap;
+		std::unordered_map<UUID, std::vector<glm::mat4>> InstanceMap;
 	};
 
 	static SceneDrawData s_SceneDrawData;
@@ -95,7 +97,8 @@ namespace Nut
 
 		s_SceneData.FlatFramebuffer = OpenGLFramebuffer::Create(framebufferSpec);
 
-		s_SceneData.DrawRectangle = Mesh::CreateRectangle("FlatShader");
+//		s_SceneData.DrawRectangle = Mesh::CreateRectangle("FlatShader");
+		s_SceneData.DrawRectangle = Mesh::CreateRectangle();
 
 	}
 
@@ -110,6 +113,12 @@ namespace Nut
 	auto Scene::Draw() -> void
 	{
 		s_SceneDrawData.InstanceMap.clear();
+
+		for (auto& entity : s_SceneData.Entities)
+		{
+			s_SceneDrawData.InstanceMap[entity->GetMesh()->MeshID()].push_back(entity->GetTransform().TransformMatrix);
+		}
+
 
 		OpenGLShader::ReleaseBinding();
 
@@ -142,7 +151,7 @@ namespace Nut
 			ShaderLibrary::Get("CompositionShader")->Bind();
 
 			s_SceneData.FlatFramebuffer->GetColorAttachment()->BindToSlot(0);
-			s_SceneData.DrawRectangle->Draw();
+//			s_SceneData.DrawRectangle->Draw();
 		}
 
 

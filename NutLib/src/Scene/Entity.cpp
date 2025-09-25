@@ -24,7 +24,7 @@ namespace Nut
 
 		m_Texture->BindToSlot(0);
 
-		m_Mesh->Draw();
+//		m_Mesh->Draw();
 	}
 
 }
