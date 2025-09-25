@@ -16,9 +16,9 @@ namespace Nut
 //		return CreateRef<Mesh>(vertexBuffers, indexBuffer, shaderName);
 //	}
 
-	auto Mesh::Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices) -> Ref<Mesh>
+	auto Mesh::Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name) -> Ref<Mesh>
 	{
-		return CreateRef<Mesh>(vertices, indices);
+		return CreateRef<Mesh>(vertices, indices, name);
 	}
 
 	auto Mesh::CreateTriangle() -> Ref<Mesh>
@@ -42,7 +42,7 @@ namespace Nut
 //		Ref<Nut::VertexBuffer> vb = Nut::VertexBuffer::Create(vertexBuffer);
 //		Ref<Nut::IndexBuffer> ib = Nut::IndexBuffer::Create(indexBuffer);
 //
-		return CreateRef<Mesh>(vertices, indices);
+		return CreateRef<Mesh>(vertices, indices, "Triangle");
 	}
 
 	auto Mesh::CreateRectangle() -> Ref<Mesh>
@@ -66,7 +66,7 @@ namespace Nut
 //		Ref<VertexBuffer> vb = VertexBuffer::Create(vertexBuffer);
 //		Ref<IndexBuffer> ib = IndexBuffer::Create(indexBuffer);
 
-		return CreateRef<Mesh>(vertices, indices);
+		return CreateRef<Mesh>(vertices, indices, "Rectangle");
 
 	}
 
@@ -108,8 +108,8 @@ namespace Nut
 //
 //	}
 
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
-		: m_Vertices(vertices), m_Indices(indices)
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name)
+		: m_Vertices(vertices), m_Indices(indices), m_Name(name)
 	{
 
 	}

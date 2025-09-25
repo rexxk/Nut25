@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Assets/AssetManager.h"
 
 #include "Core/Base.h"
 #include "Core/Buffer.h"

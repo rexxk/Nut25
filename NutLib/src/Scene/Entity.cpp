@@ -7,13 +7,13 @@ namespace Nut
 {
 
 
-	auto Entity::Create(Ref<Mesh> mesh, Ref<Texture2D> texture) -> Ref<Entity>
+	auto Entity::Create(UUID meshID, Ref<Texture2D> texture) -> Ref<Entity>
 	{
-		return CreateRef<Entity>(mesh, texture);
+		return CreateRef<Entity>(meshID, texture);
 	}
 
-	Entity::Entity(Ref<Mesh> mesh, Ref<Texture2D> texture)
-		: m_Mesh(mesh), m_Texture(texture)
+	Entity::Entity(UUID meshID, Ref<Texture2D> texture)
+		: m_MeshID(meshID), m_Texture(texture)
 	{
 
 	}

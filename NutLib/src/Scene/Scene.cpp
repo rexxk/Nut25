@@ -142,7 +142,14 @@ namespace Nut
 
 			for (auto& [entityID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
-				Renderer::DrawInstanced(entity, transformMatrices);
+				for (auto& entity : s_SceneData.Entities)
+				{
+					if (entity->EntityID() == entityID)
+					{
+						Renderer::DrawInstanced(entity, transformMatrices);
+						break;
+					}
+				}
 			}
 
 //			for (auto& entity : s_SceneData.Entities)

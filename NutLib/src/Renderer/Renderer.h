@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Core/Base.h"
+#include "Scene/Entity.h"
+
 #include <glm/glm.hpp>
 
 
@@ -16,11 +19,16 @@ namespace Nut
 	};
 
 
+	class Mesh;
+
 	class Renderer
 	{
 	public:
 		static auto DrawTriangle() -> void;
 
+		static auto DrawInstanced(Ref<Entity> entity, const std::vector<glm::mat4>& transformMatrices) -> void;
+
+		static auto DrawMesh(Ref<Mesh> mesh) -> void;
 	};
 
 }

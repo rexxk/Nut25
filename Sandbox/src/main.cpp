@@ -25,7 +25,9 @@ public:
 
 
 //		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
-		auto mesh = Nut::Mesh::CreateTriangle();
+//		auto mesh = Nut::Mesh::CreateTriangle();
+		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateTriangle());
+
 
 		Nut::TextureSpecification texSpec{};
 		texSpec.Filepath = "Assets/Textures/texture.png";
@@ -37,7 +39,7 @@ public:
 
 		Ref<Nut::Texture2D> texture = Nut::Texture2D::Create(texSpec);
 
-		m_TestEntity = Nut::Entity::Create(mesh, texture);
+		m_TestEntity = Nut::Entity::Create(meshID, texture);
 
 		m_Scene.AddEntity(m_TestEntity);
 	}
