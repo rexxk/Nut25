@@ -25,9 +25,9 @@ namespace Nut
 	class Entity
 	{
 	public:
-		static auto Create(Ref<Mesh> mesh, Ref<Texture2D> textuer) -> Ref<Entity>;
+		static auto Create(Ref<Mesh> mesh, Ref<Texture2D> texture) -> Ref<Entity>;
 
-		Entity(Ref<Mesh> mesh, Ref<Texture2D> teture);
+		Entity(Ref<Mesh> mesh, Ref<Texture2D> texture);
 
 		auto GetTransform() -> EntityTransform& { return m_Transform; }
 
