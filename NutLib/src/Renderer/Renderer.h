@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Core/Base.h"
-#include "Scene/Entity.h"
+#include "Core/UUID.h"
 
 #include <glm/glm.hpp>
+
+#include <glad/glad.h>
 
 
 namespace Nut
@@ -20,13 +22,16 @@ namespace Nut
 
 
 	class Mesh;
+	struct ShaderLayoutInfo;
+
+
 
 	class Renderer
 	{
 	public:
 		static auto DrawTriangle() -> void;
 
-		static auto DrawInstanced(Ref<Entity> entity, const std::vector<glm::mat4>& transformMatrices) -> void;
+		static auto DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
 
 		static auto DrawMesh(Ref<Mesh> mesh) -> void;
 	};

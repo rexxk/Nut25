@@ -16,16 +16,23 @@ namespace Nut
 	{
 	public:
 		static auto Create(Ref<Buffer> buffer) -> Ref<VertexBuffer>;
+		static auto Create(const void* data, uint32_t size, uint32_t stride) -> Ref<VertexBuffer>;
 
 		VertexBuffer(Ref<Buffer> buffer);
+		VertexBuffer(const void* data, uint32_t size, uint32_t stride);
 		~VertexBuffer();
 
 		auto SetData(Ref<Buffer> buffer) -> void;
+		auto SetData(const void* data, uint32_t size) -> void;
 
 		auto Handle() const -> GLuint { return m_Handle; }
 
+		auto Stride() const -> const uint32_t { return m_Stride; }
+
 	private:
-		GLuint m_Handle{ 0 };
+		GLuint m_Handle{ 0l };
+
+		uint32_t m_Stride{ 0l };
 	};
 
 
@@ -33,11 +40,14 @@ namespace Nut
 	{
 	public:
 		static auto Create(Ref<Buffer> buffer) -> Ref<IndexBuffer>;
+		static auto Create(const void* data, uint32_t size) -> Ref<IndexBuffer>;
 
 		IndexBuffer(Ref<Buffer> buffer);
+		IndexBuffer(const void* data, uint32_t size);
 		~IndexBuffer();
 
 		auto SetData(Ref<Buffer> buffer) -> void;
+		auto SetData(const void* data, uint32_t size) -> void;
 
 		auto IndexCount() const -> uint32_t { return m_IndexCount; }
 

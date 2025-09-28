@@ -181,6 +181,7 @@ namespace Nut
 				layout(location = 1) in vec2 a_TexCoord;
 				layout(location = 2) in vec3 a_Normal;
 				layout(location = 3) in vec4 a_Color;
+				layout(location = 4) in mat4 a_InstanceMatrix;
 
 				layout(std140) uniform Camera
 				{
@@ -194,7 +195,7 @@ namespace Nut
 
 				void main() 
 				{
-					gl_Position = ViewProjection * vec4(a_Position, 1.0);
+					gl_Position = ViewProjection * a_InstanceMatrix * vec4(a_Position, 1.0);
 
 					v_TexCoord = a_TexCoord;
 					v_Color = a_Color;
@@ -442,8 +443,6 @@ namespace Nut
 		GLsizei size{ 0 };
 		GLenum type{ GL_NONE };
 
-		uint32_t vertexBufferPosition{ 0 };
-
 		for (auto i = 0; i < attributeCount; i++)
 		{
 			glGetActiveAttrib(m_ProgramID, i, maxNameLength, &length, &size, &type, attributeName.get());
@@ -455,9 +454,11 @@ namespace Nut
 			layoutInfo.Type = EnumTypeToGLType(type);
 			layoutInfo.Size = EnumTypeToLength(type);
 
+			uint32_t vertexBufferPosition{ 0 };
+
 			if (type == GL_FLOAT_MAT4)
 			{
-				vertexBufferPosition++;
+				vertexBufferPosition = 1;
 				layoutInfo.IsMatrix = true;
 			}
 

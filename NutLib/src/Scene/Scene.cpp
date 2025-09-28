@@ -116,7 +116,8 @@ namespace Nut
 
 		for (auto& entity : s_SceneData.Entities)
 		{
-			s_SceneDrawData.InstanceMap[entity->EntityID()].push_back(entity->GetTransform().TransformMatrix);
+			if (entity->ModelID() != 0)
+				s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(entity->GetTransform().TransformMatrix);
 		}
 
 
@@ -140,16 +141,9 @@ namespace Nut
 			shader->SetUniform("u_Texture", 0);
 
 
-			for (auto& [entityID, transformMatrices] : s_SceneDrawData.InstanceMap)
+			for (auto& [modelID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
-				for (auto& entity : s_SceneData.Entities)
-				{
-					if (entity->EntityID() == entityID)
-					{
-						Renderer::DrawInstanced(entity, transformMatrices);
-						break;
-					}
-				}
+				Renderer::DrawInstanced(modelID, transformMatrices, shader->GetLayout());
 			}
 
 //			for (auto& entity : s_SceneData.Entities)

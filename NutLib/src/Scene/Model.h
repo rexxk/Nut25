@@ -22,6 +22,7 @@ namespace Nut
 
 
 		auto ModelID() const -> const UUID { return m_ModelID; }
+		auto MeshIDs() const -> const std::vector<UUID> { return m_MeshIDs; }
 
 	private:
 		UUID m_ModelID{};
