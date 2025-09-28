@@ -14,4 +14,5 @@
 #include "Renderer/Renderer.h"
 
 #include "Scene/Entity.h"
+#include "Scene/Model.h"
 #include "Scene/Scene.h"

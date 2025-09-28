@@ -4,8 +4,6 @@
 #include "Core/Base.h"
 #include "Core/UUID.h"
 
-#include "Renderer/Texture.h"
-
 #include <glm/glm.hpp>
 
 
@@ -28,9 +26,9 @@ namespace Nut
 	class Entity
 	{
 	public:
-		static auto Create(UUID meshID, Ref<Texture2D> texture) -> Ref<Entity>;
+		static auto Create(UUID meshID) -> Ref<Entity>;
 
-		Entity(UUID meshID, Ref<Texture2D> texture);
+		Entity(UUID meshID);
 
 		auto GetTransform() -> EntityTransform& { return m_Transform; }
 
@@ -39,12 +37,10 @@ namespace Nut
 		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
 		auto EntityID() const -> const UUID { return m_EntityID; }
 
-		auto MeshID() -> const UUID { return m_MeshID; }
+		auto ModelID() -> const UUID { return m_ModelID; }
 
 	private:
-		UUID m_MeshID{};
-
-		Ref<Texture2D> m_Texture{ nullptr };
+		UUID m_ModelID{};
 
 		EntityTransform m_Transform{};
 

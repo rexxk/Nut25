@@ -39,7 +39,9 @@ public:
 
 		Ref<Nut::Texture2D> texture = Nut::Texture2D::Create(texSpec);
 
-		m_TestEntity = Nut::Entity::Create(meshID, texture);
+		auto triangleModelID = Nut::AssetManager::AddModel(Nut::Model::Create({meshID}, {{"texture", texture}}));
+
+		m_TestEntity = Nut::Entity::Create(triangleModelID);
 
 		m_Scene.AddEntity(m_TestEntity);
 	}
