@@ -157,11 +157,12 @@ namespace Nut
 		}
 
 		{
-			ShaderLibrary::Get("CompositionShader")->Bind();
+			auto shader = ShaderLibrary::Get("CompositionShader");
+			shader->Bind();
 
 			s_SceneData.FlatFramebuffer->GetColorAttachment()->BindToSlot(0);
 
-			Renderer::DrawMesh(s_SceneData.DrawRectangle);
+			Renderer::DrawMesh(s_SceneData.DrawRectangle, shader->GetLayout());
 //			s_SceneData.DrawRectangle->Draw();
 		}
 

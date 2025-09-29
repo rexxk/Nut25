@@ -115,8 +115,53 @@ namespace Nut
 		}
 	}
 	
-	auto Renderer::DrawMesh(Ref<Mesh> mesh) -> void
+	auto Renderer::DrawMesh(Ref<Mesh> mesh, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void
 	{
+		if (!s_RendererObjects.contains(mesh->MeshID()))
+		{
+			RendererObject newRendererObject{};
+
+			newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()), sizeof(Vertex)));
+			newRendererObject.IndexBuffer = IndexBuffer::Create(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size()) * sizeof(uint32_t));
+		
+			glCreateVertexArrays(1, &newRendererObject.VertexArrayObject);
+
+			GLuint stride{ 0 };
+
+			for (auto i = 0; i < shaderLayout.size(); i++)
+			{
+				if (shaderLayout.find(i) == shaderLayout.end())
+					continue;
+
+				auto& layoutInfo = shaderLayout.at(i);
+
+				glEnableVertexArrayAttrib(newRendererObject.VertexArrayObject, i);
+				glVertexArrayAttribFormat(newRendererObject.VertexArrayObject, i, layoutInfo.Count, layoutInfo.Type, GL_FALSE, stride);
+
+				glVertexArrayAttribBinding(newRendererObject.VertexArrayObject, i, layoutInfo.VertexBufferPosition);
+
+				stride += layoutInfo.Size;
+			}
+
+			uint32_t i = 0;
+
+			for (auto& vertexBuffer : newRendererObject.VertexBuffers)
+			{
+				glVertexArrayVertexBuffer(newRendererObject.VertexArrayObject, i++, vertexBuffer->Handle(), 0, vertexBuffer->Stride());
+			}
+
+			glVertexArrayElementBuffer(newRendererObject.VertexArrayObject, newRendererObject.IndexBuffer->Handle());
+
+			s_RendererObjects[mesh->MeshID()] = newRendererObject;
+		}
+		else
+		{
+			auto& rendererObject = s_RendererObjects[mesh->MeshID()];
+
+			glBindVertexArray(rendererObject.VertexArrayObject);
+
+			glDrawElements(GL_TRIANGLES, rendererObject.IndexBuffer->IndexCount(), GL_UNSIGNED_INT, nullptr);
+		}
 
 	}
 

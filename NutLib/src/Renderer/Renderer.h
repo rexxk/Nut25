@@ -32,8 +32,8 @@ namespace Nut
 		static auto DrawTriangle() -> void;
 
 		static auto DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
+		static auto DrawMesh(Ref<Mesh> mesh, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
 
-		static auto DrawMesh(Ref<Mesh> mesh) -> void;
 	};
 
 }
