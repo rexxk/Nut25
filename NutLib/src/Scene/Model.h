@@ -13,23 +13,36 @@
 namespace Nut
 {
 
+
+	enum class TextureType
+	{
+		Albedo,
+		Normal,
+		Metalness,
+		Roughness,
+		AmbientOcclusion,
+	};
+
+
 	class Model
 	{
 	public:
-		static auto Create(const std::vector<UUID> meshIDs, const std::unordered_map<std::string, Ref<Texture2D>> textures) -> Ref<Model>;
+		static auto Create(const std::vector<UUID> meshIDs, const std::unordered_map<TextureType, Ref<Texture2D>> textures) -> Ref<Model>;
 
-		Model(const std::vector<UUID> meshIDs, const std::unordered_map<std::string, Ref<Texture2D>> textures);
+		Model(const std::vector<UUID> meshIDs, const std::unordered_map<TextureType, Ref<Texture2D>> textures);
 
 
 		auto ModelID() const -> const UUID { return m_ModelID; }
 		auto MeshIDs() const -> const std::vector<UUID> { return m_MeshIDs; }
+
+		auto GetTextures() -> const std::unordered_map<TextureType, Ref<Texture2D>>& { return m_Textures; }
 
 	private:
 		UUID m_ModelID{};
 
 		std::vector<UUID> m_MeshIDs{};
 
-		std::unordered_map<std::string, Ref<Texture2D>> m_Textures{};
+		std::unordered_map<TextureType, Ref<Texture2D>> m_Textures{};
 	};
 
 }

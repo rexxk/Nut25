@@ -25,12 +25,4 @@ namespace Nut
 		m_Transform.TransformMatrix = glm::mat4(1.0f) * glm::translate(glm::mat4(1.0f), m_Transform.Position);
 	}
 
-	auto Entity::Draw() -> void
-	{
-
-//		m_Texture->BindToSlot(0);
-
-//		m_Mesh->Draw();
-	}
-
 }

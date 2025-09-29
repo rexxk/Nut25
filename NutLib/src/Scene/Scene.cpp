@@ -1,5 +1,6 @@
 #include "Scene/Scene.h"
 
+#include "Assets/AssetManager.h"
 #include "Core/Application.h"
 #include "Core/UUID.h"
 #include "Core/Window.h"
@@ -10,6 +11,7 @@
 #include "Renderer/Texture.h"
 #include "Scene/Camera.h"
 #include "Scene/Entity.h"
+#include "Scene/Model.h"
 
 #include <vector>
 
@@ -140,18 +142,21 @@ namespace Nut
 
 			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(ViewProjectionUniform));
 //			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
+
 			shader->SetUniform("u_Texture", 0);
 
 
 			for (auto& [modelID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
+				auto& textures = AssetManager::GetModel(modelID)->GetTextures();
+
+				if (textures.contains(TextureType::Albedo))
+				{
+					textures.at(TextureType::Albedo)->BindToSlot(0);
+				}
+
 				Renderer::DrawInstanced(modelID, transformMatrices, shader->GetLayout());
 			}
-
-//			for (auto& entity : s_SceneData.Entities)
-//			{
-//				entity->Draw();
-//			}
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
@@ -163,7 +168,6 @@ namespace Nut
 			s_SceneData.FlatFramebuffer->GetColorAttachment()->BindToSlot(0);
 
 			Renderer::DrawMesh(s_SceneData.DrawRectangle, shader->GetLayout());
-//			s_SceneData.DrawRectangle->Draw();
 		}
 
 

@@ -33,8 +33,6 @@ namespace Nut
 		auto CalculateTransformMatrix() -> void;
 		auto GetTransform() -> EntityTransform& { return m_Transform; }
 
-		auto Draw() -> void;
-
 		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
 		auto EntityID() const -> const UUID { return m_EntityID; }
 
