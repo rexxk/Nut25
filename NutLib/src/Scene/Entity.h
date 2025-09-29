@@ -30,6 +30,7 @@ namespace Nut
 
 		Entity(UUID meshID);
 
+		auto CalculateTransformMatrix() -> void;
 		auto GetTransform() -> EntityTransform& { return m_Transform; }
 
 		auto Draw() -> void;
@@ -38,6 +39,7 @@ namespace Nut
 		auto EntityID() const -> const UUID { return m_EntityID; }
 
 		auto ModelID() -> const UUID { return m_ModelID; }
+
 
 	private:
 		UUID m_ModelID{};

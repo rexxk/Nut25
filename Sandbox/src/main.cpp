@@ -42,8 +42,13 @@ public:
 		auto triangleModelID = Nut::AssetManager::AddModel(Nut::Model::Create({meshID}, {{"texture", texture}}));
 
 		m_TestEntity = Nut::Entity::Create(triangleModelID);
+		m_Entity2 = Nut::Entity::Create(triangleModelID);
+
+		m_Entity2->GetTransform().Position = glm::vec3{ 5.0f, 0.0f, 0.0f };
+
 
 		m_Scene.AddEntity(m_TestEntity);
+		m_Scene.AddEntity(m_Entity2);
 	}
 
 	virtual auto OnDetach() -> void override
@@ -67,6 +72,7 @@ private:
 	Ref<Nut::Buffer> m_IndexData{ nullptr };
 
 	Ref<Nut::Entity> m_TestEntity{ nullptr };
+	Ref<Nut::Entity> m_Entity2{ nullptr };
 
 	Nut::Scene m_Scene;
 };

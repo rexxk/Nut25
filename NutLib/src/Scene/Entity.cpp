@@ -2,6 +2,8 @@
 
 #include "Renderer/Mesh.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 
 namespace Nut
 {
@@ -18,6 +20,10 @@ namespace Nut
 
 	}
 
+	auto Entity::CalculateTransformMatrix() -> void
+	{
+		m_Transform.TransformMatrix = glm::mat4(1.0f) * glm::translate(glm::mat4(1.0f), m_Transform.Position);
+	}
 
 	auto Entity::Draw() -> void
 	{

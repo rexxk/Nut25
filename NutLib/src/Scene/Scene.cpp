@@ -117,7 +117,9 @@ namespace Nut
 		for (auto& entity : s_SceneData.Entities)
 		{
 			if (entity->ModelID() != 0)
-				s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(entity->GetTransform().TransformMatrix);
+			{
+				entity->CalculateTransformMatrix();
+			}	s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(entity->GetTransform().TransformMatrix);
 		}
 
 

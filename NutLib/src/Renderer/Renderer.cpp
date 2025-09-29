@@ -53,7 +53,6 @@ namespace Nut
 			newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(transformMatrices.data(), static_cast<uint32_t>(transformMatrices.size()), sizeof(glm::mat4)));
 
 			glCreateVertexArrays(1, &newRendererObject.VertexArrayObject);
-//			glBindVertexArray(newRendererObject.VertexArrayObject);
 
 			GLuint stride{ 0 };
 
@@ -71,18 +70,17 @@ namespace Nut
 					{
 						glEnableVertexArrayAttrib(newRendererObject.VertexArrayObject, i);
 						glVertexArrayAttribFormat(newRendererObject.VertexArrayObject, i, 4, GL_FLOAT, GL_FALSE, j * sizeof(glm::vec4));
-//						glVertexAttribDivisor(i, 1);
 
 						glVertexArrayAttribBinding(newRendererObject.VertexArrayObject, i, layoutInfo.VertexBufferPosition);
-						glVertexArrayBindingDivisor(newRendererObject.VertexArrayObject, i, 1);
 
 						i++;
 					}
+
+					glVertexArrayBindingDivisor(newRendererObject.VertexArrayObject, 1, 1);
 				}
 				else
 				{
 					glEnableVertexArrayAttrib(newRendererObject.VertexArrayObject, i);
-
 					glVertexArrayAttribFormat(newRendererObject.VertexArrayObject, i, layoutInfo.Count, layoutInfo.Type, GL_FALSE, stride);
 
 					glVertexArrayAttribBinding(newRendererObject.VertexArrayObject, i, layoutInfo.VertexBufferPosition);
@@ -109,7 +107,7 @@ namespace Nut
 			auto& rendererObject = s_RendererObjects[modelID];
 
 //			rendererObject.VertexBuffers.back()->SetData(transformMatrices.data(), static_cast<uint32_t>(transformMatrices.size()) * sizeof(glm::mat4));
-			rendererObject.InstanceCount = transformMatrices.size();
+			rendererObject.InstanceCount = static_cast<uint32_t>(transformMatrices.size());
 
 			glBindVertexArray(rendererObject.VertexArrayObject);
 
