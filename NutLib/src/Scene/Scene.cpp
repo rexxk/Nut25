@@ -21,6 +21,14 @@
 namespace Nut
 {
 
+	enum class TextureSlot : uint32_t
+	{
+		Albedo = 0,
+		Normal,
+		Metalness,
+		Roughness,
+		AmbientOcclusion,
+	};
 
 	struct SceneData
 	{
@@ -109,7 +117,6 @@ namespace Nut
 		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
 		s_SceneData.ViewProjectionUniformBuffer->SetData(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
 
-
 	}
 
 	auto Scene::Draw() -> void
@@ -143,7 +150,13 @@ namespace Nut
 			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(ViewProjectionUniform));
 //			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
 
-			shader->SetUniform("u_Texture", 0);
+			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
+			auto normalSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Normal);
+			auto metalnessSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Metalness);
+			auto roughnessSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Roughness);
+			auto ambientOcclusionSlot = std::underlying_type<TextureSlot>::type(TextureSlot::AmbientOcclusion);
+
+			shader->SetUniform("u_Texture", albedoSlot);
 
 
 			for (auto& [modelID, transformMatrices] : s_SceneDrawData.InstanceMap)
@@ -152,7 +165,7 @@ namespace Nut
 
 				if (textures.contains(TextureType::Albedo))
 				{
-					textures.at(TextureType::Albedo)->BindToSlot(0);
+					textures.at(TextureType::Albedo)->BindToSlot(albedoSlot);
 				}
 
 				Renderer::DrawInstanced(modelID, transformMatrices, shader->GetLayout());

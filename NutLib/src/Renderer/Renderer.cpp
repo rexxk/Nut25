@@ -106,6 +106,7 @@ namespace Nut
 		{
 			auto& rendererObject = s_RendererObjects[modelID];
 
+			rendererObject.VertexBuffers[1]->UpdateData(transformMatrices.data(), static_cast<uint32_t>(transformMatrices.size()) * sizeof(glm::mat4));
 //			rendererObject.VertexBuffers.back()->SetData(transformMatrices.data(), static_cast<uint32_t>(transformMatrices.size()) * sizeof(glm::mat4));
 			rendererObject.InstanceCount = static_cast<uint32_t>(transformMatrices.size());
 

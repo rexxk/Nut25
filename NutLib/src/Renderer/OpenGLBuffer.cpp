@@ -49,6 +49,10 @@ namespace Nut
 		glNamedBufferData(m_Handle, size * m_Stride, data, GL_STATIC_DRAW);
 	}
 
+	auto VertexBuffer::UpdateData(const void* data, uint32_t size) -> void
+	{
+		glNamedBufferSubData(m_Handle, 0, size, data);
+	}
 
 	auto IndexBuffer::Create(Ref<Buffer> buffer) -> Ref<IndexBuffer>
 	{

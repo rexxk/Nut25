@@ -6,6 +6,7 @@
 #include <print>
 #include <vector>
 
+#include <glm/gtc/constants.hpp>
 
 
 class SandboxLayer : public Nut::Layer
@@ -63,6 +64,22 @@ public:
 	{
 		m_RendererContext->BeginScene();
 
+		{
+			auto& transform = m_TestEntity->GetTransform();
+			transform.Position.x = 1.5f * std::sinf(2.0f * glm::pi<float>() * 0.15f * static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f));
+			transform.Position.y = 2.0f * std::cosf(2.0f * glm::pi<float>() * 0.35f * static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f));
+		}
+
+		{
+			auto& transform = m_Entity2->GetTransform();
+			transform.Position.y = 2.5f * std::cosf(2.0f * glm::pi<float>() * 0.25f * static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f));
+		}
+
+		{
+			auto& transform = m_Entity3->GetTransform();
+			transform.Position.y = 2.5f * std::sinf(2.0f * glm::pi<float>() * 0.1f * static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f));
+		}
+
 		m_Scene.Update(timestep);
 		m_Scene.Draw();
 	}
@@ -77,6 +94,8 @@ private:
 	Ref<Nut::Entity> m_TestEntity{ nullptr };
 	Ref<Nut::Entity> m_Entity2{ nullptr };
 	Ref<Nut::Entity> m_Entity3{ nullptr };
+
+	Nut::Timer m_UpdateTimer{};
 
 	Nut::Scene m_Scene;
 };

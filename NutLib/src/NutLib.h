@@ -2,10 +2,11 @@
 
 #include "Assets/AssetManager.h"
 
+#include "Core/Application.h"
 #include "Core/Base.h"
 #include "Core/Buffer.h"
-#include "Core/Application.h"
 #include "Core/Layer.h"
+#include "Core/Timer.h"
 
 #include "Renderer/Mesh.h"
 #include "Renderer/OpenGLBuffer.h"

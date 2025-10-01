@@ -24,6 +24,7 @@ namespace Nut
 
 		auto SetData(Ref<Buffer> buffer) -> void;
 		auto SetData(const void* data, uint32_t size) -> void;
+		auto UpdateData(const void* data, uint32_t size) -> void;
 
 		auto Handle() const -> GLuint { return m_Handle; }
 
