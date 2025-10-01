@@ -64,20 +64,32 @@ public:
 	{
 		m_RendererContext->BeginScene();
 
+		auto elapsedTime = static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f);
+		constexpr auto twoPi = glm::two_pi<float>();
+
 		{
 			auto& transform = m_TestEntity->GetTransform();
-			transform.Position.x = 1.5f * std::sinf(2.0f * glm::pi<float>() * 0.15f * static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f));
-			transform.Position.y = 2.0f * std::cosf(2.0f * glm::pi<float>() * 0.35f * static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f));
+
+			transform.Position.x = 1.5f * std::sinf(twoPi * 0.15f * elapsedTime);
+			transform.Position.y = 2.0f * std::cosf(twoPi * 0.35f * elapsedTime);
+
+			transform.Rotation.z = 3.0f * std::sinf(twoPi * 0.1f * elapsedTime);
+
+			transform.Scale = glm::vec3{ std::cosf(twoPi * 0.3f * elapsedTime) + 1.2f };
 		}
 
 		{
 			auto& transform = m_Entity2->GetTransform();
-			transform.Position.y = 2.5f * std::cosf(2.0f * glm::pi<float>() * 0.25f * static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f));
-		}
+			transform.Position.y = 2.5f * std::cosf(twoPi * 0.25f * elapsedTime);
 
+			transform.Rotation.y = 2.0f * std::sinf(twoPi * 0.05f * elapsedTime);
+		}
+	
 		{
 			auto& transform = m_Entity3->GetTransform();
-			transform.Position.y = 2.5f * std::sinf(2.0f * glm::pi<float>() * 0.1f * static_cast<float>(m_UpdateTimer.ElapsedTime() / 1000.0f));
+			transform.Position.y = 2.5f * std::sinf(twoPi * 0.1f * elapsedTime);
+
+			transform.Rotation.x = 5.0f * std::cosf(twoPi * 0.075 * elapsedTime);
 		}
 
 		m_Scene.Update(timestep);
