@@ -70,6 +70,84 @@ namespace Nut
 
 	}
 
+
+	auto Mesh::CreatePlane(uint32_t width, uint32_t height) -> Ref<Mesh>
+	{
+		std::vector<Vertex> vertices;
+		std::vector<uint32_t> indices;
+
+		uint32_t index{ 0l };
+
+		int32_t halfHeight = height >> 1;
+		int32_t halfWidth = width >> 1;
+
+		for (auto y = -halfHeight; y < halfHeight - 1; y++)
+		{
+			for (auto x = -halfWidth; x < halfWidth - 1; x++)
+			{
+//				auto p1 = (width * y) + x;
+//				auto p2 = (width * y) + (x + 1);
+//				auto p3 = (width * (y + 1)) + x;
+//				auto p4 = (width * (y + 1)) + (x + 1);
+
+				{
+					Vertex v{};
+					v.Position = glm::vec3{ x, 0.0f, y };
+					v.TexCoord = glm::vec2{ 0.0f, 0.0f };
+					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+					v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+
+					vertices.push_back(v);
+				}
+
+				{
+					Vertex v{};
+					v.Position = glm::vec3{ x + 1, 0.0f, y };
+					v.TexCoord = glm::vec2{ 1.0f, 0.0f };
+					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+					v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+
+					vertices.push_back(v);
+				}
+
+				{
+					Vertex v{};
+					v.Position = glm::vec3{ x, 0.0f, y + 1 };
+					v.TexCoord = glm::vec2{ 0.0f, 1.0f };
+					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+					v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+
+					vertices.push_back(v);
+				}
+
+				{
+					Vertex v{};
+					v.Position = glm::vec3{ x + 1, 0.0f, y + 1 };
+					v.TexCoord = glm::vec2{ 1.0f, 1.0f };
+					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+					v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+
+					vertices.push_back(v);
+				}
+
+				indices.push_back(index + 0);
+				indices.push_back(index + 1);
+				indices.push_back(index + 2);
+				indices.push_back(index + 3);
+				indices.push_back(index + 2);
+				indices.push_back(index + 1);
+
+				index += 4;
+			}
+		}
+
+		return CreateRef<Mesh>(vertices, indices, "Plane");
+	}
+
 //	Mesh::Mesh(const std::vector<Ref<VertexBuffer>>& vertexBuffers, Ref<IndexBuffer> indexBuffer, const std::string& shaderName)
 //		: m_VertexBuffers(vertexBuffers), m_IndexBuffer(indexBuffer)
 //	{
