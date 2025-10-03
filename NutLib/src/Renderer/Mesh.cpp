@@ -3,6 +3,8 @@
 #include "Renderer/OpenGLShader.h"
 #include "Renderer/Renderer.h"
 
+#include <stb_image.h>
+
 #include <glad/glad.h>
 
 
@@ -71,7 +73,7 @@ namespace Nut
 	}
 
 
-	auto Mesh::CreatePlane(uint32_t width, uint32_t height) -> Ref<Mesh>
+	auto Mesh::CreatePlane(uint32_t width, uint32_t height, const std::filesystem::path& heightmap) -> Ref<Mesh>
 	{
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
@@ -81,67 +83,133 @@ namespace Nut
 		int32_t halfHeight = height >> 1;
 		int32_t halfWidth = width >> 1;
 
-		for (auto y = -halfHeight; y < halfHeight - 1; y++)
+		/*		for (auto y = -halfHeight; y < halfHeight - 1; y++)
+				{
+					for (auto x = -halfWidth; x < halfWidth - 1; x++)
+					{
+		//				auto p1 = (width * y) + x;
+		//				auto p2 = (width * y) + (x + 1);
+		//				auto p3 = (width * (y + 1)) + x;
+		//				auto p4 = (width * (y + 1)) + (x + 1);
+
+						{
+							Vertex v{};
+							v.Position = glm::vec3{ x, 0.0f, y };
+							v.TexCoord = glm::vec2{ 0.0f, 0.0f };
+							v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+							v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+		//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+
+							vertices.push_back(v);
+						}
+
+						{
+							Vertex v{};
+							v.Position = glm::vec3{ x + 1, 0.0f, y };
+							v.TexCoord = glm::vec2{ 1.0f, 0.0f };
+							v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+							v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+		//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+
+							vertices.push_back(v);
+						}
+
+						{
+							Vertex v{};
+							v.Position = glm::vec3{ x, 0.0f, y + 1 };
+							v.TexCoord = glm::vec2{ 0.0f, 1.0f };
+							v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+							v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+		//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+
+							vertices.push_back(v);
+						}
+
+						{
+							Vertex v{};
+							v.Position = glm::vec3{ x + 1, 0.0f, y + 1 };
+							v.TexCoord = glm::vec2{ 1.0f, 1.0f };
+							v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+							v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
+		//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+
+							vertices.push_back(v);
+						}
+
+						indices.push_back(index + 0);
+						indices.push_back(index + 1);
+						indices.push_back(index + 2);
+						indices.push_back(index + 3);
+						indices.push_back(index + 2);
+						indices.push_back(index + 1);
+
+						index += 4;
+					}
+				}
+		*/
+
+		vertices.resize(width * height);
+		size_t position = 0;
+
+		if (heightmap.empty())
 		{
-			for (auto x = -halfWidth; x < halfWidth - 1; x++)
+			for (auto z = -halfHeight; z < halfHeight; z++)
 			{
-//				auto p1 = (width * y) + x;
-//				auto p2 = (width * y) + (x + 1);
-//				auto p3 = (width * (y + 1)) + x;
-//				auto p4 = (width * (y + 1)) + (x + 1);
-
+				for (auto x = -halfWidth; x < halfWidth; x++)
 				{
 					Vertex v{};
-					v.Position = glm::vec3{ x, 0.0f, y };
-					v.TexCoord = glm::vec2{ 0.0f, 0.0f };
+					v.Position = glm::vec3{ static_cast<float>(x), 0.0f, static_cast<float>(z) };
+					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
 					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
-					v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+					v.Color = glm::vec4{ 1.0f };
 
-					vertices.push_back(v);
+					vertices[position++] = v;
 				}
+			}
+		}
+		else
+		{
+			int width{ 0 };
+			int height{ 0 };
+			int bitsPerPixel{ 0 };
 
+			stbi_set_flip_vertically_on_load(true);
+			auto pixels = stbi_load(heightmap.string().c_str(), &width, &height, &bitsPerPixel, 4);
+
+			for (auto z = -halfHeight; z < halfHeight; z++)
+			{
+				for (auto x = -halfWidth; x < halfWidth; x++)
 				{
 					Vertex v{};
-					v.Position = glm::vec3{ x + 1, 0.0f, y };
-					v.TexCoord = glm::vec2{ 1.0f, 0.0f };
+					v.Position = glm::vec3{ static_cast<float>(x), 2.5f * (1 - ((pixels[(z + halfHeight) * width + (x + halfWidth)] + 1) / 255.0f)), static_cast<float>(z)};
+					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
 					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
-					v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+					v.Color = glm::vec4{ 1.0f };
 
-					vertices.push_back(v);
+					vertices[position++] = v;
 				}
+			}
 
-				{
-					Vertex v{};
-					v.Position = glm::vec3{ x, 0.0f, y + 1 };
-					v.TexCoord = glm::vec2{ 0.0f, 1.0f };
-					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
-					v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
+			stbi_image_free(pixels);
+		}
 
-					vertices.push_back(v);
-				}
+		indices.resize(width * height * 6);
+		index = 0l;
+		for (auto z = 0; z < height - 1; z++)
+		{
+			for (auto x = 0; x < width - 1; x++)
+			{
+				auto v1 = (width * z) + x;
+				auto v2 = (width * z) + (x + 1);
+				auto v3 = (width * (z + 1)) + x;
+				auto v4 = (width * (z + 1)) + (x + 1);
 
-				{
-					Vertex v{};
-					v.Position = glm::vec3{ x + 1, 0.0f, y + 1 };
-					v.TexCoord = glm::vec2{ 1.0f, 1.0f };
-					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
-					v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
-
-					vertices.push_back(v);
-				}
-
-				indices.push_back(index + 0);
-				indices.push_back(index + 1);
-				indices.push_back(index + 2);
-				indices.push_back(index + 3);
-				indices.push_back(index + 2);
-				indices.push_back(index + 1);
-
-				index += 4;
+				indices[index++] = v1;
+				indices[index++] = v2;
+				indices[index++] = v3;
+				indices[index++] = v4;
+				indices[index++] = v3;
+				indices[index++] = v2;
 			}
 		}
 

@@ -29,7 +29,7 @@ public:
 //		auto mesh = Nut::Mesh::CreateTriangle();
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateTriangle());
 		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateRectangle());
-		auto terrainID = Nut::AssetManager::AddMesh(Nut::Mesh::CreatePlane(256u, 256u));
+		auto terrainID = Nut::AssetManager::AddMesh(Nut::Mesh::CreatePlane(256u, 256u, "Assets/Textures/terrain.png"));
 
 
 		Nut::TextureSpecification texSpec{};

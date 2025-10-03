@@ -137,6 +137,8 @@ namespace Nut
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
 		glViewport(0, 0, windowWidth, windowHeight);
 
+//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 		{
 			auto shader = ShaderLibrary::Get("FlatShader");
 			shader->Bind();
@@ -158,7 +160,6 @@ namespace Nut
 
 			shader->SetUniform("u_Texture", albedoSlot);
 
-
 			for (auto& [modelID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
 				auto& textures = AssetManager::GetModel(modelID)->GetTextures();
@@ -173,6 +174,8 @@ namespace Nut
 
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
+
+//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		{
 			auto shader = ShaderLibrary::Get("CompositionShader");
