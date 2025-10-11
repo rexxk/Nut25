@@ -19,6 +19,18 @@ namespace Nut
 {
 
 
+	struct HeightmapSpecification
+	{
+		bool UseNoise{ true };
+
+		float NoiseDivider1{ 64.0f };
+		float NoiseDivider2{ 32.0f };
+		float NoiseDivider3{ 16.0f };
+		float Divider{ 1.75f };
+
+		std::filesystem::path Filepath{};
+	};
+
 
 	class Mesh
 	{
@@ -27,7 +39,7 @@ namespace Nut
 //		static auto Create(const std::vector<Ref<VertexBuffer>>& vertexBuffers, Ref<IndexBuffer> indexBuffer, const std::string& shader) -> Ref<Mesh>;
 		static auto CreateTriangle() -> Ref<Mesh>;
 		static auto CreateRectangle() -> Ref<Mesh>;
-		static auto CreatePlane(uint32_t width, uint32_t height, const std::filesystem::path& heightmap = "") -> Ref<Mesh>;
+		static auto CreatePlane(uint32_t width, uint32_t height, const HeightmapSpecification& specification) -> Ref<Mesh>;
 //		static auto CreateTriangle(const std::string& shaderName) -> Ref<Mesh>;
 //		static auto CreateRectangle(const std::string& shaderName) -> Ref<Mesh>;
 

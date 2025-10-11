@@ -73,92 +73,31 @@ namespace Nut
 	}
 
 
-	auto Mesh::CreatePlane(uint32_t width, uint32_t height, const std::filesystem::path& heightmap) -> Ref<Mesh>
+	auto Mesh::CreatePlane(uint32_t width, uint32_t height, const HeightmapSpecification& specification) -> Ref<Mesh>
 	{
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 
 		uint32_t index{ 0l };
 
-		int32_t halfHeight = height >> 1;
-		int32_t halfWidth = width >> 1;
-
-		/*		for (auto y = -halfHeight; y < halfHeight - 1; y++)
-				{
-					for (auto x = -halfWidth; x < halfWidth - 1; x++)
-					{
-		//				auto p1 = (width * y) + x;
-		//				auto p2 = (width * y) + (x + 1);
-		//				auto p3 = (width * (y + 1)) + x;
-		//				auto p4 = (width * (y + 1)) + (x + 1);
-
-						{
-							Vertex v{};
-							v.Position = glm::vec3{ x, 0.0f, y };
-							v.TexCoord = glm::vec2{ 0.0f, 0.0f };
-							v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
-							v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
-
-							vertices.push_back(v);
-						}
-
-						{
-							Vertex v{};
-							v.Position = glm::vec3{ x + 1, 0.0f, y };
-							v.TexCoord = glm::vec2{ 1.0f, 0.0f };
-							v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
-							v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
-
-							vertices.push_back(v);
-						}
-
-						{
-							Vertex v{};
-							v.Position = glm::vec3{ x, 0.0f, y + 1 };
-							v.TexCoord = glm::vec2{ 0.0f, 1.0f };
-							v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
-							v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
-
-							vertices.push_back(v);
-						}
-
-						{
-							Vertex v{};
-							v.Position = glm::vec3{ x + 1, 0.0f, y + 1 };
-							v.TexCoord = glm::vec2{ 1.0f, 1.0f };
-							v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
-							v.Color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f };
-		//					v.Color = glm::vec4{ 0.5f, 0.5f, 0.5f, 1.0f };
-
-							vertices.push_back(v);
-						}
-
-						indices.push_back(index + 0);
-						indices.push_back(index + 1);
-						indices.push_back(index + 2);
-						indices.push_back(index + 3);
-						indices.push_back(index + 2);
-						indices.push_back(index + 1);
-
-						index += 4;
-					}
-				}
-		*/
-
 		vertices.resize(width * height);
 		size_t position = 0;
 
-		if (heightmap.empty())
+		if (specification.UseNoise)
 		{
-			for (auto z = -halfHeight; z < halfHeight; z++)
+			for (auto z = 0; z < height; z++)
 			{
-				for (auto x = -halfWidth; x < halfWidth; x++)
+				for (auto x = 0; x < width; x++)
 				{
+					float div1 = specification.NoiseDivider1;
+					float div2 = specification.NoiseDivider2;
+					float div3 = specification.NoiseDivider3;
+
+					float noise = (PerlinNoise::GetNoise(x / div1, z / div1) + PerlinNoise::GetNoise(x / div2, z / div2) * 0.5f + PerlinNoise::GetNoise(x / div3, z / div3) * 0.25f) / specification.Divider;
+					float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
+
 					Vertex v{};
-					v.Position = glm::vec3{ static_cast<float>(x), 0.0f, static_cast<float>(z) };
+					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
 					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
 					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
 					v.Color = glm::vec4{ 1.0f };
@@ -174,7 +113,7 @@ namespace Nut
 			int bitsPerPixel{ 0 };
 
 			stbi_set_flip_vertically_on_load(true);
-			auto pixels = stbi_load(heightmap.string().c_str(), &width, &height, &bitsPerPixel, 4);
+			auto pixels = stbi_load(specification.Filepath.string().c_str(), &width, &height, &bitsPerPixel, 4);
 
 			for (auto z = 0; z < height; z++)
 			{
@@ -182,12 +121,7 @@ namespace Nut
 				{
 					Vertex v{};
 
-//					float noise = (PerlinNoise::GetNoise(x / 64.0f, z / 64.0f) + PerlinNoise::GetNoise(x / 32.0f, z / 32.0f) * 0.5f + PerlinNoise::GetNoise(x / 16.0f, z / 16.0f) * 0.25f) / 1.75f;
-					float noise = (PerlinNoise::GetNoise(x / 64.0f, z / 64.0f) + PerlinNoise::GetNoise(x / 32.0f, z / 32.0f) * 0.5f + PerlinNoise::GetNoise(x / 16.0f, z / 16.0f) * 0.25f) / 8.0f;
-					float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
-
-//					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, (pixels[(z * width + x) * 4]) - 225.0f, static_cast<float>(z) - height / 2};
-					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2};
+					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, (pixels[(z * width + x) * 4]) - 225.0f, static_cast<float>(z) - height / 2};
 					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
 					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
 					v.Color = glm::vec4{ 1.0f };

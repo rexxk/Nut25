@@ -29,7 +29,13 @@ public:
 //		auto mesh = Nut::Mesh::CreateTriangle();
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateTriangle());
 		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateRectangle());
-		auto terrainID = Nut::AssetManager::AddMesh(Nut::Mesh::CreatePlane(256u, 256u, "Assets/Textures/terrain.png"));
+
+		Nut::HeightmapSpecification heightmapSpecification{};
+//		heightmapSpecification.UseNoise = false;
+//		heightmapSpecification.Filepath = "Assets/Textures/terrain.png";
+		heightmapSpecification.Divider = 8.0f;
+
+		auto terrainID = Nut::AssetManager::AddMesh(Nut::Mesh::CreatePlane(256u, 256u, heightmapSpecification));
 
 
 		Nut::TextureSpecification texSpec{};
