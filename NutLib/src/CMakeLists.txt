@@ -7,6 +7,7 @@ set_property(TARGET NutLib PROPERTY CXX_STANDARD 26)
 add_subdirectory(Assets)
 add_subdirectory(Core)
 add_subdirectory(Events)
+add_subdirectory(Noise)
 add_subdirectory(Renderer)
 add_subdirectory(Scene)
 

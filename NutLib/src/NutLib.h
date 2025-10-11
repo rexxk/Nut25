@@ -8,6 +8,8 @@
 #include "Core/Layer.h"
 #include "Core/Timer.h"
 
+#include "Noise/PerlinNoise.h"
+
 #include "Renderer/Mesh.h"
 #include "Renderer/OpenGLBuffer.h"
 #include "Renderer/OpenGLFramebuffer.h"
