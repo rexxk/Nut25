@@ -36,14 +36,11 @@ namespace Nut
 	{
 	public:
 		static auto Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name = "<mesh>") -> Ref<Mesh>;
-//		static auto Create(const std::vector<Ref<VertexBuffer>>& vertexBuffers, Ref<IndexBuffer> indexBuffer, const std::string& shader) -> Ref<Mesh>;
+
 		static auto CreateTriangle() -> Ref<Mesh>;
 		static auto CreateRectangle() -> Ref<Mesh>;
 		static auto CreatePlane(uint32_t width, uint32_t height, const HeightmapSpecification& specification) -> Ref<Mesh>;
-//		static auto CreateTriangle(const std::string& shaderName) -> Ref<Mesh>;
-//		static auto CreateRectangle(const std::string& shaderName) -> Ref<Mesh>;
 
-//		Mesh(const std::vector<Ref<VertexBuffer>>& vertexBuffers, Ref<IndexBuffer> indexBuffer, const std::string& shader);
 		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name = "<mesh>");
 		~Mesh();
 
@@ -54,13 +51,8 @@ namespace Nut
 
 		auto Name() const -> const std::string { return m_Name; }
 
-//		auto Draw() -> void;
 
 	private:
-//		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
-//		Ref<IndexBuffer> m_IndexBuffer{ nullptr };
-
-//		GLuint m_VAO{ 0 };
 
 		std::vector<Vertex> m_Vertices{};
 		std::vector<uint32_t> m_Indices{};
