@@ -8,7 +8,6 @@
 #include <glad/glad.h>
 
 
-
 namespace Nut
 {
 
@@ -176,12 +175,13 @@ namespace Nut
 			stbi_set_flip_vertically_on_load(true);
 			auto pixels = stbi_load(heightmap.string().c_str(), &width, &height, &bitsPerPixel, 4);
 
-			for (auto z = -halfHeight; z < halfHeight; z++)
+			for (auto z = 0; z < height; z++)
 			{
-				for (auto x = -halfWidth; x < halfWidth; x++)
+				for (auto x = 0; x < width; x++)
 				{
 					Vertex v{};
-					v.Position = glm::vec3{ static_cast<float>(x), 2.5f * (1 - ((pixels[(z + halfHeight) * width + (x + halfWidth)] + 1) / 255.0f)), static_cast<float>(z)};
+
+					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, (pixels[(z * width + x) * 4]) - 225.0f, static_cast<float>(z) - height / 2};
 					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
 					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
 					v.Color = glm::vec4{ 1.0f };
