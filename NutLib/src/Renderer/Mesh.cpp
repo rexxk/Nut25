@@ -1,5 +1,6 @@
 #include "Renderer/Mesh.h"
 
+#include "Noise/PerlinNoise.h"
 #include "Renderer/OpenGLShader.h"
 #include "Renderer/Renderer.h"
 
@@ -181,7 +182,12 @@ namespace Nut
 				{
 					Vertex v{};
 
-					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, (pixels[(z * width + x) * 4]) - 225.0f, static_cast<float>(z) - height / 2};
+//					float noise = (PerlinNoise::GetNoise(x / 64.0f, z / 64.0f) + PerlinNoise::GetNoise(x / 32.0f, z / 32.0f) * 0.5f + PerlinNoise::GetNoise(x / 16.0f, z / 16.0f) * 0.25f) / 1.75f;
+					float noise = (PerlinNoise::GetNoise(x / 64.0f, z / 64.0f) + PerlinNoise::GetNoise(x / 32.0f, z / 32.0f) * 0.5f + PerlinNoise::GetNoise(x / 16.0f, z / 16.0f) * 0.25f) / 8.0f;
+					float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
+
+//					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, (pixels[(z * width + x) * 4]) - 225.0f, static_cast<float>(z) - height / 2};
+					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2};
 					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
 					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
 					v.Color = glm::vec4{ 1.0f };

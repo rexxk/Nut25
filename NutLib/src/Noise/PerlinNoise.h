@@ -9,10 +9,9 @@ namespace Nut
 	class PerlinNoise
 	{
 	public:
-		PerlinNoise();
+//		PerlinNoise();
 
-	private:
-		auto GetNoise(float x, float y) -> float;
+		static auto GetNoise(float x, float y) -> float;
 
 	};
 

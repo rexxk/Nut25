@@ -70,21 +70,24 @@ namespace Nut
         }
     }
 
-
+/*
 	PerlinNoise::PerlinNoise()
 	{
-        for (auto x = -10.0f; x < 10.0f; x++)
+        for (auto y = 0.0f; y < 4.0f; y++)
         {
-            float noise = (GetNoise(x / 64.0f, 66.0f / 64.0f) + GetNoise(x / 32.0f, 66.0f / 32.0f) * 0.5f + GetNoise(x / 16.0f, 66.0f / 16.0f) * 0.25f) / 1.75f;
+            for (auto x = 0.0f; x < 4.0f; x++)
+            {
+                float noise = (GetNoise(x / 64.0f, y / 64.0f) + GetNoise(x / 32.0f, y / 32.0f) * 0.5f + GetNoise(x / 16.0f, y / 16.0f) * 0.25f) / 1.75f;
 
-            float brightness = (noise * 0.5f + 0.5f) * 255.0f;
+                float brightness = (noise * 0.5f + 0.5f) * 255.0f;
 
-            LOG_CORE_INFO("Noise @15,66 = {}", brightness);
+                LOG_CORE_INFO("Noise @15,66 = {}", brightness);
+            }
+
         }
 
-
 	}
-
+*/
 
     auto PerlinNoise::GetNoise(float x, float y) -> float
     {
