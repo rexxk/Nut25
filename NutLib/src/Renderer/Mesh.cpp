@@ -90,7 +90,7 @@ namespace Nut
 						glm::vec3& p2 = vertices[position - 2].Position;
 						glm::vec3& p3 = vertices[position - 1].Position;
 
-						auto normal = glm::cross(p3 - p1, p2 - p1);
+						auto normal = glm::normalize(glm::cross(p2 - p1, p3 - p1));
 
 						vertices[position - 3].Normal = normal;
 						vertices[position - 2].Normal = normal;
