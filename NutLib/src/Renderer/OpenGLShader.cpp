@@ -225,7 +225,7 @@ namespace Nut
 
 					vec4 tex = texture(u_Texture, v_TexCoord);
 
-					o_Color = tex + v_Color + vec4(normal, 1.0);
+					o_Color = tex + v_Color * vec4(normal, 1.0);
 					o_Depth = v_Zpos;
 				}
 

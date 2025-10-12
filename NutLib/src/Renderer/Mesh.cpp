@@ -79,10 +79,23 @@ namespace Nut
 					Vertex v{};
 					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
 					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
-					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
+//					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
 					v.Color = glm::vec4{ 1.0f };
 
 					vertices[position++] = v;
+
+					if (position % 3 == 0)
+					{
+						glm::vec3& p1 = vertices[position - 3].Position;
+						glm::vec3& p2 = vertices[position - 2].Position;
+						glm::vec3& p3 = vertices[position - 1].Position;
+
+						auto normal = glm::cross(p3 - p1, p2 - p1);
+
+						vertices[position - 3].Normal = normal;
+						vertices[position - 2].Normal = normal;
+						vertices[position - 1].Normal = normal;
+					}
 				}
 			}
 		}
