@@ -87,7 +87,7 @@ namespace Nut
 	auto OpenGLFramebuffer::Clear() -> void
 	{
 		glm::vec4 clearColor{ 1.0f, 0.0f, 1.0f, 1.0f };
-		float clearDepth = 0.0f;
+		float clearDepth = 1.0f;
 
 		for (auto& [type, attachment] : m_Attachments)
 		{

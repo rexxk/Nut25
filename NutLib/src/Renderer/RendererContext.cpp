@@ -41,8 +41,10 @@ namespace Nut
 		s_ContextData.WindowWidth = windowWidth;
 		s_ContextData.WindowHeight = windowHeight;
 
-//		glEnable(GL_DEPTH_TEST);
-//		glDepthFunc(GL_LESS);
+		glEnable(GL_DEPTH_TEST);
+//		glDepthFunc(GL_ALWAYS);
+		glDepthFunc(GL_LESS);
+		glDepthMask(GL_TRUE);
 
 		EventHandler::Subscribe(EventType::WindowSize, [&](Ref<Event> event)
 			{

@@ -191,7 +191,6 @@ namespace Nut
 				out vec2 v_TexCoord;
 				out vec3 v_Normal;
 				out vec4 v_Color;
-				out float v_Zpos;
 
 				void main() 
 				{
@@ -200,7 +199,6 @@ namespace Nut
 					v_TexCoord = a_TexCoord;
 					v_Color = a_Color;
 					v_Normal = mat3(a_InstanceMatrix) * a_Normal;
-					v_Zpos = a_Position.z;
 				}
 			)"
 		},
@@ -214,7 +212,6 @@ namespace Nut
 				in vec2 v_TexCoord;
 				in vec3 v_Normal;
 				in vec4 v_Color;
-				in float v_Zpos;
 
 				uniform sampler2D u_Texture;
 
@@ -231,9 +228,10 @@ namespace Nut
 
 					vec4 tex = texture(u_Texture, v_TexCoord);
 
-					o_Color = tex * (v_Color + vec4(diffuseColor, 1.0));
+//					o_Color = tex * vec4(diffuseColor, 1.0);
+					o_Color = tex * normalize((v_Color * vec4(diffuseColor, 1.0)));
 //					o_Color = tex + v_Color * vec4(normal, 1.0);
-					o_Depth = v_Zpos;
+					o_Depth = gl_FragCoord.z;
 				}
 
 			)"
