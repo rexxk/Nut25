@@ -220,10 +220,10 @@ namespace Nut
 
 				void main()
 				{
-					vec3 lightDirection = vec3(0.5, 0.8, 0.75);
+					vec3 lightDirection = vec3(-0.3, 0.5, 0.75);
 					vec3 negativeLightDirection = normalize(-lightDirection);
 
-					float diffuse = max(dot(v_Normal, negativeLightDirection), 0.0);
+					float diffuse = max(dot(normalize(v_Normal), negativeLightDirection), 0.0);
 					vec3 diffuseColor = diffuse * vec3(1.0, 1.0, 1.0);
 
 //					vec3 normal = v_Normal;

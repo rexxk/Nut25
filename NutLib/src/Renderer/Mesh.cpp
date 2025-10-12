@@ -65,9 +65,9 @@ namespace Nut
 
 		if (specification.UseNoise)
 		{
-			for (auto z = 0; z < height; z++)
+			for (auto z = 0u; z < height; z++)
 			{
-				for (auto x = 0; x < width; x++)
+				for (auto x = 0u; x < width; x++)
 				{
 					float div1 = specification.NoiseDivider1;
 					float div2 = specification.NoiseDivider2;
@@ -78,24 +78,12 @@ namespace Nut
 
 					Vertex v{};
 					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
-					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
+					v.TexCoord = glm::vec2{ x % 2, z % 2 };
+					v.Normal = glm::vec3{ 0.0f };
 //					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
 					v.Color = glm::vec4{ 1.0f };
 
 					vertices[position++] = v;
-
-					if (position % 3 == 0)
-					{
-						glm::vec3& p1 = vertices[position - 3].Position;
-						glm::vec3& p2 = vertices[position - 2].Position;
-						glm::vec3& p3 = vertices[position - 1].Position;
-
-						auto normal = glm::normalize(glm::cross(p2 - p1, p3 - p1));
-
-						vertices[position - 3].Normal = normal;
-						vertices[position - 2].Normal = normal;
-						vertices[position - 1].Normal = normal;
-					}
 				}
 			}
 		}
@@ -115,7 +103,7 @@ namespace Nut
 					Vertex v{};
 
 					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, (pixels[(z * width + x) * 4]) - 225.0f, static_cast<float>(z) - height / 2};
-					v.TexCoord = glm::vec2{ std::abs(x % 2), std::abs(z % 2) };
+					v.TexCoord = glm::vec2{ std::abs(x) % 2, std::abs(z) % 2 };
 					v.Normal = glm::vec3{ 0.0f, 1.0f, 0.0f };
 					v.Color = glm::vec4{ 1.0f };
 
@@ -128,9 +116,9 @@ namespace Nut
 
 		indices.resize(width * height * 6);
 		index = 0l;
-		for (auto z = 0; z < height - 1; z++)
+		for (auto z = 0u; z < height - 1; z++)
 		{
-			for (auto x = 0; x < width - 1; x++)
+			for (auto x = 0u; x < width - 1; x++)
 			{
 				auto v1 = (width * z) + x;
 				auto v2 = (width * z) + (x + 1);
@@ -140,9 +128,42 @@ namespace Nut
 				indices[index++] = v1;
 				indices[index++] = v2;
 				indices[index++] = v3;
+
+				{
+					glm::vec3& p1 = vertices[v1].Position;
+					glm::vec3& p2 = vertices[v2].Position;
+					glm::vec3& p3 = vertices[v3].Position;
+
+					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
+
+					vertices[v1].Normal += normal;
+					vertices[v2].Normal += normal;
+					vertices[v3].Normal += normal;
+
+					vertices[v1].Normal /= 2.0f;
+					vertices[v2].Normal /= 2.0f;
+					vertices[v3].Normal /= 2.0f;
+				}
+
 				indices[index++] = v4;
 				indices[index++] = v3;
 				indices[index++] = v2;
+
+				{
+					glm::vec3& p1 = vertices[v4].Position;
+					glm::vec3& p2 = vertices[v3].Position;
+					glm::vec3& p3 = vertices[v2].Position;
+
+					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
+
+					vertices[v4].Normal += normal;
+					vertices[v3].Normal += normal;
+					vertices[v2].Normal += normal;
+
+					vertices[v4].Normal /= 2.0f;
+					vertices[v3].Normal /= 2.0f;
+					vertices[v2].Normal /= 2.0f;
+				}
 			}
 		}
 
