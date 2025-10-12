@@ -9,6 +9,7 @@ namespace Nut
 {
 
 
+
 	class RendererContext
 	{
 	public:

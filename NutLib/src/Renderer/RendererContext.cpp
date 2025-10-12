@@ -41,6 +41,9 @@ namespace Nut
 		s_ContextData.WindowWidth = windowWidth;
 		s_ContextData.WindowHeight = windowHeight;
 
+//		glEnable(GL_DEPTH_TEST);
+//		glDepthFunc(GL_LESS);
+
 		EventHandler::Subscribe(EventType::WindowSize, [&](Ref<Event> event)
 			{
 				Ref<WindowResizedEvent> e = std::dynamic_pointer_cast<WindowResizedEvent>(event);
