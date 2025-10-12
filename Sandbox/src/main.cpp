@@ -115,6 +115,8 @@ public:
 			auto& transform = m_Terrain->GetTransform();
 			transform.Position.x = 10.0f * std::sinf(twoPi * 0.1f * elapsedTime);
 			transform.Position.y = 3 * std::cosf(twoPi * 0.05f * elapsedTime) - 15.0f;
+
+			transform.Rotation.y = elapsedTime * 0.1f;
 		}
 
 		m_Scene.Update(timestep);

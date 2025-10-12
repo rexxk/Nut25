@@ -199,7 +199,7 @@ namespace Nut
 
 					v_TexCoord = a_TexCoord;
 					v_Color = a_Color;
-					v_Normal = a_Normal;
+					v_Normal = vec3(a_InstanceMatrix * vec4(a_Normal, 1.0));
 					v_Zpos = a_Position.z;
 				}
 			)"
