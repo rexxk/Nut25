@@ -3,6 +3,7 @@
 #include "Core/Input.h"
 #include "Core/Timer.h"
 #include "Events/EventHandler.h"
+#include "UI/ImGuiContext.h"
 
 #include <print>
 
@@ -37,6 +38,7 @@ namespace Nut
 
 		m_Window = Window::Create(windowSpec);
 	
+		ImGuiContext::Initialize(m_Window->Handle());
 
 		EventHandler::Subscribe(EventType::WindowClose, [&](Ref<Event> event)
 			{
@@ -66,10 +68,19 @@ namespace Nut
 			m_Window->HandleEvents();
 			EventHandler::Poll();
 
+			ImGuiContext::BeginFrame();
+
 			for (auto& layer : m_LayerStack)
 			{
 				layer->OnUpdate(timestep);
 			}
+
+
+
+			ImGuiContext::EndFrame();
+
+			ImGuiContext::Render();
+
 
 			if (timer.ElapsedTime() > 1000.0)
 			{
@@ -85,6 +96,9 @@ namespace Nut
 
 			m_Window->Swap();
 		}
+
+
+		ImGuiContext::Shutdown();
 	}
 
 

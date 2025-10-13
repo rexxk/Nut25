@@ -10,6 +10,7 @@ add_subdirectory(Events)
 add_subdirectory(Noise)
 add_subdirectory(Renderer)
 add_subdirectory(Scene)
+add_subdirectory(UI)
 
 target_sources(NutLib PRIVATE
 	EntryPoint.h

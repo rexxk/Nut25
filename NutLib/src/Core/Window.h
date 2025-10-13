@@ -44,6 +44,7 @@ namespace Nut
 		auto GetSize() const -> const std::pair<int32_t, int32_t> { return std::make_pair(m_Specification.Width, m_Specification.Height); }
 
 		auto GetRendererContext() -> Ref<RendererContext> { return m_RendererContext; }
+		auto Handle() -> GLFWwindow* { return m_Handle; }
 
 	private:
 		WindowSpecification m_Specification{};

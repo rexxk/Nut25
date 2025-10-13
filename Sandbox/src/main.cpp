@@ -8,6 +8,8 @@
 
 #include <glm/gtc/constants.hpp>
 
+#include <imgui.h>
+
 
 class SandboxLayer : public Nut::Layer
 {
@@ -122,6 +124,12 @@ public:
 
 		m_Scene.Update(timestep);
 		m_Scene.Draw();
+
+		ImGui::Begin("Statistics");
+
+		ImGui::Text("ImGui controls");
+
+		ImGui::End();
 
 	}
 
