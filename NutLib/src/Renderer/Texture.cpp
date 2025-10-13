@@ -53,14 +53,17 @@ namespace Nut
 				return;
 			}
 
-			glTextureStorage2D(m_ID, 1, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, imageWidth, imageHeight);
+			GLsizei levels = 1 + std::floor(std::log2(std::max(imageWidth, imageHeight)));
+
+			glTextureStorage2D(m_ID, levels, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, imageWidth, imageHeight);
 			glTextureSubImage2D(m_ID, 0, 0, 0, imageWidth, imageHeight, specification.Format, GL_UNSIGNED_BYTE, imagePixels);
+
+			glGenerateTextureMipmap(m_ID);
 
 			stbi_image_free(imagePixels);
 		}
 
 
-		glGenerateTextureMipmap(m_ID);
 	}
 
 	Texture2D::~Texture2D()

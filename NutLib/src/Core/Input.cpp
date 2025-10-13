@@ -38,14 +38,16 @@ namespace Nut
 			{
 				Ref<KeyPressedEvent> e = std::dynamic_pointer_cast<KeyPressedEvent>(event);
 
-				s_KeyStatus[static_cast<size_t>(e->Key())] = true;
+				if (e->Key() < 256)
+					s_KeyStatus[static_cast<size_t>(e->Key())] = true;
 			});
 
 		EventHandler::Subscribe(EventType::KeyRelease, [](Ref<Event> event)
 			{
 				Ref<KeyReleasedEvent> e = std::dynamic_pointer_cast<KeyReleasedEvent>(event);
 
-				s_KeyStatus[static_cast<size_t>(e->Key())] = false;
+				if (e->Key() < 256)
+					s_KeyStatus[static_cast<size_t>(e->Key())] = false;
 			});
 	}
 

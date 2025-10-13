@@ -34,7 +34,7 @@ namespace Nut
 			{
 				Ref<MouseMovedEvent> e = std::dynamic_pointer_cast<MouseMovedEvent>(event);
 
-				e->Print();
+//				e->Print();
 			});
 	}
 

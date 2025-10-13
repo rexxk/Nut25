@@ -42,6 +42,7 @@ public:
 
 
 		Nut::TextureSpecification texSpec{};
+//		texSpec.Filepath = "Assets/Textures/grass.jpg";
 		texSpec.Filepath = "Assets/Textures/texture.png";
 //		texSpec.Filepath = "C:/Programming/Private/Nut25/Sandbox/Assets/Textures/texture.png";
 //		texSpec.Format = GL_RGBA;
