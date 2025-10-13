@@ -2,6 +2,7 @@
 
 #include "Core/Application.h"
 #include "Core/Base.h"
+#include "Core/Defines.h"
 #include "Events/EventHandler.h"
 
 #include <glad/glad.h>
@@ -21,6 +22,18 @@ namespace Nut
 		return CreateRef<Window>(spec);
 	}
 
+
+	auto IntToMouseButton(int button) -> MouseButton
+	{
+		switch (button)
+		{
+			case 0: return MouseButton::Left;
+			case 1: return MouseButton::Right;
+			case 2: return MouseButton::Middle;
+		}
+
+		return MouseButton::Left;
+	}
 
 
 	Window::Window(const WindowSpecification& spec)
@@ -76,6 +89,47 @@ namespace Nut
 		glfwSetWindowMaximizeCallback(m_Handle, [](GLFWwindow* window, int maximized)
 			{
 
+			});
+
+		glfwSetCursorPosCallback(m_Handle, [](GLFWwindow* window, double xPosition, double yPosition)
+			{
+				Ref<MouseMovedEvent> event = CreateRef<MouseMovedEvent>(static_cast<int32_t>(xPosition), static_cast<int32_t>(yPosition));
+				EventHandler::AddEvent(event);
+			});
+
+		glfwSetMouseButtonCallback(m_Handle, [](GLFWwindow* window, int button, int action, int mods)
+			{
+				if (action == GLFW_PRESS)
+				{
+					Ref<MouseButtonPressedEvent> event = CreateRef<MouseButtonPressedEvent>(IntToMouseButton(button));
+					EventHandler::AddEvent(event);
+				}
+				else if (action == GLFW_RELEASE)
+				{
+					Ref<MouseButtonReleasedEvent> event = CreateRef<MouseButtonReleasedEvent>(IntToMouseButton(button));
+					EventHandler::AddEvent(event);
+				}
+
+			});
+
+		glfwSetKeyCallback(m_Handle, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+			{
+				if (action == GLFW_PRESS)
+				{
+					Ref<KeyPressedEvent> event = CreateRef<KeyPressedEvent>(static_cast<uint16_t>(key));
+					EventHandler::AddEvent(event);
+				}
+				else if (action == GLFW_RELEASE)
+				{
+					Ref<KeyReleasedEvent> event = CreateRef<KeyReleasedEvent>(static_cast<uint16_t>(key));
+					EventHandler::AddEvent(event);
+				}
+			});
+
+		glfwSetCharCallback(m_Handle, [](GLFWwindow* window, unsigned int codepoint)
+			{
+				Ref<KeyTypedEvent> event = CreateRef<KeyTypedEvent>(static_cast<uint16_t>(codepoint));
+				EventHandler::AddEvent(event);
 			});
 
 

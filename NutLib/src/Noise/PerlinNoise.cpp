@@ -91,8 +91,8 @@ namespace Nut
 
     auto PerlinNoise::GetNoise(float x, float y) -> float
     {
-        const int32_t xi0 = std::floor(x);
-        const int32_t yi0 = std::floor(y);
+        const int32_t xi0 = static_cast<int32_t>(std::floor(x));
+        const int32_t yi0 = static_cast<int32_t>(std::floor(y));
 
         const float xf0 = x - static_cast<float>(xi0);
         const float yf0 = y - static_cast<float>(yi0);

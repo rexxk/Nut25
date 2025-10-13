@@ -5,6 +5,7 @@
 #include "Core/Application.h"
 #include "Core/Base.h"
 #include "Core/Buffer.h"
+#include "Core/Input.h"
 #include "Core/Layer.h"
 #include "Core/Timer.h"
 

@@ -1,6 +1,10 @@
 #pragma once
 
 
+#include "Core/Defines.h"
+
+
+#include <cstdint>
 #include <print>
 
 
@@ -14,8 +18,9 @@ namespace Nut
 	{
 		None,
 		WindowClose, WindowSize,
+		MouseMove, MouseButtonPress, MouseButtonRelease,
+		KeyPress, KeyRelease, KeyType,
 	};
-
 
 
 	class Event
@@ -76,5 +81,105 @@ namespace Nut
 		int m_Width{};
 		int m_Height{};
 	};
+
+
+	class MouseMovedEvent : public Event
+	{
+	public:
+		MouseMovedEvent(int32_t x, int32_t y)
+			: Event(), m_X(x), m_Y(y)
+		{
+			m_Type = EventType::MouseMove;
+		}
+
+		virtual auto Print() -> void override
+		{
+			std::println("MouseMovedEvent - {}x{}", m_X, m_Y);
+		}
+
+		auto X() const -> int32_t { return m_X; }
+		auto Y() const -> int32_t { return m_Y; }
+
+	private:
+		int32_t m_X{ 0 };
+		int32_t m_Y{ 0 };
+	};
+
+	class MouseButtonPressedEvent : public Event
+	{
+	public:
+		MouseButtonPressedEvent(MouseButton button)
+			: Event(), m_Button(button)
+		{
+			m_Type = EventType::MouseButtonPress;
+		}
+
+		auto Button() const -> MouseButton { return m_Button; }
+
+	private:
+		MouseButton m_Button;
+	};
+
+
+	class MouseButtonReleasedEvent : public Event
+	{
+	public:
+		MouseButtonReleasedEvent(MouseButton button)
+			: Event(), m_Button(button)
+		{
+			m_Type = EventType::MouseButtonRelease;
+		}
+
+		auto Button() const -> MouseButton { return m_Button; }
+
+	private:
+		MouseButton m_Button;
+	};
+
+	class KeyPressedEvent : public Event
+	{
+	public:
+		KeyPressedEvent(uint16_t key)
+			: Event(), m_Key(key)
+		{
+			m_Type = EventType::KeyPress;
+		}
+
+		auto Key() const -> uint16_t { return m_Key; }
+
+	private:
+		uint16_t m_Key;
+	};
+
+	class KeyReleasedEvent : public Event
+	{
+	public:
+		KeyReleasedEvent(uint16_t key)
+			: Event(), m_Key(key)
+		{
+			m_Type = EventType::KeyRelease;
+		}
+
+		auto Key() const -> uint16_t { return m_Key; }
+
+	private:
+		uint16_t m_Key;
+	};
+
+	class KeyTypedEvent : public Event
+	{
+	public:
+		KeyTypedEvent(uint16_t key)
+			: Event(), m_Key(key)
+		{
+			m_Type = EventType::KeyType;
+		}
+
+		auto Key() const -> uint16_t { return m_Key; }
+
+	private:
+		uint16_t m_Key;
+	};
+
 
 }

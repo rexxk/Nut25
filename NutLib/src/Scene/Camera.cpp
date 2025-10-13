@@ -30,6 +30,12 @@ namespace Nut
 				Resize(e->Width(), e->Height());
 			});
 
+		EventHandler::Subscribe(EventType::MouseMove, [&](Ref<Event> event)
+			{
+				Ref<MouseMovedEvent> e = std::dynamic_pointer_cast<MouseMovedEvent>(event);
+
+				e->Print();
+			});
 	}
 
 	auto Camera::Resize(int32_t canvasWidth, int32_t canvasHeight) -> void

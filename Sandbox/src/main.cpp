@@ -108,7 +108,7 @@ public:
 			auto& transform = m_Entity3->GetTransform();
 			transform.Position.y = 2.5f * std::sinf(twoPi * 0.1f * elapsedTime);
 
-			transform.Rotation.x = 5.0f * std::cosf(twoPi * 0.075 * elapsedTime);
+			transform.Rotation.x = 5.0f * std::cosf(twoPi * 0.075f * elapsedTime);
 		}
 
 		{
@@ -121,6 +121,7 @@ public:
 
 		m_Scene.Update(timestep);
 		m_Scene.Draw();
+
 	}
 
 

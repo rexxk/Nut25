@@ -6,6 +6,9 @@ target_sources(NutLib PUBLIC
 	Application.cpp
 	Base.h
 	Buffer.h
+	Defines.h
+	Input.h
+	Input.cpp
 	Layer.h
 	Layer.cpp
 	LayerStack.h
