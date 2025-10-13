@@ -140,6 +140,8 @@ namespace Nut
 		glViewport(0, 0, windowWidth, windowHeight);
 
 //		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//		glEnable(GL_CULL_FACE);
+//		glCullFace(GL_FRONT);
 
 		{
 			auto shader = ShaderLibrary::Get("FlatShader");
@@ -179,6 +181,7 @@ namespace Nut
 		}
 
 //		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDisable(GL_CULL_FACE);
 
 		{
 			auto shader = ShaderLibrary::Get("CompositionShader");
