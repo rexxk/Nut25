@@ -80,17 +80,29 @@ namespace Nut
 
 
 
-	auto Sampler::Create(GLenum filter) -> Ref<Sampler>
+	auto FilterTypeToEnum(SamplerFilterType filterType) -> GLenum
+	{
+		switch (filterType)
+		{
+			case SamplerFilterType::Linear: return GL_LINEAR_MIPMAP_LINEAR;
+			case SamplerFilterType::Nearest: return GL_NEAREST_MIPMAP_NEAREST;
+		}
+		
+		return GL_NEAREST_MIPMAP_NEAREST;
+	}
+
+
+	auto Sampler::Create(SamplerFilterType filter) -> Ref<Sampler>
 	{
 		return CreateRef<Sampler>(filter);
 	}
 
-	Sampler::Sampler(GLenum filter)
+	Sampler::Sampler(SamplerFilterType filter)
 	{
 		glCreateSamplers(1, &m_ID);
 
-		glSamplerParameteri(m_ID, GL_TEXTURE_MIN_FILTER, filter);
-		glSamplerParameteri(m_ID, GL_TEXTURE_MAG_FILTER, filter);
+		glSamplerParameteri(m_ID, GL_TEXTURE_MIN_FILTER, FilterTypeToEnum(filter));
+		glSamplerParameteri(m_ID, GL_TEXTURE_MAG_FILTER, FilterTypeToEnum(filter));
 		glSamplerParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glSamplerParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}

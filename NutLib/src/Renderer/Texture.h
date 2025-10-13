@@ -13,6 +13,13 @@ namespace Nut
 {
 
 
+	enum SamplerFilterType
+	{
+		Nearest,
+		Linear,
+	};
+
+
 	struct TextureSpecification
 	{
 		uint32_t Width{ 1u };
@@ -50,9 +57,9 @@ namespace Nut
 	class Sampler
 	{
 	public:
-		static auto Create(GLenum filter) -> Ref<Sampler>;
+		static auto Create(SamplerFilterType filter) -> Ref<Sampler>;
 
-		Sampler(GLenum filter);
+		Sampler(SamplerFilterType filter);
 		~Sampler();
 
 		auto ID() const -> const GLuint { return m_ID; }

@@ -37,6 +37,7 @@ namespace Nut
 		Ref<Mesh> DrawRectangle{ nullptr };
 
 		Ref<Sampler> NearestSampler{ nullptr };
+		Ref<Sampler> LinearSampler{ nullptr };
 
 		Ref<OpenGLFramebuffer> FlatFramebuffer{ nullptr };
 
@@ -85,7 +86,8 @@ namespace Nut
 		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
 		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
 
-		s_SceneData.NearestSampler = Sampler::Create(GL_NEAREST);
+		s_SceneData.NearestSampler = Sampler::Create(SamplerFilterType::Nearest);
+		s_SceneData.LinearSampler = Sampler::Create(SamplerFilterType::Linear);
 
 		Nut::FramebufferSpecification framebufferSpec{};
 		framebufferSpec.Width = static_cast<uint32_t>(windowWidth);
@@ -144,6 +146,7 @@ namespace Nut
 			shader->Bind();
 
 			glBindSampler(0, s_SceneData.NearestSampler->ID());
+//			glBindSampler(0, s_SceneData.LinearSampler->ID());
 
 			glBindFramebuffer(GL_FRAMEBUFFER, s_SceneData.FlatFramebuffer->ID());
 
