@@ -182,4 +182,84 @@ namespace Nut
 	}
 
 
+	auto Mesh::UpdateHeightmap(const HeightmapSpecification& specification) -> void
+	{
+		uint32_t index{ 0u };
+
+		uint32_t width = 256u;
+		uint32_t height = 256u;
+
+		size_t position = 0;
+
+		for (auto z = 0u; z < height; z++)
+		{
+			for (auto x = 0u; x < width; x++)
+			{
+				float div1 = specification.NoiseDivider1;
+				float div2 = specification.NoiseDivider2;
+				float div3 = specification.NoiseDivider3;
+
+				float noise = (PerlinNoise::GetNoise(x / div1, z / div1) + PerlinNoise::GetNoise(x / div2, z / div2) * 0.5f + PerlinNoise::GetNoise(x / div3, z / div3) * 0.25f) / specification.Divider;
+				float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
+
+				Vertex& v = m_Vertices[z * width + x];
+//				v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
+				v.Position.y = brightness;
+			}
+		}
+	
+		index = 0u;
+		for (auto z = 0u; z < height - 1; z++)
+		{
+			for (auto x = 0u; x < width - 1; x++)
+			{
+				auto v1 = (width * z) + x;
+				auto v2 = (width * z) + (x + 1);
+				auto v3 = (width * (z + 1)) + x;
+				auto v4 = (width * (z + 1)) + (x + 1);
+
+//				indices[index++] = v1;
+//				indices[index++] = v2;
+//				indices[index++] = v3;
+
+				{
+					glm::vec3& p1 = m_Vertices[v1].Position;
+					glm::vec3& p2 = m_Vertices[v2].Position;
+					glm::vec3& p3 = m_Vertices[v3].Position;
+
+					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
+
+					m_Vertices[v1].Normal += normal;
+					m_Vertices[v2].Normal += normal;
+					m_Vertices[v3].Normal += normal;
+
+					m_Vertices[v1].Normal /= 2.0f;
+					m_Vertices[v2].Normal /= 2.0f;
+					m_Vertices[v3].Normal /= 2.0f;
+				}
+
+//				indices[index++] = v4;
+//				indices[index++] = v3;
+//				indices[index++] = v2;
+
+				{
+					glm::vec3& p1 = m_Vertices[v4].Position;
+					glm::vec3& p2 = m_Vertices[v3].Position;
+					glm::vec3& p3 = m_Vertices[v2].Position;
+
+					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
+
+					m_Vertices[v4].Normal += normal;
+					m_Vertices[v3].Normal += normal;
+					m_Vertices[v2].Normal += normal;
+
+					m_Vertices[v4].Normal /= 2.0f;
+					m_Vertices[v3].Normal /= 2.0f;
+					m_Vertices[v2].Normal /= 2.0f;
+				}
+			}
+		}
+
+	}
+
 }

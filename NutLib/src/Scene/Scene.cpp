@@ -38,6 +38,7 @@ namespace Nut
 		std::vector<Ref<Entity>> Entities;
 
 		Ref<Mesh> DrawRectangle{ nullptr };
+		Ref<Model> TerrainModel{ nullptr };
 
 		Ref<Sampler> NearestSampler{ nullptr };
 		Ref<Sampler> LinearSampler{ nullptr };
@@ -82,6 +83,7 @@ namespace Nut
 		return CreateRef<Camera>(position, rotation, canvasWidth, canvasHeight);
 	}
 
+	static HeightmapSpecification s_HeightmapSpecification;
 
 	Scene::Scene()
 	{		
@@ -140,6 +142,24 @@ namespace Nut
 			ImGui::Separator();
 			ImGui::Text("Radiance");
 			ImGui::ColorPicker3("##Radiance", glm::value_ptr(s_DirectionalLightUniform.Radiance));
+
+			ImGui::End();
+		}
+
+		if (s_SceneData.TerrainModel != nullptr)
+		{
+			ImGui::Begin("Heightmap");
+
+			ImGui::Text("Divider 1"); ImGui::SameLine(); ImGui::DragFloat("##div1", &s_HeightmapSpecification.NoiseDivider1, 0.1f, 0.1f, 100.0f);
+			ImGui::Text("Divider 2"); ImGui::SameLine(); ImGui::DragFloat("##div2", &s_HeightmapSpecification.NoiseDivider2, 0.1f, 0.1f, 100.0f);
+			ImGui::Text("Divider 3"); ImGui::SameLine(); ImGui::DragFloat("##div3", &s_HeightmapSpecification.NoiseDivider3, 0.1f, 0.1f, 100.0f);
+			ImGui::Text("Smoothness"); ImGui::SameLine(); ImGui::DragFloat("##smoothness", &s_HeightmapSpecification.Divider, 0.1f, 0.1f, 100.0f);
+
+			if (ImGui::Button("Generate"))
+			{
+				AssetManager::GetMesh(s_SceneData.TerrainModel->MeshIDs()[0])->UpdateHeightmap(s_HeightmapSpecification);
+				Renderer::UpdateModel(s_SceneData.TerrainModel);
+			}
 
 			ImGui::End();
 		}
@@ -225,6 +245,11 @@ namespace Nut
 	{
 		s_SceneData.Entities.emplace_back(entity);
 
+	}
+
+	auto Scene::SetTerrainModel(Ref<Model> terrainModel) -> void
+	{
+		s_SceneData.TerrainModel = terrainModel;
 	}
 
 }

@@ -9,6 +9,8 @@ namespace Nut
 {
 
 
+	class Model;
+
 	class Scene
 	{
 	public:
@@ -19,6 +21,7 @@ namespace Nut
 
 		auto AddEntity(Ref<Entity> entity) -> void;
 
+		auto SetTerrainModel(Ref<Model> terrainModel) -> void;
 	};
 
 

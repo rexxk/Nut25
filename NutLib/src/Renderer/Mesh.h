@@ -44,6 +44,8 @@ namespace Nut
 		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name = "<mesh>");
 		~Mesh();
 
+		auto UpdateHeightmap(const HeightmapSpecification& specification) -> void;
+
 		auto GetVertices() const -> const std::vector<Vertex>& { return m_Vertices; }
 		auto GetIndices() const -> const std::vector<uint32_t>& { return m_Indices; }
 

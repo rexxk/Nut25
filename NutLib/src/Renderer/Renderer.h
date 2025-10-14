@@ -22,6 +22,7 @@ namespace Nut
 
 
 	class Mesh;
+	class Model;
 	struct ShaderLayoutInfo;
 
 
@@ -34,6 +35,7 @@ namespace Nut
 		static auto DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
 		static auto DrawMesh(Ref<Mesh> mesh, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
 
+		static auto UpdateModel(Ref<Model> mesh) -> void;
 	};
 
 }
