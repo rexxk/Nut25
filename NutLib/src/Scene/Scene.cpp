@@ -135,7 +135,10 @@ namespace Nut
 		{
 			ImGui::Begin("Directional Light");
 
+			ImGui::Text("Direction");
 			ImGui::DragFloat3("##Direction", glm::value_ptr(s_DirectionalLightUniform.Direction), 0.01f, -1.0f, 1.0f);
+			ImGui::Separator();
+			ImGui::Text("Radiance");
 			ImGui::ColorPicker3("##Radiance", glm::value_ptr(s_DirectionalLightUniform.Radiance));
 
 			ImGui::End();
