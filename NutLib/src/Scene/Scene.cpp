@@ -13,8 +13,11 @@
 #include "Scene/Entity.h"
 #include "Scene/Model.h"
 
+#include "imgui.h"
+
 #include <vector>
 
+#include <glm/gtc/type_ptr.hpp>
 
 
 
@@ -43,18 +46,12 @@ namespace Nut
 
 		Ref<Camera> SceneCamera{ nullptr };
 		Ref<UniformBuffer> ViewProjectionUniformBuffer{ nullptr };
+		Ref<UniformBuffer> DirectionalLightUniformBuffer{ nullptr };
 
 		Ref<Window> Window{ nullptr };
 	};
 
 	static SceneData s_SceneData;
-
-	struct SceneBuffers
-	{
-		Ref<Buffer> ViewProjectionBuffer{ nullptr };
-	};
-
-	static SceneBuffers s_SceneBuffers;
 
 	struct SceneDrawData
 	{
@@ -69,6 +66,16 @@ namespace Nut
 	};
 
 	static ViewProjectionUniform s_ViewProjectionUniform;
+
+	struct DirectionalLight
+	{
+		glm::vec3 Direction;
+		float Padding;
+		glm::vec3 Radiance;
+		float Padding2;
+	};
+
+	static DirectionalLight s_DirectionalLightUniform;
 
 	auto Camera::Create(const glm::vec3& position, const glm::vec3& rotation, int32_t canvasWidth, int32_t canvasHeight) -> Ref<Camera>
 	{
@@ -85,6 +92,9 @@ namespace Nut
 
 		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
 		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
+
+		s_DirectionalLightUniform = DirectionalLight{ .Direction{-0.3f, 0.5f, 0.75f}, .Radiance{1.0f} };
+		s_SceneData.DirectionalLightUniformBuffer = UniformBuffer::Create(&s_DirectionalLightUniform, sizeof(DirectionalLight));
 
 		s_SceneData.NearestSampler = Sampler::Create(SamplerFilterType::Nearest);
 		s_SceneData.LinearSampler = Sampler::Create(SamplerFilterType::Linear);
@@ -119,6 +129,17 @@ namespace Nut
 		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
 		s_SceneData.ViewProjectionUniformBuffer->SetData(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
 
+		s_SceneData.DirectionalLightUniformBuffer->SetData(&s_DirectionalLightUniform, sizeof(DirectionalLight));
+
+
+		{
+			ImGui::Begin("Directional Light");
+
+			ImGui::DragFloat3("##Direction", glm::value_ptr(s_DirectionalLightUniform.Direction), 0.01f, -1.0f, 1.0f);
+			ImGui::ColorPicker3("##Radiance", glm::value_ptr(s_DirectionalLightUniform.Radiance));
+
+			ImGui::End();
+		}
 	}
 
 	auto Scene::Draw() -> void
@@ -155,6 +176,7 @@ namespace Nut
 			s_SceneData.FlatFramebuffer->Clear();
 
 			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(ViewProjectionUniform));
+			glBindBufferRange(GL_UNIFORM_BUFFER, 1, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 //			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
 
 			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);

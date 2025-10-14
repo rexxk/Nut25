@@ -183,7 +183,7 @@ namespace Nut
 				layout(location = 3) in vec4 a_Color;
 				layout(location = 4) in mat4 a_InstanceMatrix;
 
-				layout(std140) uniform Camera
+				layout(binding = 0, std140) uniform Camera
 				{
 					mat4 ViewProjection;
 				};
@@ -215,13 +215,26 @@ namespace Nut
 
 				uniform sampler2D u_Texture;
 
+				struct DirectionalLight
+				{
+					vec3 Direction;
+					vec3 Radiance;
+				};
+
+				layout(binding = 1, std140) uniform DirectionalLightBuffer
+				{
+					DirectionalLight DirLight;
+				};
+
 				void main()
 				{
 					vec3 lightDirection = vec3(-0.3, 0.5, 0.75);
-					vec3 negativeLightDirection = normalize(-lightDirection);
+//					vec3 negativeLightDirection = normalize(-lightDirection);
+					vec3 negativeLightDirection = normalize(-DirLight.Direction);
 
 					float diffuse = max(dot(normalize(v_Normal), negativeLightDirection), 0.0);
-					vec3 diffuseColor = diffuse * vec3(1.0, 1.0, 1.0);
+//					vec3 diffuseColor = diffuse * vec3(1.0, 1.0, 1.0);
+					vec3 diffuseColor = diffuse * DirLight.Radiance;
 
 //					vec3 normal = v_Normal;
 //					normal *= -1.0;
