@@ -177,7 +177,7 @@ namespace Nut
 		auto meshID = model->MeshIDs()[0];
 		auto mesh = AssetManager::GetMesh(meshID);
 		rendererObject.VertexBuffers[0]->SetData(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()));
-		rendererObject.IndexBuffer->SetData(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size()));
+		rendererObject.IndexBuffer->SetData(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size() * sizeof(uint32_t)));
 	}
 
 }
