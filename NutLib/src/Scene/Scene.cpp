@@ -8,6 +8,7 @@
 #include "Renderer/OpenGLBuffer.h"
 #include "Renderer/OpenGLFramebuffer.h"
 #include "Renderer/OpenGLShader.h"
+#include "Renderer/TerrainMesh.h"
 #include "Renderer/Texture.h"
 #include "Scene/Camera.h"
 #include "Scene/Entity.h"
@@ -83,7 +84,7 @@ namespace Nut
 		return CreateRef<Camera>(position, rotation, canvasWidth, canvasHeight);
 	}
 
-	static HeightmapSpecification s_HeightmapSpecification;
+	static HeightmapSpecification s_HeightmapSpecification{ .NoiseDivider1{14.0f}, .NoiseDivider2{28.0f}, .NoiseDivider3{19.0f}, .Divider{16.0f} };
 
 	Scene::Scene()
 	{		
@@ -157,7 +158,7 @@ namespace Nut
 
 			if (ImGui::Button("Generate"))
 			{
-				AssetManager::GetMesh(s_SceneData.TerrainModel->MeshIDs()[0])->UpdateHeightmap(s_HeightmapSpecification);
+				std::dynamic_pointer_cast<TerrainMesh>(AssetManager::GetMesh(s_SceneData.TerrainModel->MeshIDs()[0]))->UpdateHeightmap(s_HeightmapSpecification);
 				Renderer::UpdateModel(s_SceneData.TerrainModel);
 			}
 

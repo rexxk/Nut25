@@ -40,7 +40,7 @@ public:
 		heightmapSpecification.NoiseDivider3 = 19.0f;
 		heightmapSpecification.Divider = 16.0f;
 
-		auto terrainID = Nut::AssetManager::AddMesh(Nut::Mesh::CreatePlane(256u, 256u, heightmapSpecification));
+		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
 
 
 		Nut::TextureSpecification texSpec{};

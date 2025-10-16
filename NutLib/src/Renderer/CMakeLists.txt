@@ -14,6 +14,8 @@ target_sources(NutLib PRIVATE
 	Renderer.cpp
 	RendererContext.h
 	RendererContext.cpp
+	TerrainMesh.h
+	TerrainMesh.cpp
 	Texture.h
 	Texture.cpp
 )

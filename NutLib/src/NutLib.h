@@ -16,6 +16,8 @@
 #include "Renderer/OpenGLFramebuffer.h"
 #include "Renderer/OpenGLShader.h"
 #include "Renderer/Renderer.h"
+#include "Renderer/TerrainMesh.h"
+#include "Renderer/Texture.h"
 
 #include "Scene/Entity.h"
 #include "Scene/Model.h"
