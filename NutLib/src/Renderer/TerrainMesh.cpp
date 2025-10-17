@@ -23,16 +23,16 @@ namespace Nut
 		m_Vertices.resize(width * height);
 		size_t position = 0;
 
+		const float& div1 = specification.NoiseDivider1;
+		const float& div2 = specification.NoiseDivider2;
+		const float& div3 = specification.NoiseDivider3;
+
 		if (specification.UseNoise)
 		{
 			for (auto z = 0u; z < height; z++)
 			{
 				for (auto x = 0u; x < width; x++)
 				{
-					float div1 = specification.NoiseDivider1;
-					float div2 = specification.NoiseDivider2;
-					float div3 = specification.NoiseDivider3;
-
 					float noise = (PerlinNoise::GetNoise(x / div1, z / div1) + PerlinNoise::GetNoise(x / div2, z / div2) * 0.5f + PerlinNoise::GetNoise(x / div3, z / div3) * 0.25f) / specification.Divider;
 					float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
 
@@ -136,14 +136,14 @@ namespace Nut
 
 		size_t position = 0;
 
+		const float& div1 = specification.NoiseDivider1;
+		const float& div2 = specification.NoiseDivider2;
+		const float& div3 = specification.NoiseDivider3;
+
 		for (auto z = 0u; z < m_Height; z++)
 		{
 			for (auto x = 0u; x < m_Width; x++)
 			{
-				float div1 = specification.NoiseDivider1;
-				float div2 = specification.NoiseDivider2;
-				float div3 = specification.NoiseDivider3;
-
 				float noise = (PerlinNoise::GetNoise(x / div1, z / div1) + PerlinNoise::GetNoise(x / div2, z / div2) * 0.5f + PerlinNoise::GetNoise(x / div3, z / div3) * 0.25f) / specification.Divider;
 				float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
 
