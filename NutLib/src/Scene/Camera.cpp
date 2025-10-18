@@ -58,4 +58,9 @@ namespace Nut
 		m_Properties.Position = m_Properties.LookAt - ForwardDirection() * m_Properties.Distance;
 	}
 
+	auto Camera::Update() -> void
+	{
+		CalculateViewMatrix();
+	}
+
 }

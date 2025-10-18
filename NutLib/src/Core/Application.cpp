@@ -65,6 +65,8 @@ namespace Nut
 			double timestep = timestepTimer.ElapsedTime() / 1000.0;
 			timestepTimer.Reset();
 
+			Input::Update();
+
 			m_Window->HandleEvents();
 			EventHandler::Poll();
 

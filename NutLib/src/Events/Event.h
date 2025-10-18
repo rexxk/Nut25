@@ -18,7 +18,7 @@ namespace Nut
 	{
 		None,
 		WindowClose, WindowSize,
-		MouseMove, MouseButtonPress, MouseButtonRelease,
+		MouseMove, MouseButtonPress, MouseButtonRelease, MouseDelta,
 		KeyPress, KeyRelease, KeyType,
 	};
 
@@ -103,6 +103,25 @@ namespace Nut
 	private:
 		int32_t m_X{ 0 };
 		int32_t m_Y{ 0 };
+	};
+
+	class MouseDeltaEvent : public Event
+	{
+	public:
+		MouseDeltaEvent(int32_t x, int32_t y, int32_t z = 0)
+			: Event(), m_X(x), m_Y(y), m_Z(z)
+		{
+			m_Type = EventType::MouseDelta;
+		}
+
+		auto X() const -> int32_t { return m_X; }
+		auto Y() const -> int32_t { return m_Y; }
+		auto Z() const -> int32_t { return m_Z; }
+
+	private:
+		int32_t m_X{ 0 };
+		int32_t m_Y{ 0 };
+		int32_t m_Z{ 0 };
 	};
 
 	class MouseButtonPressedEvent : public Event

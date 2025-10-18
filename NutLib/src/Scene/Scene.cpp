@@ -11,6 +11,7 @@
 #include "Renderer/TerrainMesh.h"
 #include "Renderer/Texture.h"
 #include "Scene/Camera.h"
+#include "Scene/CameraController.h"
 #include "Scene/Entity.h"
 #include "Scene/Model.h"
 
@@ -47,6 +48,7 @@ namespace Nut
 		Ref<OpenGLFramebuffer> FlatFramebuffer{ nullptr };
 
 		Ref<Camera> SceneCamera{ nullptr };
+		Ref<CameraController> CameraController{ nullptr };
 		Ref<UniformBuffer> ViewProjectionUniformBuffer{ nullptr };
 		Ref<UniformBuffer> DirectionalLightUniformBuffer{ nullptr };
 
@@ -92,6 +94,7 @@ namespace Nut
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
 
 		s_SceneData.SceneCamera = Camera::Create(glm::vec3{ 3.0f, 3.0f, -5.0f }, glm::vec3{ 0.0f }, windowWidth, windowHeight);
+		s_SceneData.CameraController = CreateRef<CameraController>(s_SceneData.SceneCamera);
 
 		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
 		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
@@ -129,6 +132,8 @@ namespace Nut
 
 	auto Scene::Update(double ts) -> void
 	{
+		s_SceneData.CameraController->Update(ts);
+
 		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
 		s_SceneData.ViewProjectionUniformBuffer->SetData(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
 

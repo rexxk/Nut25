@@ -17,6 +17,7 @@ namespace Nut
 		static auto IsMouseButtonPressed(MouseButton button) -> bool;
 		static auto IsKeyPressed(uint16_t key) -> bool;
 
+		static auto Update() -> void;
 	};
 
 

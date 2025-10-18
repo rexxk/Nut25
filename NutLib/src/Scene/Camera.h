@@ -36,9 +36,14 @@ namespace Nut
 		auto ProjectionMatrix() -> glm::mat4 { return m_ProjectionMatrix; }
 		auto ViewMatrix() -> glm::mat4 { return m_ViewMatrix; }
 
+		auto Update() -> void;
+
 		auto ViewProjectionMatrix() -> glm::mat4 { return m_ProjectionMatrix * m_ViewMatrix; }
 
 		CameraProperties& GetProperties() { return m_Properties; }
+
+		auto UpDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 0.0f, 1.0f, 0.0f }); }
+		auto ForwardDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 0.0f, 0.0f, -1.0f }); }
 
 	private:
 		auto Resize(int32_t canvasWidth, int32_t canvasHeight) -> void;
@@ -47,7 +52,6 @@ namespace Nut
 		auto CalculatePosition() -> void;
 		auto GetOrientation() const -> const glm::quat { return glm::quat{ glm::vec3{-m_Properties.Pitch, -m_Properties.Yaw, 0.0f} }; }
 
-		auto ForwardDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 0.0f, 0.0f, -1.0f }); }
 
 	private:
 		CameraProperties m_Properties{};

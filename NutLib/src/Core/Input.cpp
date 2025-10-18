@@ -10,28 +10,42 @@
 namespace Nut
 {
 
-	static std::vector<bool> s_MouseButtonStatus;
 
-	static std::vector<bool> s_KeyStatus;
+	struct RawInputData
+	{
+		std::vector<bool> MouseButtonStatus;
+		std::vector<bool> KeyStatus;
+
+		int32_t LastMouseXPosition{ -1 };
+		int32_t LastMouseYPosition{ -1 };
+	
+		int32_t DeltaX{ 0 };
+		int32_t DeltaY{ 0 };
+		int32_t DeltaZ{ 0 };
+	};
+
+	static RawInputData s_RawInputData;
+
+
 
 
 	auto Input::Initialize() -> void
 	{
-		s_MouseButtonStatus.resize(static_cast<size_t>(MouseButton::ButtonCount), false);
-		s_KeyStatus.resize(256, false);
+		s_RawInputData.MouseButtonStatus.resize(static_cast<size_t>(MouseButton::ButtonCount), false);
+		s_RawInputData.KeyStatus.resize(256, false);
 
 		EventHandler::Subscribe(EventType::MouseButtonPress, [](Ref<Event> event)
 			{
 				Ref<MouseButtonPressedEvent> e = std::dynamic_pointer_cast<MouseButtonPressedEvent>(event);
 
-				s_MouseButtonStatus[static_cast<size_t>(e->Button())] = true;
+				s_RawInputData.MouseButtonStatus[static_cast<size_t>(e->Button())] = true;
 			});
 
 		EventHandler::Subscribe(EventType::MouseButtonRelease, [](Ref<Event> event)
 			{
 				Ref<MouseButtonReleasedEvent> e = std::dynamic_pointer_cast<MouseButtonReleasedEvent>(event);
 
-				s_MouseButtonStatus[static_cast<size_t>(e->Button())] = false;
+				s_RawInputData.MouseButtonStatus[static_cast<size_t>(e->Button())] = false;
 			});
 
 		EventHandler::Subscribe(EventType::KeyPress, [](Ref<Event> event)
@@ -39,7 +53,7 @@ namespace Nut
 				Ref<KeyPressedEvent> e = std::dynamic_pointer_cast<KeyPressedEvent>(event);
 
 				if (e->Key() < 256)
-					s_KeyStatus[static_cast<size_t>(e->Key())] = true;
+					s_RawInputData.KeyStatus[static_cast<size_t>(e->Key())] = true;
 			});
 
 		EventHandler::Subscribe(EventType::KeyRelease, [](Ref<Event> event)
@@ -47,22 +61,54 @@ namespace Nut
 				Ref<KeyReleasedEvent> e = std::dynamic_pointer_cast<KeyReleasedEvent>(event);
 
 				if (e->Key() < 256)
-					s_KeyStatus[static_cast<size_t>(e->Key())] = false;
+					s_RawInputData.KeyStatus[static_cast<size_t>(e->Key())] = false;
+			});
+
+		EventHandler::Subscribe(EventType::MouseMove, [](Ref<Event> event)
+			{
+				Ref<MouseMovedEvent> e = std::dynamic_pointer_cast<MouseMovedEvent>(event);
+
+				if (s_RawInputData.LastMouseXPosition == -1 || s_RawInputData.LastMouseYPosition == -1)
+				{
+					s_RawInputData.LastMouseXPosition = e->X();
+					s_RawInputData.LastMouseYPosition = e->Y();
+
+					return;
+				}
+
+				s_RawInputData.DeltaX = s_RawInputData.LastMouseXPosition - e->X();
+				s_RawInputData.DeltaY = s_RawInputData.LastMouseYPosition - e->Y();
+
+				s_RawInputData.LastMouseXPosition = e->X();
+				s_RawInputData.LastMouseYPosition = e->Y();
 			});
 	}
 
 
 	auto Input::IsMouseButtonPressed(MouseButton button) -> bool
 	{
-		return s_MouseButtonStatus[static_cast<size_t>(button)];
+		return s_RawInputData.MouseButtonStatus[static_cast<size_t>(button)];
 	}
 
 	auto Input::IsKeyPressed(uint16_t key) -> bool
 	{
 		if (key < 256)
-			return s_KeyStatus[key];
+			return s_RawInputData.KeyStatus[key];
 
 		return false;
+	}
+
+	auto Input::Update() -> void
+	{
+		if (s_RawInputData.DeltaX != 0 || s_RawInputData.DeltaY != 0 || s_RawInputData.DeltaZ != 0)
+		{
+			Ref<MouseDeltaEvent> event = CreateRef<MouseDeltaEvent>(s_RawInputData.DeltaX, s_RawInputData.DeltaY, s_RawInputData.DeltaZ);
+			EventHandler::AddEvent(event);
+
+			s_RawInputData.DeltaX = 0;
+			s_RawInputData.DeltaY = 0;
+			s_RawInputData.DeltaZ = 0;
+		}
 	}
 
 }
