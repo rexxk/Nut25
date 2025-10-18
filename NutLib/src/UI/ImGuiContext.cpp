@@ -59,6 +59,7 @@ namespace Nut
 
 				ImGuiIO& io = ImGui::GetIO();
 				io.MouseWheel = e->Z();
+				io.MouseDelta = ImVec2(static_cast<float>(e->X()), static_cast<float>(e->Y()));
 			});
 	}
 
