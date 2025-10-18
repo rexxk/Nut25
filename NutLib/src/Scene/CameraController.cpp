@@ -1,6 +1,8 @@
 #include "Scene/CameraController.h"
 
+#include "Core/Defines.h"
 #include "Core/Input.h"
+#include "Core/Log.h"
 #include "Events/EventHandler.h"
 
 
@@ -34,6 +36,26 @@ namespace Nut
 		m_Timestep = timestep;
 
 		m_Camera->Update();
+
+		auto& cameraProperties = m_Camera->GetProperties();
+
+		if (Input::IsKeyPressed(Keys::W))
+		{
+			cameraProperties.LookAt += m_Camera->ForwardDirection() * m_WalkSpeed;
+		}
+		if (Input::IsKeyPressed(Keys::A))
+		{
+			cameraProperties.LookAt -= m_Camera->RightDirection() * m_WalkSpeed;
+		}
+		if (Input::IsKeyPressed(Keys::S))
+		{
+			cameraProperties.LookAt -= m_Camera->ForwardDirection() * m_WalkSpeed;
+		}
+		if (Input::IsKeyPressed(Keys::D))
+		{
+			cameraProperties.LookAt += m_Camera->RightDirection() * m_WalkSpeed;
+		}
+
 	}
 
 }

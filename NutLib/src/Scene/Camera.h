@@ -42,6 +42,7 @@ namespace Nut
 
 		CameraProperties& GetProperties() { return m_Properties; }
 
+		auto RightDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 1.0f, 0.0f, 0.0f }); }
 		auto UpDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 0.0f, 1.0f, 0.0f }); }
 		auto ForwardDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 0.0f, 0.0f, -1.0f }); }
 

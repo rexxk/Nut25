@@ -18,6 +18,7 @@ namespace Nut
 	private:
 		Ref<Camera> m_Camera{ nullptr };
 
+		float m_WalkSpeed{ 1.0f };
 		float m_MouseSpeed{ 1.0f };
 		double m_Timestep{ 0.0 };
 	};

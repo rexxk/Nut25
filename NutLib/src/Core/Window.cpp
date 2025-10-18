@@ -3,6 +3,7 @@
 #include "Core/Application.h"
 #include "Core/Base.h"
 #include "Core/Defines.h"
+#include "Core/Log.h"
 #include "Events/EventHandler.h"
 
 #include <glad/glad.h>

@@ -90,10 +90,10 @@ namespace Nut
 		return s_RawInputData.MouseButtonStatus[static_cast<size_t>(button)];
 	}
 
-	auto Input::IsKeyPressed(uint16_t key) -> bool
+	auto Input::IsKeyPressed(Keys key) -> bool
 	{
-		if (key < 256)
-			return s_RawInputData.KeyStatus[key];
+		if (std::underlying_type<Keys>::type(key) < 256)
+			return s_RawInputData.KeyStatus[std::underlying_type<Keys>::type(key)];
 
 		return false;
 	}
