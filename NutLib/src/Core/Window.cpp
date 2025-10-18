@@ -113,6 +113,12 @@ namespace Nut
 
 			});
 
+		glfwSetScrollCallback(m_Handle, [](GLFWwindow* window, double xOffset, double yOffset)
+			{
+				Ref<MouseScrolledEvent> event = CreateRef<MouseScrolledEvent>(static_cast<int32_t>(yOffset));
+				EventHandler::AddEvent(event);
+			});
+
 		glfwSetKeyCallback(m_Handle, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 			{
 				if (action == GLFW_PRESS)

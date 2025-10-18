@@ -18,7 +18,7 @@ namespace Nut
 	{
 		None,
 		WindowClose, WindowSize,
-		MouseMove, MouseButtonPress, MouseButtonRelease, MouseDelta,
+		MouseMove, MouseButtonPress, MouseButtonRelease, MouseScroll, MouseDelta,
 		KeyPress, KeyRelease, KeyType,
 	};
 
@@ -102,6 +102,21 @@ namespace Nut
 
 	private:
 		int32_t m_X{ 0 };
+		int32_t m_Y{ 0 };
+	};
+
+	class MouseScrolledEvent : public Event
+	{
+	public:
+		MouseScrolledEvent(int32_t y)
+			: Event(), m_Y(y)
+		{
+			m_Type = EventType::MouseScroll;
+		}
+
+		auto Y() const -> int32_t { return m_Y; }
+
+	private:
 		int32_t m_Y{ 0 };
 	};
 

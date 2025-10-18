@@ -1,5 +1,6 @@
 #include "Core/Input.h"
 
+#include "Core/Log.h"
 #include "Events/EventHandler.h"
 
 
@@ -81,6 +82,12 @@ namespace Nut
 
 				s_RawInputData.LastMouseXPosition = e->X();
 				s_RawInputData.LastMouseYPosition = e->Y();
+			});
+
+		EventHandler::Subscribe(EventType::MouseScroll, [](Ref<Event> event)
+			{
+				Ref<MouseScrolledEvent> e = std::dynamic_pointer_cast<MouseScrolledEvent>(event);
+				s_RawInputData.DeltaZ = e->Y();
 			});
 	}
 

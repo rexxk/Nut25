@@ -52,6 +52,14 @@ namespace Nut
 				ImGuiIO& io = ImGui::GetIO();
 				io.MousePos = ImVec2(static_cast<float>(e->X()), static_cast<float>(e->Y()));
 			});
+
+		EventHandler::Subscribe(EventType::MouseDelta, [](Ref<Event> event)
+			{
+				Ref<MouseDeltaEvent> e = std::dynamic_pointer_cast<MouseDeltaEvent>(event);
+
+				ImGuiIO& io = ImGui::GetIO();
+				io.MouseWheel = e->Z();
+			});
 	}
 
 	auto ImGuiContext::Shutdown() -> void
