@@ -16,16 +16,26 @@ namespace Nut
 
 		EventHandler::Subscribe(EventType::MouseDelta, [&](Ref<Event> event)
 			{
+				Ref<MouseDeltaEvent> e = std::dynamic_pointer_cast<MouseDeltaEvent>(event);
+				auto& cameraProperties = m_Camera->GetProperties();
+
 				if (Input::IsMouseButtonPressed(MouseButton::Right))
 				{
-					Ref<MouseDeltaEvent> e = std::dynamic_pointer_cast<MouseDeltaEvent>(event);
-
-					auto& cameraProperties = m_Camera->GetProperties();
-
 					float yawSign = m_Camera->UpDirection().y < 0 ? -1.0f : 1.0f;
 					cameraProperties.Yaw -= yawSign * static_cast<float>(e->X()) * m_MouseSpeed * m_Timestep;
 					cameraProperties.Pitch -= static_cast<float>(e->Y()) * m_MouseSpeed * m_Timestep;
+
+					return;
 				}
+
+				if (Input::IsMouseButtonPressed(MouseButton::Middle))
+				{
+					cameraProperties.LookAt -= m_Camera->RightDirection() * m_MouseSpeed * static_cast<float>(e->X());
+					cameraProperties.LookAt += m_Camera->UpDirection() * m_MouseSpeed * static_cast<float>(e->Y());
+
+					return;
+				}
+
 			});
 
 	}
