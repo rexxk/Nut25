@@ -38,8 +38,8 @@ namespace Nut
 
 					Vertex v{};
 					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
-//					v.TexCoord = glm::vec2{ x % 2, z % 2 };
-					v.TexCoord = glm::vec2{ x / static_cast<float>(width), z / static_cast<float>(height) };
+
+					v.TexCoord = glm::vec2{ x / static_cast<float>(width), 1.0f - (z / static_cast<float>(height)) };
 					v.Normal = glm::vec3{ 0.0f };
 					v.Color = glm::vec4{ 1.0f };
 
