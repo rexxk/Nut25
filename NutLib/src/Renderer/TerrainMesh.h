@@ -18,6 +18,8 @@ namespace Nut
 		float NoiseDivider3{ 16.0f };
 		float Divider{ 1.75f };
 
+		float TextureMultiplier{ 1.0f };
+
 		std::filesystem::path Filepath{};
 	};
 

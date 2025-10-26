@@ -40,6 +40,7 @@ namespace Nut
 					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
 
 					v.TexCoord = glm::vec2{ x / static_cast<float>(width), 1.0f - (z / static_cast<float>(height)) };
+					v.TexCoord *= specification.TextureMultiplier;
 					v.Normal = glm::vec3{ 0.0f };
 					v.Color = glm::vec4{ 1.0f };
 
@@ -150,6 +151,9 @@ namespace Nut
 				Vertex& v = m_Vertices[z * m_Width + x];
 				//				v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
 				v.Position.y = brightness;
+
+				v.TexCoord = glm::vec2{ x / static_cast<float>(m_Width), 1.0f - (z / static_cast<float>(m_Height)) };
+				v.TexCoord *= specification.TextureMultiplier;
 			}
 		}
 
