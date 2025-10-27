@@ -169,11 +169,13 @@ namespace Nut
 
 	auto Renderer::UpdateModel(Ref<Model> model) -> void
 	{
-		if (!s_RendererObjects.contains(model->ModelID()))
+//		if (!s_RendererObjects.contains(model->ModelID()))
+		if (!s_RendererObjects.contains(model->MeshIDs()[0]))
 			return;
 
-		auto& rendererObject = s_RendererObjects[model->ModelID()];
-
+//		auto& rendererObject = s_RendererObjects[model->ModelID()];
+		auto& rendererObject = s_RendererObjects[model->MeshIDs()[0]];
+		
 		auto meshID = model->MeshIDs()[0];
 		auto mesh = AssetManager::GetMesh(meshID);
 		rendererObject.VertexBuffers[0]->SetData(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()));

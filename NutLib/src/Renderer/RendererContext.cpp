@@ -39,6 +39,16 @@ namespace Nut
 			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
 		}
 
+		// TerrainShader
+		{
+			ShaderSpecification shaderSpec{};
+			shaderSpec.ShaderName = "TerrainShader";
+			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/TerrainShader.vs");
+			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/TerrainShader.fs");
+
+			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
+		}
+
 		// Composition
 		{
 			ShaderSpecification shaderSpec{};
@@ -48,9 +58,6 @@ namespace Nut
 
 			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
 		}
-
-//		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadFlatShader());
-//		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadCompositionShader());
 
 		return CreateRef<RendererContext>(windowWidth, windowHeight);
 	}

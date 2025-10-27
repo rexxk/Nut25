@@ -70,13 +70,13 @@ public:
 		m_Scene.AddEntity(m_Entity2);
 		m_Scene.AddEntity(m_Entity3);
 
-		m_Scene.SetTerrainModel(Nut::AssetManager::GetModel(terrainModelID));
+//		m_Scene.SetTerrainModel(Nut::AssetManager::GetModel(terrainModelID));
 
 		m_Terrain->GetTransform().Position = glm::vec3{ 0.0f, -2.0f, 0.0f };
 
-		m_Scene.AddEntity(m_Terrain);
+		m_Scene.SetTerrainEntity(m_Terrain);
 
-		Nut::PerlinNoise noise{};
+//		Nut::PerlinNoise noise{};
 	}
 
 	virtual auto OnDetach() -> void override

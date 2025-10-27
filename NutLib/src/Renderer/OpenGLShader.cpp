@@ -296,21 +296,6 @@ namespace Nut
 		return CreateRef<OpenGLShader>(specification);
 	}
 
-	auto OpenGLShader::LoadFromFile(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath) -> Ref<OpenGLShader>
-	{
-		return CreateRef<OpenGLShader>(vertexShaderPath, fragmentShaderPath);
-	}
-
-	auto OpenGLShader::LoadFlatShader() -> Ref<OpenGLShader>
-	{
-		return CreateRef<OpenGLShader>("FlatShader", s_FlatShaderSources);
-	}
-
-	auto OpenGLShader::LoadCompositionShader() -> Ref<OpenGLShader>
-	{
-		return CreateRef<OpenGLShader>("CompositionShader", s_CompositionShaderSources);
-	}
-
 
 	OpenGLShader::OpenGLShader(const ShaderSpecification& specification)
 	{
@@ -322,11 +307,6 @@ namespace Nut
 		}
 
 		Reload();
-	}
-
-	OpenGLShader::OpenGLShader(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath)
-	{
-
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& shaderName, const std::unordered_map<ShaderDomain, std::string>& shaderSources)

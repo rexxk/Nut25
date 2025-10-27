@@ -40,7 +40,8 @@ namespace Nut
 		std::vector<Ref<Entity>> Entities;
 
 		Ref<Mesh> DrawRectangle{ nullptr };
-		Ref<Model> TerrainModel{ nullptr };
+//		Ref<Model> TerrainModel{ nullptr };
+		Ref<Entity> TerrainEntity{ nullptr };
 
 		Ref<Sampler> NearestSampler{ nullptr };
 		Ref<Sampler> LinearSampler{ nullptr };
@@ -51,6 +52,7 @@ namespace Nut
 		Ref<CameraController> CameraController{ nullptr };
 		Ref<UniformBuffer> ViewProjectionUniformBuffer{ nullptr };
 		Ref<UniformBuffer> DirectionalLightUniformBuffer{ nullptr };
+		Ref<UniformBuffer> EntityTransformUniformBuffer{ nullptr };
 
 		Ref<Window> Window{ nullptr };
 	};
@@ -81,6 +83,8 @@ namespace Nut
 
 	static DirectionalLight s_DirectionalLightUniform;
 
+
+
 	auto Camera::Create(const glm::vec3& position, const glm::vec3& rotation, int32_t canvasWidth, int32_t canvasHeight) -> Ref<Camera>
 	{
 		return CreateRef<Camera>(position, rotation, canvasWidth, canvasHeight);
@@ -101,6 +105,8 @@ namespace Nut
 
 		s_DirectionalLightUniform = DirectionalLight{ .Direction{-0.3f, 0.5f, 0.75f}, .Radiance{1.0f} };
 		s_SceneData.DirectionalLightUniformBuffer = UniformBuffer::Create(&s_DirectionalLightUniform, sizeof(DirectionalLight));
+
+		s_SceneData.EntityTransformUniformBuffer = UniformBuffer::Create(nullptr, sizeof(glm::mat4));
 
 		s_SceneData.NearestSampler = Sampler::Create(SamplerFilterType::Nearest);
 		s_SceneData.LinearSampler = Sampler::Create(SamplerFilterType::Linear);
@@ -152,7 +158,7 @@ namespace Nut
 			ImGui::End();
 		}
 
-		if (s_SceneData.TerrainModel != nullptr)
+		if (s_SceneData.TerrainEntity != nullptr)
 		{
 			ImGui::Begin("Heightmap");
 
@@ -164,8 +170,9 @@ namespace Nut
 
 			if (ImGui::Button("Generate"))
 			{
-				std::dynamic_pointer_cast<TerrainMesh>(AssetManager::GetMesh(s_SceneData.TerrainModel->MeshIDs()[0]))->UpdateHeightmap(s_HeightmapSpecification);
-				Renderer::UpdateModel(s_SceneData.TerrainModel);
+				auto model = AssetManager::GetModel(s_SceneData.TerrainEntity->ModelID());
+				std::dynamic_pointer_cast<TerrainMesh>(AssetManager::GetMesh(model->MeshIDs()[0]))->UpdateHeightmap(s_HeightmapSpecification);
+				Renderer::UpdateModel(model);
 			}
 
 			ImGui::End();
@@ -194,6 +201,40 @@ namespace Nut
 //		glEnable(GL_CULL_FACE);
 //		glCullFace(GL_FRONT);
 
+		glBindFramebuffer(GL_FRAMEBUFFER, s_SceneData.FlatFramebuffer->ID());
+		s_SceneData.FlatFramebuffer->Clear();
+
+		// Draw scene terrain
+		{
+			auto shader = ShaderLibrary::Get("TerrainShader");
+			shader->Bind();
+
+			glBindSampler(0, s_SceneData.NearestSampler->ID());
+
+			s_SceneData.TerrainEntity->CalculateTransformMatrix();
+			s_SceneData.EntityTransformUniformBuffer->SetData(&s_SceneData.TerrainEntity->GetTransform().TransformMatrix, sizeof(glm::mat4));
+
+			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(ViewProjectionUniform));
+			glBindBufferRange(GL_UNIFORM_BUFFER, 1, s_SceneData.EntityTransformUniformBuffer->Handle(), 0, sizeof(glm::mat4));
+			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
+
+			auto terrainModel = AssetManager::GetModel(s_SceneData.TerrainEntity->ModelID());
+			auto terrainMesh = AssetManager::GetMesh(terrainModel->MeshIDs().at(0));
+
+			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
+			shader->SetUniform("u_Texture", albedoSlot);
+
+			auto& textures = terrainModel->GetTextures();
+
+			if (textures.contains(TextureType::Albedo))
+			{
+				textures.at(TextureType::Albedo)->BindToSlot(albedoSlot);
+			}
+
+			Renderer::DrawMesh(terrainMesh, shader->GetLayout());
+		}
+
+		// Draw scene entities
 		{
 			auto shader = ShaderLibrary::Get("FlatShader");
 			shader->Bind();
@@ -201,12 +242,8 @@ namespace Nut
 			glBindSampler(0, s_SceneData.NearestSampler->ID());
 //			glBindSampler(0, s_SceneData.LinearSampler->ID());
 
-			glBindFramebuffer(GL_FRAMEBUFFER, s_SceneData.FlatFramebuffer->ID());
-
-			s_SceneData.FlatFramebuffer->Clear();
-
 			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(ViewProjectionUniform));
-			glBindBufferRange(GL_UNIFORM_BUFFER, 1, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
+			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 //			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
 
 			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
@@ -229,9 +266,10 @@ namespace Nut
 				Renderer::DrawInstanced(modelID, transformMatrices, shader->GetLayout());
 			}
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
 //		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDisable(GL_CULL_FACE);
 
@@ -256,7 +294,11 @@ namespace Nut
 
 	auto Scene::SetTerrainModel(Ref<Model> terrainModel) -> void
 	{
-		s_SceneData.TerrainModel = terrainModel;
+//		s_SceneData.TerrainModel = terrainModel;
 	}
 
+	auto Scene::SetTerrainEntity(Ref<Entity> terrainEntity) -> void
+	{
+		s_SceneData.TerrainEntity = terrainEntity;
+	}
 }
