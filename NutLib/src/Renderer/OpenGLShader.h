@@ -14,6 +14,25 @@
 namespace Nut
 {
 
+	enum class ShaderDomain
+	{
+		Vertex,
+		Fragment,
+		Geometry,
+		Compute,
+	};
+
+
+	struct ShaderSpecification
+	{
+		std::vector<std::pair<ShaderDomain, std::string>> SourceFiles;
+		std::string ShaderName{};
+
+		auto AddSourceFilePath(ShaderDomain domain, const std::string& filepath) -> void
+		{
+			SourceFiles.push_back(std::make_pair(domain, filepath));
+		}
+	};
 
 
 	struct ShaderUniformInfo
@@ -36,21 +55,15 @@ namespace Nut
 	class OpenGLShader
 	{
 	public:
-		enum class Domain
-		{
-			Vertex, 
-			Fragment,
-			Geometry,
-			Compute,
-		};
+		static auto Load(const ShaderSpecification& specification) -> Ref<OpenGLShader>;
 
-	public:
 		static auto LoadFromFile(const std::filesystem::path& vertexShaderFile, const std::filesystem::path& fragmentShaderPath) -> Ref<OpenGLShader>;
 		static auto LoadFlatShader() -> Ref<OpenGLShader>;
 		static auto LoadCompositionShader() -> Ref<OpenGLShader>;
 
+		OpenGLShader(const ShaderSpecification& specification);
 		OpenGLShader(const std::filesystem::path& vertexShaderFile, const std::filesystem::path& framgentShaderPath);
-		OpenGLShader(const std::string& shaderName, const std::unordered_map<Domain, std::string>& shaderSources);
+		OpenGLShader(const std::string& shaderName, const std::unordered_map<ShaderDomain, std::string>& shaderSources);
 		~OpenGLShader();
 
 		auto Reload() -> void;
@@ -70,6 +83,8 @@ namespace Nut
 		static auto ReleaseBinding() -> void;
 
 	private:
+		auto LoadSourceFileFromFile(const std::string& filepath) -> std::string;
+
 		auto CompileAndLink() -> void;
 		auto FindUniforms() -> void;
 		auto FindAttributes() -> void;
@@ -79,7 +94,7 @@ namespace Nut
 
 		std::string m_Name{};
 
-		std::unordered_map<Domain, std::string> m_ShaderSources{};
+		std::unordered_map<ShaderDomain, std::string> m_ShaderSources{};
 		std::unordered_map<std::string, ShaderUniformInfo> m_UniformInfos{};
 		std::unordered_map<GLint, ShaderLayoutInfo> m_Layout{};
 

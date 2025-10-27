@@ -18,6 +18,7 @@ namespace Nut
 		RendererContext(int32_t windowWidth, int32_t windowHeight);
 
 		auto BeginScene() -> void;
+
 	};
 
 

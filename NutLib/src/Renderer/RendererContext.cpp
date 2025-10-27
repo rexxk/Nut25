@@ -20,7 +20,6 @@ namespace Nut
 	{
 		int32_t WindowWidth{ 0 };
 		int32_t WindowHeight{ 0 };
-
 	};
 
 	static ContextData s_ContextData{ 0 };
@@ -30,8 +29,28 @@ namespace Nut
 	{
 		LOG_CORE_INFO("RenderContext created, size {},{}", windowWidth, windowHeight);
 
-		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadFlatShader());
-		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadCompositionShader());
+		// FlatShader
+		{
+			ShaderSpecification shaderSpec{};
+			shaderSpec.ShaderName = "FlatShader";
+			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/FlatShader.vs");
+			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/FlatShader.fs");
+
+			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
+		}
+
+		// Composition
+		{
+			ShaderSpecification shaderSpec{};
+			shaderSpec.ShaderName = "CompositionShader";
+			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/CompositionShader.vs");
+			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/CompositionShader.fs");
+
+			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
+		}
+
+//		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadFlatShader());
+//		Nut::ShaderLibrary::Add(Nut::OpenGLShader::LoadCompositionShader());
 
 		return CreateRef<RendererContext>(windowWidth, windowHeight);
 	}

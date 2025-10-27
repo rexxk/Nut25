@@ -5,6 +5,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+#include <fstream>
 #include <string>
 #include <unordered_map>
 
@@ -16,27 +17,27 @@ namespace Nut
 	static std::unordered_map<std::string, Ref<OpenGLShader>> s_Shaders{};
 
 
-	auto DomainToString(OpenGLShader::Domain domain) -> std::string
+	auto DomainToString(ShaderDomain domain) -> std::string
 	{
 		switch (domain)
 		{
-			case OpenGLShader::Domain::Vertex: return "Vertex";
-			case OpenGLShader::Domain::Fragment: return "Fragment";
-			case OpenGLShader::Domain::Geometry: return "Geometry";
-			case OpenGLShader::Domain::Compute: return "Compute";
+			case ShaderDomain::Vertex: return "Vertex";
+			case ShaderDomain::Fragment: return "Fragment";
+			case ShaderDomain::Geometry: return "Geometry";
+			case ShaderDomain::Compute: return "Compute";
 		}
 
 		return "unknown";
 	}
 
-	auto DomainToGLShader(OpenGLShader::Domain domain) -> GLuint
+	auto DomainToGLShader(ShaderDomain domain) -> GLuint
 	{
 		switch (domain)
 		{
-			case OpenGLShader::Domain::Vertex: return GL_VERTEX_SHADER;
-			case OpenGLShader::Domain::Fragment: return GL_FRAGMENT_SHADER;
-			case OpenGLShader::Domain::Geometry: return GL_GEOMETRY_SHADER;
-			case OpenGLShader::Domain::Compute: return GL_COMPUTE_SHADER;
+			case ShaderDomain::Vertex: return GL_VERTEX_SHADER;
+			case ShaderDomain::Fragment: return GL_FRAGMENT_SHADER;
+			case ShaderDomain::Geometry: return GL_GEOMETRY_SHADER;
+			case ShaderDomain::Compute: return GL_COMPUTE_SHADER;
 		}
 
 		return GL_NONE;
@@ -171,9 +172,9 @@ namespace Nut
 		return 1u;
 	}
 
-	std::unordered_map<OpenGLShader::Domain, std::string> s_FlatShaderSources{
+	std::unordered_map<ShaderDomain, std::string> s_FlatShaderSources{
 		{
-			OpenGLShader::Domain::Vertex,
+			ShaderDomain::Vertex,
 			R"(
 				#version 450 core
 
@@ -203,7 +204,7 @@ namespace Nut
 			)"
 		},
 		{
-			OpenGLShader::Domain::Fragment,
+			ShaderDomain::Fragment,
 			R"(
 				#version 450 core
 
@@ -251,9 +252,9 @@ namespace Nut
 		}
 	};
 
-	std::unordered_map<OpenGLShader::Domain, std::string> s_CompositionShaderSources{
+	std::unordered_map<ShaderDomain, std::string> s_CompositionShaderSources{
 	{
-		OpenGLShader::Domain::Vertex,
+		ShaderDomain::Vertex,
 		R"(
 				#version 450 core
 
@@ -270,7 +271,7 @@ namespace Nut
 			)"
 		},
 		{
-			OpenGLShader::Domain::Fragment,
+			ShaderDomain::Fragment,
 			R"(
 				#version 450 core
 
@@ -290,6 +291,11 @@ namespace Nut
 	};
 
 
+	auto OpenGLShader::Load(const ShaderSpecification& specification) -> Ref<OpenGLShader>
+	{
+		return CreateRef<OpenGLShader>(specification);
+	}
+
 	auto OpenGLShader::LoadFromFile(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath) -> Ref<OpenGLShader>
 	{
 		return CreateRef<OpenGLShader>(vertexShaderPath, fragmentShaderPath);
@@ -305,12 +311,25 @@ namespace Nut
 		return CreateRef<OpenGLShader>("CompositionShader", s_CompositionShaderSources);
 	}
 
+
+	OpenGLShader::OpenGLShader(const ShaderSpecification& specification)
+	{
+		m_Name = specification.ShaderName;
+
+		for (auto [domain, source] : specification.SourceFiles)
+		{
+			m_ShaderSources[domain] = LoadSourceFileFromFile(source);
+		}
+
+		Reload();
+	}
+
 	OpenGLShader::OpenGLShader(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath)
 	{
 
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& shaderName, const std::unordered_map<Domain, std::string>& shaderSources)
+	OpenGLShader::OpenGLShader(const std::string& shaderName, const std::unordered_map<ShaderDomain, std::string>& shaderSources)
 		: m_ShaderSources(shaderSources), m_Name(shaderName)
 	{
 		LOG_CORE_INFO("Compiling shader: {}", shaderName);
@@ -333,6 +352,31 @@ namespace Nut
 		CompileAndLink();
 		FindUniforms();
 		FindAttributes();
+	}
+
+	auto OpenGLShader::LoadSourceFileFromFile(const std::string& filepath) -> std::string
+	{
+		std::string source;
+
+		auto fs = std::ifstream(filepath, std::ios::in | std::ios::binary);
+
+		if (!fs.is_open())
+		{
+			LOG_CORE_ERROR("Unable to open shader file {}", filepath);
+			return "";
+		}
+
+		fs.seekg(0, fs.end);
+		auto length = fs.tellg();
+		fs.seekg(0, fs.beg);
+
+		source.resize(length);
+
+		fs.read((char*)source.data(), length);
+
+		fs.close();
+
+		return source;
 	}
 
 	auto OpenGLShader::CompileAndLink() -> void
