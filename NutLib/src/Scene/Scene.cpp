@@ -66,13 +66,6 @@ namespace Nut
 
 	static SceneDrawData s_SceneDrawData;
 
-	struct ViewProjectionUniform
-	{
-		glm::mat4 ViewProjectionMatrix;
-	};
-
-	static ViewProjectionUniform s_ViewProjectionUniform;
-
 	struct DirectionalLight
 	{
 		glm::vec3 Direction;
@@ -97,11 +90,10 @@ namespace Nut
 		s_SceneData.Window = Application::Get().GetWindow();
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
 
-		s_SceneData.SceneCamera = Camera::Create(glm::vec3{ 3.0f, 3.0f, -5.0f }, glm::vec3{ 0.0f }, windowWidth, windowHeight);
+		s_SceneData.SceneCamera = Camera::Create(glm::vec3{ 3.0f, 30.0f, -50.0f }, glm::vec3{ 0.0f }, windowWidth, windowHeight);
 		s_SceneData.CameraController = CreateRef<CameraController>(s_SceneData.SceneCamera);
 
-		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
-		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
+		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(nullptr, sizeof(glm::mat4));
 
 		s_DirectionalLightUniform = DirectionalLight{ .Direction{-0.3f, 0.5f, 0.75f}, .Radiance{1.0f} };
 		s_SceneData.DirectionalLightUniformBuffer = UniformBuffer::Create(&s_DirectionalLightUniform, sizeof(DirectionalLight));
@@ -140,8 +132,8 @@ namespace Nut
 	{
 		s_SceneData.CameraController->Update(ts);
 
-		s_ViewProjectionUniform.ViewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
-		s_SceneData.ViewProjectionUniformBuffer->SetData(&s_ViewProjectionUniform, sizeof(ViewProjectionUniform));
+		glm::mat4 viewProjectionMatrix = s_SceneData.SceneCamera->ViewProjectionMatrix();
+		s_SceneData.ViewProjectionUniformBuffer->SetData(&viewProjectionMatrix, sizeof(glm::mat4));
 
 		s_SceneData.DirectionalLightUniformBuffer->SetData(&s_DirectionalLightUniform, sizeof(DirectionalLight));
 
@@ -214,21 +206,22 @@ namespace Nut
 			s_SceneData.TerrainEntity->CalculateTransformMatrix();
 			s_SceneData.EntityTransformUniformBuffer->SetData(&s_SceneData.TerrainEntity->GetTransform().TransformMatrix, sizeof(glm::mat4));
 
-			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(ViewProjectionUniform));
+			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 			glBindBufferRange(GL_UNIFORM_BUFFER, 1, s_SceneData.EntityTransformUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 
 			auto terrainModel = AssetManager::GetModel(s_SceneData.TerrainEntity->ModelID());
 			auto terrainMesh = AssetManager::GetMesh(terrainModel->MeshIDs().at(0));
 
-			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
-			shader->SetUniform("u_Texture", albedoSlot);
+//			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
+			shader->SetUniform("u_GrassTexture", 0);
+			shader->SetUniform("u_RockTexture", 1);
 
 			auto& textures = terrainModel->GetTextures();
 
 			if (textures.contains(TextureType::Albedo))
 			{
-				textures.at(TextureType::Albedo)->BindToSlot(albedoSlot);
+				textures.at(TextureType::Albedo)->BindToSlot(0);
 			}
 
 			Renderer::DrawMesh(terrainMesh, shader->GetLayout());
@@ -242,7 +235,7 @@ namespace Nut
 			glBindSampler(0, s_SceneData.NearestSampler->ID());
 //			glBindSampler(0, s_SceneData.LinearSampler->ID());
 
-			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(ViewProjectionUniform));
+			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 //			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
 

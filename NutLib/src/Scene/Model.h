@@ -14,9 +14,9 @@ namespace Nut
 {
 
 
-	enum class TextureType
+	enum class TextureType : uint8_t
 	{
-		Albedo,
+		Albedo = 0,
 		Normal,
 		Metalness,
 		Roughness,
