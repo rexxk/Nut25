@@ -33,8 +33,12 @@ namespace Nut
 			{
 				for (auto x = 0u; x < width; x++)
 				{
-					float noise = (PerlinNoise::GetNoise(x / div1, z / div1) + PerlinNoise::GetNoise(x / div2, z / div2) * 0.5f + PerlinNoise::GetNoise(x / div3, z / div3) * 0.25f) / specification.Divider;
-					float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
+					auto xScaled = x * specification.Scale;
+					auto zScaled = z * specification.Scale;
+
+					float noise = (PerlinNoise::GetNoise(xScaled / div1, zScaled / div1) + PerlinNoise::GetNoise(xScaled / div2, zScaled / div2) * 0.5f + PerlinNoise::GetNoise(xScaled / div3, zScaled / div3) * 0.25f) / specification.Divider;
+					float brightness = (noise * 0.5f + 0.5f) * specification.Amplitude - (specification.Amplitude / 2);
+//					float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
 
 					Vertex v{};
 					v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
@@ -145,8 +149,12 @@ namespace Nut
 		{
 			for (auto x = 0u; x < m_Width; x++)
 			{
-				float noise = (PerlinNoise::GetNoise(x / div1, z / div1) + PerlinNoise::GetNoise(x / div2, z / div2) * 0.5f + PerlinNoise::GetNoise(x / div3, z / div3) * 0.25f) / specification.Divider;
-				float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
+				auto xScaled = x * specification.Scale;
+				auto zScaled = z * specification.Scale;
+
+				float noise = (PerlinNoise::GetNoise(xScaled / div1, zScaled / div1) + PerlinNoise::GetNoise(xScaled / div2, zScaled / div2) * 0.5f + PerlinNoise::GetNoise(xScaled / div3, zScaled / div3) * 0.25f) / specification.Divider;
+				float brightness = (noise * 0.5f + 0.5f) * specification.Amplitude - (specification.Amplitude / 2);
+//				float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
 
 				Vertex& v = m_Vertices[z * m_Width + x];
 				//				v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };

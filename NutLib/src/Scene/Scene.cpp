@@ -158,6 +158,9 @@ namespace Nut
 			ImGui::Text("Divider 2"); ImGui::SameLine(); ImGui::DragFloat("##div2", &s_HeightmapSpecification.NoiseDivider2, 0.1f, 0.1f, 100.0f);
 			ImGui::Text("Divider 3"); ImGui::SameLine(); ImGui::DragFloat("##div3", &s_HeightmapSpecification.NoiseDivider3, 0.1f, 0.1f, 100.0f);
 			ImGui::Text("Smoothness"); ImGui::SameLine(); ImGui::DragFloat("##smoothness", &s_HeightmapSpecification.Divider, 0.1f, 0.1f, 100.0f);
+			ImGui::Text("Amplitude"); ImGui::SameLine(); ImGui::DragFloat("##amplitude", &s_HeightmapSpecification.Amplitude, 1.0f, 1.0f, 512.0f);
+			ImGui::Text("Scale"); ImGui::SameLine(); ImGui::DragFloat("##scale", &s_HeightmapSpecification.Scale, 0.05f, 0.1f, 16.0f);
+
 			ImGui::Text("Texture multiplier"); ImGui::SameLine(); ImGui::DragFloat("##textureMultiplier", &s_HeightmapSpecification.TextureMultiplier, 1.0f, 1.0f, 128.0f);
 
 			if (ImGui::Button("Generate"))

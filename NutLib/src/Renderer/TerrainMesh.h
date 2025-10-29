@@ -17,6 +17,9 @@ namespace Nut
 		float NoiseDivider2{ 32.0f };
 		float NoiseDivider3{ 16.0f };
 		float Divider{ 1.75f };
+		float Scale{ 1.0f };
+
+		float Amplitude{ 255.0f };
 
 		float TextureMultiplier{ 1.0f };
 
