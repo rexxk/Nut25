@@ -9,6 +9,55 @@ namespace Nut
 {
 
 
+	auto CalculateNormals(uint32_t width, uint32_t height, std::vector<Vertex>& vertices) -> void
+	{
+		for (auto z = 0u; z < height - 1; z++)
+		{
+			for (auto x = 0u; x < width - 1; x++)
+			{
+				auto v1 = (width * z) + x;
+				auto v2 = (width * z) + (x + 1);
+				auto v3 = (width * (z + 1)) + x;
+				auto v4 = (width * (z + 1)) + (x + 1);
+
+				{
+					glm::vec3& p1 = vertices[v1].Position;
+					glm::vec3& p2 = vertices[v2].Position;
+					glm::vec3& p3 = vertices[v3].Position;
+
+					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
+
+					vertices[v1].Normal += normal;
+					vertices[v2].Normal += normal;
+					vertices[v3].Normal += normal;
+
+					vertices[v1].Normal /= 2.0f;
+					vertices[v2].Normal /= 2.0f;
+					vertices[v3].Normal /= 2.0f;
+				}
+
+				{
+					glm::vec3& p1 = vertices[v4].Position;
+					glm::vec3& p2 = vertices[v3].Position;
+					glm::vec3& p3 = vertices[v2].Position;
+
+					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
+
+					vertices[v4].Normal += normal;
+					vertices[v3].Normal += normal;
+					vertices[v2].Normal += normal;
+
+					vertices[v4].Normal /= 2.0f;
+					vertices[v3].Normal /= 2.0f;
+					vertices[v2].Normal /= 2.0f;
+				}
+			}
+		}
+
+	}
+
+
+
 	auto TerrainMesh::Create(uint32_t width, uint32_t height, const HeightmapSpecification& specification) -> Ref<Mesh>
 	{
 		return CreateRef<TerrainMesh>(width, height, specification);
@@ -33,8 +82,8 @@ namespace Nut
 			{
 				for (auto x = 0u; x < width; x++)
 				{
-					auto xScaled = x * specification.Scale;
-					auto zScaled = z * specification.Scale;
+					auto xScaled = x / specification.Scale;
+					auto zScaled = z / specification.Scale;
 
 					float noise = (PerlinNoise::GetNoise(xScaled / div1, zScaled / div1) + PerlinNoise::GetNoise(xScaled / div2, zScaled / div2) * 0.5f + PerlinNoise::GetNoise(xScaled / div3, zScaled / div3) * 0.25f) / specification.Divider;
 					float brightness = (noise * 0.5f + 0.5f) * specification.Amplitude - (specification.Amplitude / 2);
@@ -80,7 +129,8 @@ namespace Nut
 		}
 
 		m_Indices.resize(width * height * 6);
-		index = 0l;
+		index = 0u;
+
 		for (auto z = 0u; z < height - 1; z++)
 		{
 			for (auto x = 0u; x < width - 1; x++)
@@ -94,44 +144,13 @@ namespace Nut
 				m_Indices[index++] = v2;
 				m_Indices[index++] = v3;
 
-				{
-					glm::vec3& p1 = m_Vertices[v1].Position;
-					glm::vec3& p2 = m_Vertices[v2].Position;
-					glm::vec3& p3 = m_Vertices[v3].Position;
-
-					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
-
-					m_Vertices[v1].Normal += normal;
-					m_Vertices[v2].Normal += normal;
-					m_Vertices[v3].Normal += normal;
-
-					m_Vertices[v1].Normal /= 2.0f;
-					m_Vertices[v2].Normal /= 2.0f;
-					m_Vertices[v3].Normal /= 2.0f;
-				}
-
 				m_Indices[index++] = v4;
 				m_Indices[index++] = v3;
 				m_Indices[index++] = v2;
-
-				{
-					glm::vec3& p1 = m_Vertices[v4].Position;
-					glm::vec3& p2 = m_Vertices[v3].Position;
-					glm::vec3& p3 = m_Vertices[v2].Position;
-
-					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
-
-					m_Vertices[v4].Normal += normal;
-					m_Vertices[v3].Normal += normal;
-					m_Vertices[v2].Normal += normal;
-
-					m_Vertices[v4].Normal /= 2.0f;
-					m_Vertices[v3].Normal /= 2.0f;
-					m_Vertices[v2].Normal /= 2.0f;
-				}
 			}
 		}
 
+		CalculateNormals(width, height, m_Vertices);
 	}
 
 
@@ -149,8 +168,8 @@ namespace Nut
 		{
 			for (auto x = 0u; x < m_Width; x++)
 			{
-				auto xScaled = x * specification.Scale;
-				auto zScaled = z * specification.Scale;
+				auto xScaled = x / specification.Scale;
+				auto zScaled = z / specification.Scale;
 
 				float noise = (PerlinNoise::GetNoise(xScaled / div1, zScaled / div1) + PerlinNoise::GetNoise(xScaled / div2, zScaled / div2) * 0.5f + PerlinNoise::GetNoise(xScaled / div3, zScaled / div3) * 0.25f) / specification.Divider;
 				float brightness = (noise * 0.5f + 0.5f) * specification.Amplitude - (specification.Amplitude / 2);
@@ -165,58 +184,7 @@ namespace Nut
 			}
 		}
 
-		index = 0u;
-		for (auto z = 0u; z < m_Height - 1; z++)
-		{
-			for (auto x = 0u; x < m_Width - 1; x++)
-			{
-				auto v1 = (m_Width * z) + x;
-				auto v2 = (m_Width * z) + (x + 1);
-				auto v3 = (m_Width * (z + 1)) + x;
-				auto v4 = (m_Width * (z + 1)) + (x + 1);
-
-				//				indices[index++] = v1;
-				//				indices[index++] = v2;
-				//				indices[index++] = v3;
-
-				{
-					glm::vec3& p1 = m_Vertices[v1].Position;
-					glm::vec3& p2 = m_Vertices[v2].Position;
-					glm::vec3& p3 = m_Vertices[v3].Position;
-
-					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
-
-					m_Vertices[v1].Normal += normal;
-					m_Vertices[v2].Normal += normal;
-					m_Vertices[v3].Normal += normal;
-
-					m_Vertices[v1].Normal /= 2.0f;
-					m_Vertices[v2].Normal /= 2.0f;
-					m_Vertices[v3].Normal /= 2.0f;
-				}
-
-				//				indices[index++] = v4;
-				//				indices[index++] = v3;
-				//				indices[index++] = v2;
-
-				{
-					glm::vec3& p1 = m_Vertices[v4].Position;
-					glm::vec3& p2 = m_Vertices[v3].Position;
-					glm::vec3& p3 = m_Vertices[v2].Position;
-
-					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
-
-					m_Vertices[v4].Normal += normal;
-					m_Vertices[v3].Normal += normal;
-					m_Vertices[v2].Normal += normal;
-
-					m_Vertices[v4].Normal /= 2.0f;
-					m_Vertices[v3].Normal /= 2.0f;
-					m_Vertices[v2].Normal /= 2.0f;
-				}
-			}
-		}
-
+		CalculateNormals(m_Width, m_Height, m_Vertices);
 
 	}
 
