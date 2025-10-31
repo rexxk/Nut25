@@ -14,9 +14,18 @@
 
 #include <glad/glad.h>
 
+#include <glm/glm.hpp>
+
 
 namespace Nut
 {
+
+
+	struct AABB
+	{
+		glm::vec3 Min{ std::numeric_limits<float>::max() };
+		glm::vec3 Max{ std::numeric_limits<float>::min() };
+	};
 
 
 	class Mesh
@@ -38,6 +47,7 @@ namespace Nut
 
 		auto Name() const -> const std::string { return m_Name; }
 
+		auto GetBoundingBox() const -> const AABB { return m_AABB; }
 
 	protected:
 
@@ -45,6 +55,8 @@ namespace Nut
 		std::vector<uint32_t> m_Indices{};
 
 		UUID m_MeshID{};
+
+		AABB m_AABB;
 
 		std::string m_Name{};
 	};

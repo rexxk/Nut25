@@ -35,7 +35,8 @@ namespace Nut
 
 	auto Camera::Resize(int32_t canvasWidth, int32_t canvasHeight) -> void
 	{
-		m_ProjectionMatrix = glm::perspective(m_Properties.FieldOfView, static_cast<float>(canvasWidth) / static_cast<float>(canvasHeight), 0.1f, 1000.0f);
+		m_Properties.Aspect = static_cast<float>(canvasWidth) / static_cast<float>(canvasHeight);
+		m_ProjectionMatrix = glm::perspective(m_Properties.FieldOfView, m_Properties.Aspect, 0.1f, 1000.0f);
 
 	}
 
@@ -57,5 +58,27 @@ namespace Nut
 	{
 		CalculateViewMatrix();
 	}
+
+	auto Camera::GetFrustum() -> Frustum
+	{
+		Frustum frustum{};
+
+		const float halfVerticalSide = m_Properties.FarPlane * std::tanf(glm::radians(m_Properties.FieldOfView) * 0.5f);
+		const float halfHorizontalSide = halfVerticalSide * m_Properties.Aspect;
+		const glm::vec3 frontMultiplicationFar = m_Properties.FarPlane * ForwardDirection();
+
+		frustum.NearFace = { m_Properties.Position + m_Properties.NearPlane * ForwardDirection(), ForwardDirection() };
+		frustum.FarFace = { m_Properties.Position + frontMultiplicationFar, -ForwardDirection() };
+
+		frustum.RightFace = { m_Properties.Position, glm::cross(frontMultiplicationFar - RightDirection() * halfHorizontalSide, UpDirection()) };
+		frustum.LeftFace = { m_Properties.Position, glm::cross(UpDirection(), frontMultiplicationFar + RightDirection() * halfHorizontalSide) };
+
+		frustum.TopFace = { m_Properties.Position, glm::cross(RightDirection(), frontMultiplicationFar - UpDirection() * halfVerticalSide) };
+		frustum.BottomFace = { m_Properties.Position, glm::cross(frontMultiplicationFar + UpDirection() * halfVerticalSide, RightDirection()) };
+
+
+		return frustum;
+	}
+
 
 }

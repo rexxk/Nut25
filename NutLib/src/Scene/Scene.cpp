@@ -138,6 +138,7 @@ namespace Nut
 		s_SceneData.DirectionalLightUniformBuffer->SetData(&s_DirectionalLightUniform, sizeof(DirectionalLight));
 
 
+		// Directional light properties
 		{
 			ImGui::Begin("Directional Light");
 
@@ -150,6 +151,8 @@ namespace Nut
 			ImGui::End();
 		}
 
+
+		// Heightmap creation properties
 		if (s_SceneData.TerrainEntity != nullptr)
 		{
 			ImGui::Begin("Heightmap");
@@ -172,6 +175,25 @@ namespace Nut
 
 			ImGui::End();
 		}
+
+		// Camera frustum values
+		{
+			ImGui::Begin("Camera Frustum");
+
+			auto frustum = s_SceneData.SceneCamera->GetFrustum();
+
+			ImGui::Text("Top plane: %f,%f,%f - d = %f", frustum.TopFace.Normal.x, frustum.TopFace.Normal.y, frustum.TopFace.Normal.z, frustum.TopFace.Distance);
+			ImGui::Text("Bottom plane: %f,%f,%f - d = %f", frustum.BottomFace.Normal.x, frustum.BottomFace.Normal.y, frustum.BottomFace.Normal.z, frustum.BottomFace.Distance);
+
+			ImGui::Text("Left plane: %f,%f,%f - d = %f", frustum.LeftFace.Normal.x, frustum.LeftFace.Normal.y, frustum.LeftFace.Normal.z, frustum.LeftFace.Distance);
+			ImGui::Text("Right plane: %f,%f,%f - d = %f", frustum.RightFace.Normal.x, frustum.RightFace.Normal.y, frustum.RightFace.Normal.z, frustum.RightFace.Distance);
+
+			ImGui::Text("Near plane: %f,%f,%f - d = %f", frustum.NearFace.Normal.x, frustum.NearFace.Normal.y, frustum.NearFace.Normal.z, frustum.NearFace.Distance);
+			ImGui::Text("Far plane: %f,%f,%f - d = %f", frustum.FarFace.Normal.x, frustum.FarFace.Normal.y, frustum.FarFace.Normal.z, frustum.FarFace.Distance);
+
+			ImGui::End();
+		}
+
 	}
 
 	auto Scene::Draw() -> void

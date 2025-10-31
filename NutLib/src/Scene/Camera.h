@@ -23,6 +23,42 @@ namespace Nut
 		float Distance{ 1.0f };
 
 		float FieldOfView{ 45.0f };
+
+		float NearPlane{ 0.1f };
+		float FarPlane{ 1000.0f };
+		float Aspect{ 1.0f };
+	};
+
+
+	struct Plane
+	{
+		glm::vec3 Normal{ 0.0f, 1.0f, 0.0f };
+		float Distance{ 0.0f };
+
+		Plane() = default;
+		Plane(const glm::vec3& p1, const glm::vec3& normal)
+			: Normal(glm::normalize(normal)), Distance(glm::dot(normal, p1))
+		{
+
+		}
+
+		auto GetSignedDistanceToPlane(const glm::vec3& point) const -> float
+		{
+			return glm::dot(Normal, point) - Distance;
+		}
+
+	};
+
+	struct Frustum
+	{
+		Plane TopFace{};
+		Plane BottomFace{};
+
+		Plane LeftFace{};
+		Plane RightFace{};
+
+		Plane NearFace{};
+		Plane FarFace{};
 	};
 
 
@@ -45,6 +81,8 @@ namespace Nut
 		auto RightDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 1.0f, 0.0f, 0.0f }); }
 		auto UpDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 0.0f, 1.0f, 0.0f }); }
 		auto ForwardDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 0.0f, 0.0f, -1.0f }); }
+
+		auto GetFrustum() -> Frustum;
 
 	private:
 		auto Resize(int32_t canvasWidth, int32_t canvasHeight) -> void;

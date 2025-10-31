@@ -150,6 +150,17 @@ namespace Nut
 			}
 		}
 
+		for (auto& vertex : m_Vertices)
+		{
+			m_AABB.Min.x = std::min(m_AABB.Min.x, vertex.Position.x);
+			m_AABB.Min.y = std::min(m_AABB.Min.y, vertex.Position.y);
+			m_AABB.Min.z = std::min(m_AABB.Min.z, vertex.Position.z);
+
+			m_AABB.Max.x = std::max(m_AABB.Max.x, vertex.Position.x);
+			m_AABB.Max.y = std::max(m_AABB.Max.y, vertex.Position.y);
+			m_AABB.Max.z = std::max(m_AABB.Max.z, vertex.Position.z);
+		}
+
 		CalculateNormals(width, height, m_Vertices);
 	}
 

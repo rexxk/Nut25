@@ -56,7 +56,16 @@ namespace Nut
 	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name)
 		: m_Vertices(vertices), m_Indices(indices), m_Name(name)
 	{
+		for (auto& vertex : m_Vertices)
+		{
+			m_AABB.Min.x = std::min(m_AABB.Min.x, vertex.Position.x);
+			m_AABB.Min.y = std::min(m_AABB.Min.y, vertex.Position.y);
+			m_AABB.Min.z = std::min(m_AABB.Min.z, vertex.Position.z);
 
+			m_AABB.Max.x = std::max(m_AABB.Max.x, vertex.Position.x);
+			m_AABB.Max.y = std::max(m_AABB.Max.y, vertex.Position.y);
+			m_AABB.Max.z = std::max(m_AABB.Max.z, vertex.Position.z);
+		}
 	}
 
 	Mesh::~Mesh()
