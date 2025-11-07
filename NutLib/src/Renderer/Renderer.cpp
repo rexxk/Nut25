@@ -21,7 +21,6 @@ namespace Nut
 		std::vector<Ref<VertexBuffer>> VertexBuffers;
 		Ref<IndexBuffer> IndexBuffer;
 
-		uint32_t VertexCount{ 0l };
 		uint32_t InstanceCount{ 0l };
 		GLuint VertexArrayObject{ 0l };
 	};
@@ -173,7 +172,6 @@ namespace Nut
 		if (s_LineRendererObject.VertexArrayObject == 0)
 		{
 			s_LineRendererObject.VertexBuffers.push_back(VertexBuffer::Create(vertexList.data(), static_cast<uint32_t>(vertexList.size()), sizeof(LineVertex)));
-			s_LineRendererObject.VertexCount = static_cast<uint32_t>(vertexList.size());
 
 			glCreateVertexArrays(1, &s_LineRendererObject.VertexArrayObject);
 
@@ -200,10 +198,10 @@ namespace Nut
 		}
 		else
 		{
-			s_LineRendererObject.VertexBuffers[0]->SetData(vertexList.data(), vertexList.size());
+			s_LineRendererObject.VertexBuffers[0]->SetData(vertexList.data(), static_cast<uint32_t>(vertexList.size()));
 
 			glBindVertexArray(s_LineRendererObject.VertexArrayObject);
-			glDrawArrays(GL_LINES, 0, s_LineRendererObject.VertexCount);
+			glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(vertexList.size()));
 //			glDrawElements(GL_TRIANGLES, rendererObject.IndexBuffer->IndexCount(), GL_UNSIGNED_INT, nullptr);
 		}
 

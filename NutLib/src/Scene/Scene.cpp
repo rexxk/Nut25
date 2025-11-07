@@ -2,6 +2,7 @@
 
 #include "Assets/AssetManager.h"
 #include "Core/Application.h"
+#include "Core/Log.h"
 #include "Core/UUID.h"
 #include "Core/Window.h"
 #include "Renderer/Mesh.h"
@@ -66,6 +67,7 @@ namespace Nut
 		std::vector<LineVertex> DebugLines;
 
 		bool DrawDebugLines{ false };
+		bool DrawTerrainLines{ false };
 	};
 
 	static SceneDrawData s_SceneDrawData;
@@ -202,7 +204,13 @@ namespace Nut
 		{
 			ImGui::Begin("Debug panel");
 
+			ImGui::PushID("##debugLines");
 			ImGui::Checkbox("Draw lines", &s_SceneDrawData.DrawDebugLines);
+			ImGui::PopID();
+
+			ImGui::PushID("##debugTerrainLines");
+			ImGui::Checkbox("Draw terrain lines", &s_SceneDrawData.DrawTerrainLines);
+			ImGui::PopID();
 
 			ImGui::End();
 		}
@@ -213,7 +221,7 @@ namespace Nut
 		s_SceneDrawData.InstanceMap.clear();
 		s_SceneDrawData.DebugLines.clear();
 
-		if (s_SceneDrawData.DrawDebugLines)
+		if (s_SceneDrawData.DrawTerrainLines)
 			s_SceneData.TerrainEntity->CreateDebugLines(s_SceneDrawData.DebugLines);
 
 		for (auto& entity : s_SceneData.Entities)
@@ -310,6 +318,7 @@ namespace Nut
 		// Draw debug lines
 		if (s_SceneDrawData.DrawDebugLines)
 		{
+			LOG_CORE_INFO("DRAWLINES");
 			auto shader = ShaderLibrary::Get("LineShader");
 			shader->Bind();
 

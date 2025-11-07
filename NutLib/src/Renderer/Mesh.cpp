@@ -24,9 +24,9 @@ namespace Nut
 	auto Mesh::CreateTriangle() -> Ref<Mesh>
 	{
 		std::vector<Nut::Vertex> vertices{
-			{.Position{ -0.5f, -0.5f, 0.0f }, .TexCoord{ 0.0f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .Color{ 1.0f, 0.0f, 0.0f, 1.0f }},
-			{.Position{  0.5f, -0.5f, 0.0f }, .TexCoord{ 1.0f, 0.0f }, .Normal{0.0f, 0.0f, -1.0f}, .Color{ 0.0f, 1.0f, 0.0f, 1.0f }},
-			{.Position{  0.0f,  0.5f, 0.0f }, .TexCoord{ 1.0f, 1.0f }, .Normal{0.0f, 0.0f, -1.0f}, .Color{ 0.0f, 0.0f, 1.0f, 1.0f }},
+			{.Position{ -0.5f, -0.5f, 0.0f }, .TexCoord{ 0.0f, 0.0f }, .Normal{0.0f, 0.0f, 1.0f}, .Color{ 1.0f, 0.0f, 0.0f, 1.0f }},
+			{.Position{  0.5f, -0.5f, 0.0f }, .TexCoord{ 1.0f, 0.0f }, .Normal{0.0f, 0.0f, 1.0f}, .Color{ 0.0f, 1.0f, 0.0f, 1.0f }},
+			{.Position{  0.0f,  0.5f, 0.0f }, .TexCoord{ 1.0f, 1.0f }, .Normal{0.0f, 0.0f, 1.0f}, .Color{ 0.0f, 0.0f, 1.0f, 1.0f }},
 		};
 
 		std::vector<uint32_t> indices{
@@ -40,10 +40,10 @@ namespace Nut
 	{
 		std::vector<Vertex> vertices
 		{
-			{.Position{-1.0f, -1.0f, 0.0f}, .TexCoord{0.0f, 0.0f}, .Normal{0.0f, 0.0f, -1.0f}, .Color{1.0f}},
-			{.Position{ 1.0f, -1.0f, 0.0f}, .TexCoord{1.0f, 0.0f}, .Normal{0.0f, 0.0f, -1.0f}, .Color{1.0f}},
-			{.Position{ 1.0f,  1.0f, 0.0f}, .TexCoord{1.0f, 1.0f}, .Normal{0.0f, 0.0f, -1.0f}, .Color{1.0f}},
-			{.Position{-1.0f,  1.0f, 0.0f}, .TexCoord{0.0f, 1.0f}, .Normal{0.0f, 0.0f, -1.0f}, .Color{1.0f}},
+			{.Position{-1.0f, -1.0f, 0.0f}, .TexCoord{0.0f, 0.0f}, .Normal{0.0f, 0.0f, 1.0f}, .Color{1.0f}},
+			{.Position{ 1.0f, -1.0f, 0.0f}, .TexCoord{1.0f, 0.0f}, .Normal{0.0f, 0.0f, 1.0f}, .Color{1.0f}},
+			{.Position{ 1.0f,  1.0f, 0.0f}, .TexCoord{1.0f, 1.0f}, .Normal{0.0f, 0.0f, 1.0f}, .Color{1.0f}},
+			{.Position{-1.0f,  1.0f, 0.0f}, .TexCoord{0.0f, 1.0f}, .Normal{0.0f, 0.0f, 1.0f}, .Color{1.0f}},
 		};
 
 		std::vector<uint32_t> indices
