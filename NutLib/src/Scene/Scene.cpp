@@ -318,7 +318,6 @@ namespace Nut
 		// Draw debug lines
 		if (s_SceneDrawData.DrawDebugLines)
 		{
-			LOG_CORE_INFO("DRAWLINES");
 			auto shader = ShaderLibrary::Get("LineShader");
 			shader->Bind();
 
