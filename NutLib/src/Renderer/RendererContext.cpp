@@ -59,6 +59,17 @@ namespace Nut
 			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
 		}
 
+		// LineShader
+		{
+			ShaderSpecification shaderSpec{};
+			shaderSpec.ShaderName = "LineShader";
+			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/LineShader.vs");
+			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/LineShader.fs");
+
+			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
+		}
+
+
 		return CreateRef<RendererContext>(windowWidth, windowHeight);
 	}
 

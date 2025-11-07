@@ -62,6 +62,10 @@ namespace Nut
 	struct SceneDrawData
 	{
 		std::unordered_map<UUID, std::vector<glm::mat4>> InstanceMap;
+
+		std::vector<LineVertex> DebugLines;
+
+		bool DrawDebugLines{ false };
 	};
 
 	static SceneDrawData s_SceneDrawData;
@@ -86,7 +90,7 @@ namespace Nut
 	static HeightmapSpecification s_HeightmapSpecification{ .NoiseDivider1{14.0f}, .NoiseDivider2{28.0f}, .NoiseDivider3{19.0f}, .Divider{16.0f} };
 
 	Scene::Scene()
-	{		
+	{
 		s_SceneData.Window = Application::Get().GetWindow();
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
 
@@ -95,7 +99,7 @@ namespace Nut
 
 		s_SceneData.ViewProjectionUniformBuffer = UniformBuffer::Create(nullptr, sizeof(glm::mat4));
 
-		s_DirectionalLightUniform = DirectionalLight{ .Direction{-0.3f, 0.5f, 0.75f}, .Radiance{1.0f} };
+		s_DirectionalLightUniform = DirectionalLight{ .Direction{-0.3f, -0.5f, -0.75f}, .Radiance{1.0f} };
 		s_SceneData.DirectionalLightUniformBuffer = UniformBuffer::Create(&s_DirectionalLightUniform, sizeof(DirectionalLight));
 
 		s_SceneData.EntityTransformUniformBuffer = UniformBuffer::Create(nullptr, sizeof(glm::mat4));
@@ -194,19 +198,36 @@ namespace Nut
 			ImGui::End();
 		}
 
+		// Debug data
+		{
+			ImGui::Begin("Debug panel");
+
+			ImGui::Checkbox("Draw lines", &s_SceneDrawData.DrawDebugLines);
+
+			ImGui::End();
+		}
 	}
 
 	auto Scene::Draw() -> void
 	{
 		s_SceneDrawData.InstanceMap.clear();
+		s_SceneDrawData.DebugLines.clear();
+
+		if (s_SceneDrawData.DrawDebugLines)
+			s_SceneData.TerrainEntity->CreateDebugLines(s_SceneDrawData.DebugLines);
 
 		for (auto& entity : s_SceneData.Entities)
 		{
 			if (entity->ModelID() != 0)
 			{
 				entity->CalculateTransformMatrix();
-			}	s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(entity->GetTransform().TransformMatrix);
+				s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(entity->GetTransform().TransformMatrix);
+
+				if (s_SceneDrawData.DrawDebugLines)
+					entity->CreateDebugLines(s_SceneDrawData.DebugLines);
+			}
 		}
+
 
 
 		OpenGLShader::ReleaseBinding();
@@ -284,6 +305,17 @@ namespace Nut
 				Renderer::DrawInstanced(modelID, transformMatrices, shader->GetLayout());
 			}
 
+		}
+
+		// Draw debug lines
+		if (s_SceneDrawData.DrawDebugLines)
+		{
+			auto shader = ShaderLibrary::Get("LineShader");
+			shader->Bind();
+
+			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
+
+			Renderer::DrawLines(s_SceneDrawData.DebugLines, shader->GetLayout());
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

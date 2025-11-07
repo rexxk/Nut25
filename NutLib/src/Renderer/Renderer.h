@@ -20,6 +20,11 @@ namespace Nut
 		glm::vec4 Color;
 	};
 
+	struct LineVertex
+	{
+		glm::vec3 Position;
+		glm::vec4 Color;
+	};
 
 	class Mesh;
 	class Model;
@@ -34,6 +39,7 @@ namespace Nut
 
 		static auto DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
 		static auto DrawMesh(Ref<Mesh> mesh, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
+		static auto DrawLines(const std::vector<LineVertex>& vertexList, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
 
 		static auto UpdateModel(Ref<Model> mesh) -> void;
 	};

@@ -8,6 +8,9 @@
 
 #include <glad/glad.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 namespace Nut
 {
@@ -73,5 +76,19 @@ namespace Nut
 
 	}
 
+	auto Mesh::CreateDebugLines(std::vector<LineVertex>& vertexList, const glm::mat4& transformMatrix) -> void
+	{
+		for (auto& vertex : m_Vertices)
+		{
+			glm::vec3 position = glm::vec3{ transformMatrix * glm::vec4{vertex.Position, 1.0f} };
+			glm::vec3 normal = glm::mat3(transformMatrix) * vertex.Normal;
+
+			LineVertex v1{ .Position = position, .Color = glm::vec4{1.0f, 1.0f, 0.0f, 1.0f} };
+			LineVertex v2{ .Position = position + glm::normalize(normal) * 5.0f, .Color = glm::vec4{1.0f, 1.0f, 0.0f, 1.0f} };
+
+			vertexList.push_back(v1);
+			vertexList.push_back(v2);
+		}
+	}
 
 }

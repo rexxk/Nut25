@@ -53,7 +53,7 @@ namespace Nut
 				return;
 			}
 
-			GLsizei levels = 1 + std::floor(std::log2(std::max(imageWidth, imageHeight)));
+			GLsizei levels = 1 + static_cast<GLsizei>(std::floor(std::log2(std::max(imageWidth, imageHeight))));
 
 			glTextureStorage2D(m_ID, levels, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, imageWidth, imageHeight);
 			glTextureSubImage2D(m_ID, 0, 0, 0, imageWidth, imageHeight, specification.Format, GL_UNSIGNED_BYTE, imagePixels);

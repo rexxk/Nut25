@@ -4,6 +4,8 @@
 #include "Core/Base.h"
 #include "Core/UUID.h"
 
+#include "Renderer/Renderer.h"
+
 #include <glm/glm.hpp>
 
 
@@ -31,6 +33,7 @@ namespace Nut
 		Entity(UUID meshID);
 
 		auto CalculateTransformMatrix() -> void;
+		auto CreateDebugLines(std::vector<LineVertex>& vertexList) -> void;
 		auto GetTransform() -> EntityTransform& { return m_Transform; }
 
 		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }

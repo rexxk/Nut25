@@ -301,6 +301,8 @@ namespace Nut
 	{
 		m_Name = specification.ShaderName;
 
+		LOG_CORE_INFO("Compiling shader: {}", m_Name);
+
 		for (auto [domain, source] : specification.SourceFiles)
 		{
 			m_ShaderSources[domain] = LoadSourceFileFromFile(source);

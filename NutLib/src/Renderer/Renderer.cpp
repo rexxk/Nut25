@@ -21,12 +21,14 @@ namespace Nut
 		std::vector<Ref<VertexBuffer>> VertexBuffers;
 		Ref<IndexBuffer> IndexBuffer;
 
+		uint32_t VertexCount{ 0l };
 		uint32_t InstanceCount{ 0l };
 		GLuint VertexArrayObject{ 0l };
 	};
 
 	static std::unordered_map<UUID, RendererObject> s_RendererObjects{};
 
+	static RendererObject s_LineRendererObject{};
 
 	auto Renderer::DrawTriangle() -> void
 	{
@@ -166,6 +168,46 @@ namespace Nut
 
 	}
 
+	auto Renderer::DrawLines(const std::vector<LineVertex>& vertexList, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void
+	{
+		if (s_LineRendererObject.VertexArrayObject == 0)
+		{
+			s_LineRendererObject.VertexBuffers.push_back(VertexBuffer::Create(vertexList.data(), static_cast<uint32_t>(vertexList.size()), sizeof(LineVertex)));
+			s_LineRendererObject.VertexCount = static_cast<uint32_t>(vertexList.size());
+
+			glCreateVertexArrays(1, &s_LineRendererObject.VertexArrayObject);
+
+			GLuint stride{ 0 };
+
+			for (auto i = 0; i < shaderLayout.size(); i++)
+			{
+				if (shaderLayout.find(i) == shaderLayout.end())
+					continue;
+
+				auto& layoutInfo = shaderLayout.at(i);
+
+				glEnableVertexArrayAttrib(s_LineRendererObject.VertexArrayObject, i);
+				glVertexArrayAttribFormat(s_LineRendererObject.VertexArrayObject, i, layoutInfo.Count, layoutInfo.Type, GL_FALSE, stride);
+
+				glVertexArrayAttribBinding(s_LineRendererObject.VertexArrayObject, i, layoutInfo.VertexBufferPosition);
+
+				stride += layoutInfo.Size;
+			}
+
+			uint32_t i = 0;
+
+			glVertexArrayVertexBuffer(s_LineRendererObject.VertexArrayObject, i++, s_LineRendererObject.VertexBuffers[0]->Handle(), 0, s_LineRendererObject.VertexBuffers[0]->Stride());
+		}
+		else
+		{
+			s_LineRendererObject.VertexBuffers[0]->SetData(vertexList.data(), vertexList.size());
+
+			glBindVertexArray(s_LineRendererObject.VertexArrayObject);
+			glDrawArrays(GL_LINES, 0, s_LineRendererObject.VertexCount);
+//			glDrawElements(GL_TRIANGLES, rendererObject.IndexBuffer->IndexCount(), GL_UNSIGNED_INT, nullptr);
+		}
+
+	}
 
 	auto Renderer::UpdateModel(Ref<Model> model) -> void
 	{

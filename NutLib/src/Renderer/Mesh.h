@@ -49,6 +49,8 @@ namespace Nut
 
 		auto GetBoundingBox() const -> const AABB { return m_AABB; }
 
+		auto CreateDebugLines(std::vector<LineVertex>& vertexList, const glm::mat4& transformMatrix) -> void;
+
 	protected:
 
 		std::vector<Vertex> m_Vertices{};

@@ -25,7 +25,7 @@ namespace Nut
 					glm::vec3& p2 = vertices[v2].Position;
 					glm::vec3& p3 = vertices[v3].Position;
 
-					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
+					auto normal = glm::normalize(glm::cross(p3 - p1, p2 - p1));
 
 					vertices[v1].Normal += normal;
 					vertices[v2].Normal += normal;
@@ -41,7 +41,7 @@ namespace Nut
 					glm::vec3& p2 = vertices[v3].Position;
 					glm::vec3& p3 = vertices[v2].Position;
 
-					auto normal = glm::normalize(glm::cross(p1 - p2, p1 - p3));
+					auto normal = glm::normalize(glm::cross(p3 - p1, p2 - p1));
 
 					vertices[v4].Normal += normal;
 					vertices[v3].Normal += normal;

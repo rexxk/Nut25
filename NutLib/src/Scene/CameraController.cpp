@@ -22,8 +22,8 @@ namespace Nut
 				if (Input::IsMouseButtonPressed(MouseButton::Right))
 				{
 					float yawSign = m_Camera->UpDirection().y < 0 ? -1.0f : 1.0f;
-					cameraProperties.Yaw -= yawSign * static_cast<float>(e->X()) * m_MouseSpeed * m_Timestep;
-					cameraProperties.Pitch -= static_cast<float>(e->Y()) * m_MouseSpeed * m_Timestep;
+					cameraProperties.Yaw -= yawSign * static_cast<float>(e->X()) * m_MouseSpeed * static_cast<float>(m_Timestep);
+					cameraProperties.Pitch -= static_cast<float>(e->Y()) * m_MouseSpeed * static_cast<float>(m_Timestep);
 
 					return;
 				}
