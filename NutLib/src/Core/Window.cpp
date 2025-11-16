@@ -42,7 +42,7 @@ namespace Nut
 	{
 		try
 		{
-			if (!glfwInit() == GLFW_FALSE)
+			if (glfwInit() == GLFW_FALSE)
 			{
 				throw Exception("Failed to initialize GLFW"sv);
 			}

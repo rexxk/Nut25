@@ -177,7 +177,7 @@ public:
 
 Ref<Nut::Application> CreateApplication()
 {
-	Nut::ApplicationSettings settings{ .Width = 1280, .Height = 720, .VSync{true}, .Fullscreen{false} };
+	Nut::ApplicationSettings settings{ .Width = 1280, .Height = 720, .VSync{true}, .Fullscreen{true} };
 
 	Ref<SandboxApp> application{ nullptr };
 	try

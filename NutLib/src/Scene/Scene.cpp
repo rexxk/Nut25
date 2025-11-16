@@ -221,7 +221,7 @@ namespace Nut
 		s_SceneDrawData.InstanceMap.clear();
 		s_SceneDrawData.DebugLines.clear();
 
-		if (s_SceneDrawData.DrawTerrainLines)
+		if (s_SceneDrawData.DrawTerrainLines && s_SceneDrawData.DrawDebugLines)
 			s_SceneData.TerrainEntity->CreateDebugLines(s_SceneDrawData.DebugLines);
 
 		for (auto& entity : s_SceneData.Entities)
