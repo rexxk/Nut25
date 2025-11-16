@@ -12,8 +12,10 @@ auto main() -> int
 {
 	Ref<Nut::Application> app = CreateApplication();
 
-
-	app->Run();
+	if (app)
+	{
+		app->Run();
+	}
 
 
 	return 0;

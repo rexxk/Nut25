@@ -42,7 +42,7 @@ namespace Nut
 	{
 		try
 		{
-			if (glfwInit() == GLFW_FALSE)
+			if (!glfwInit() == GLFW_FALSE)
 			{
 				throw Exception("Failed to initialize GLFW"sv);
 			}
@@ -150,9 +150,11 @@ namespace Nut
 		}
 		catch (Exception ex)
 		{
-			std::string_view message = ex.what();
-			LOG_CORE_ERROR("Window exception: {}", message);
-			__debugbreak();
+//			std::string_view message = ex.what();
+//			LOG_CORE_ERROR("Window exception: {}", message);
+//			__debugbreak();
+
+			throw;
 		}
 	}
 

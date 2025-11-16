@@ -1,6 +1,8 @@
 #include "Core/Application.h"
 
+#include "Core/Exception.h"
 #include "Core/Input.h"
+#include "Core/Log.h"
 #include "Core/Timer.h"
 #include "Events/EventHandler.h"
 #include "UI/ImGuiContext.h"
@@ -36,9 +38,21 @@ namespace Nut
 		windowSpec.Fullscreen = settings.Fullscreen;
 		windowSpec.VSync = settings.VSync;
 
-		m_Window = Window::Create(windowSpec);
+		try
+		{
+			m_Window = Window::Create(windowSpec);
 	
-		ImGuiContext::Initialize(m_Window->Handle());
+			ImGuiContext::Initialize(m_Window->Handle());
+
+		}
+		catch (Exception& ex)
+		{
+			std::string message(ex.what());
+			LOG_CORE_ERROR("Application error: {}", message);
+//			LOG_CORE_ERROR("Application error: {}", ex.what());
+
+			throw Exception("Error in application constructor"sv);
+		}
 
 		EventHandler::Subscribe(EventType::WindowClose, [&](Ref<Event> event)
 			{

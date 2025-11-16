@@ -162,7 +162,14 @@ public:
 	SandboxApp(const Nut::ApplicationSettings& settings)
 		: Nut::Application(settings)
 	{
-		AttachLayer(CreateRef<SandboxLayer>("Sandbox"));
+		try
+		{
+			AttachLayer(CreateRef<SandboxLayer>("Sandbox"));
+		}
+		catch (Nut::Exception& ex)
+		{
+			std::println("Exception: {}", ex.what());
+		}
 	}
 
 };
@@ -172,5 +179,16 @@ Ref<Nut::Application> CreateApplication()
 {
 	Nut::ApplicationSettings settings{ .Width = 1280, .Height = 720, .VSync{true}, .Fullscreen{false} };
 
-	return CreateRef<SandboxApp>(settings);
+	Ref<SandboxApp> application{ nullptr };
+	try
+	{
+		application = CreateRef<SandboxApp>(settings);
+	}
+	catch (Nut::Exception& ex)
+	{
+		std::string message{ ex.what() };
+		std::println("Failed to create application: {}", message);
+	}
+
+	return application;
 }

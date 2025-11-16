@@ -45,6 +45,8 @@ namespace Nut
 
 }
 
+#define UNPACK_VAARGS(...) __VA_ARGS__
+
 #define LOG_CORE_INFO(x, ...) Nut::Log::PrintString(Nut::LogType::Info, x, __VA_ARGS__)
 #define LOG_CORE_WARN(x, ...) Nut::Log::PrintString(Nut::LogType::Warning, x, __VA_ARGS__)
 #define LOG_CORE_ERROR(x, ...) Nut::Log::PrintString(Nut::LogType::Error, x, __VA_ARGS__)
