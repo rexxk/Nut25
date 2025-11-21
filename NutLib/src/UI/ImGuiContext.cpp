@@ -58,7 +58,7 @@ namespace Nut
 				Ref<MouseDeltaEvent> e = std::dynamic_pointer_cast<MouseDeltaEvent>(event);
 
 				ImGuiIO& io = ImGui::GetIO();
-				io.MouseWheel = e->Z();
+				io.MouseWheel = static_cast<float>(e->Z());
 				io.MouseDelta = ImVec2(static_cast<float>(e->X()), static_cast<float>(e->Y()));
 			});
 	}
