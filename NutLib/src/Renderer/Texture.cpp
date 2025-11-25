@@ -105,6 +105,8 @@ namespace Nut
 		glSamplerParameteri(m_ID, GL_TEXTURE_MAG_FILTER, FilterTypeToEnum(filter));
 		glSamplerParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glSamplerParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glSamplerParameterf(m_ID, GL_TEXTURE_MAX_ANISOTROPY, 16.0f);
 	}
 
 	Sampler::~Sampler()
