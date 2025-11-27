@@ -3,6 +3,8 @@
 #include "Core/Base.h"
 #include "Core/UUID.h"
 
+#include <unordered_map>
+
 
 namespace Nut
 {
@@ -11,14 +13,29 @@ namespace Nut
 	class Mesh;
 	class Model;
 
+	template<class T>
 	class AssetManager
 	{
 	public:
-		static auto AddMesh(Ref<Mesh> mesh) -> const UUID;
-		static auto GetMesh(UUID uuid) -> Ref<Mesh>;
+		static auto Add(T item) -> const UUID
+		{
+			if (!s_Items.contains(item->ID()))
+			{
+				s_Items[item->ID()] = item;
+			}
 
-		static auto AddModel(Ref<Model> model) -> const UUID;
-		static auto GetModel(UUID uuid) -> Ref<Model>;
+			return item->ID();
+		}
+
+		static auto Get(UUID uuid) -> T
+		{
+			if (s_Items.contains(uuid))
+				return s_Items[uuid];
+
+			return nullptr;
+		}
+
+		inline static std::unordered_map<UUID, T> s_Items{};
 	};
 
 }

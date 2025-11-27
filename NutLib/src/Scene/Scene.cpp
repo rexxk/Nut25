@@ -174,8 +174,8 @@ namespace Nut
 
 			if (ImGui::Button("Generate"))
 			{
-				auto model = AssetManager::GetModel(s_SceneData.TerrainEntity->ModelID());
-				std::dynamic_pointer_cast<TerrainMesh>(AssetManager::GetMesh(model->MeshIDs()[0]))->UpdateHeightmap(s_HeightmapSpecification);
+				auto model = AssetManager<Ref<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
+				std::dynamic_pointer_cast<TerrainMesh>(AssetManager<Ref<Mesh>>::Get(model->MeshIDs()[0]))->UpdateHeightmap(s_HeightmapSpecification);
 				Renderer::UpdateModel(model);
 			}
 
@@ -264,8 +264,8 @@ namespace Nut
 			glBindBufferRange(GL_UNIFORM_BUFFER, 1, s_SceneData.EntityTransformUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 
-			auto terrainModel = AssetManager::GetModel(s_SceneData.TerrainEntity->ModelID());
-			auto terrainMesh = AssetManager::GetMesh(terrainModel->MeshIDs().at(0));
+			auto terrainModel = AssetManager<Ref<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
+			auto terrainMesh = AssetManager<Ref<Mesh>>::Get(terrainModel->MeshIDs().at(0));
 
 //			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
 			shader->SetUniform("u_GrassTexture", 0);
@@ -303,7 +303,7 @@ namespace Nut
 
 			for (auto& [modelID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
-				auto& textures = AssetManager::GetModel(modelID)->GetTextures();
+				auto& textures = AssetManager<Ref<Model>>::Get(modelID)->GetTextures();
 
 				if (textures.contains(TextureType::Albedo))
 				{

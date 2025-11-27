@@ -39,13 +39,13 @@ namespace Nut
 	{
 		if (!s_RendererObjects.contains(modelID))
 		{
-			auto meshIDs = AssetManager::GetModel(modelID)->MeshIDs();
+			auto meshIDs = AssetManager<Ref<Model>>::Get(modelID)->MeshIDs();
 
 			RendererObject newRendererObject{};
 
 			for (auto& meshID : meshIDs)
 			{
-				auto mesh = AssetManager::GetMesh(meshID);
+				auto mesh = AssetManager<Ref<Mesh>>::Get(meshID);
 
 				newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()), sizeof(Vertex)));
 				newRendererObject.IndexBuffer = IndexBuffer::Create(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size()) * sizeof(uint32_t));
@@ -217,7 +217,7 @@ namespace Nut
 		auto& rendererObject = s_RendererObjects[model->MeshIDs()[0]];
 		
 		auto meshID = model->MeshIDs()[0];
-		auto mesh = AssetManager::GetMesh(meshID);
+		auto mesh = AssetManager<Ref<Mesh>>::Get(meshID);
 		rendererObject.VertexBuffers[0]->SetData(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()));
 		rendererObject.IndexBuffer->SetData(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size() * sizeof(uint32_t)));
 	}

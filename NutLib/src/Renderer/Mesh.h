@@ -44,6 +44,7 @@ namespace Nut
 		auto GetIndices() const -> const std::vector<uint32_t>& { return m_Indices; }
 
 		auto MeshID() const -> const UUID { return m_MeshID; }
+		auto ID() const -> const UUID { return m_MeshID; }
 
 		auto Name() const -> const std::string { return m_Name; }
 

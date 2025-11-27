@@ -33,13 +33,13 @@ namespace Nut
 
 	auto Entity::CreateDebugLines(std::vector<LineVertex>& vertexList) -> void
 	{
-		auto model = AssetManager::GetModel(m_ModelID);
+		auto model = AssetManager<Ref<Model>>::Get(m_ModelID);
 
 		auto meshIDs = model->MeshIDs();
 
 		for (auto& meshID : meshIDs)
 		{
-			auto mesh = AssetManager::GetMesh(meshID);
+			auto mesh = AssetManager<Ref<Mesh>>::Get(meshID);
 			mesh->CreateDebugLines(vertexList, m_Transform.TransformMatrix);
 		}
 	}

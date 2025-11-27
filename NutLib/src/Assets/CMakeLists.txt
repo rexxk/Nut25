@@ -2,5 +2,5 @@
 
 
 target_sources(NutLib PRIVATE 
-	AssetManager.cpp
+	
 )

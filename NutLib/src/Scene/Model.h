@@ -33,6 +33,7 @@ namespace Nut
 
 
 		auto ModelID() const -> const UUID { return m_ModelID; }
+		auto ID() const -> const UUID { return m_ModelID; }
 		auto MeshIDs() const -> const std::vector<UUID> { return m_MeshIDs; }
 
 		auto GetTextures() -> const std::unordered_map<TextureType, Ref<Texture2D>>& { return m_Textures; }
