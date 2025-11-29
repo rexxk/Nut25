@@ -3,6 +3,7 @@
 #include "Core/Base.h"
 #include "Core/UUID.h"
 
+#include <string>
 #include <unordered_map>
 
 
@@ -10,18 +11,15 @@ namespace Nut
 {
 
 
-	class Mesh;
-	class Model;
-
 	template<class T>
 	class AssetManager
 	{
 	public:
-		static auto Add(T item) -> const UUID
+		static auto Add(const std::string& name, T&& item) -> const UUID
 		{
-			if (!s_Items.contains(item->ID()))
+			if (!s_Items.contains(name))
 			{
-				s_Items[item->ID()] = item;
+				s_Items[name] = item;
 			}
 
 			return item->ID();
@@ -29,13 +27,24 @@ namespace Nut
 
 		static auto Get(UUID uuid) -> T
 		{
-			if (s_Items.contains(uuid))
-				return s_Items[uuid];
+			for (auto& [name, item] : s_Items)
+			{
+				if (item->ID() == uuid)
+					return item;
+			}
 
 			return nullptr;
 		}
 
-		inline static std::unordered_map<UUID, T> s_Items{};
+		static auto Get(const std::string& name) -> T
+		{
+			if (s_Items.contains(name))
+				return s_Items[name];
+
+			return nullptr;
+		}
+
+		inline static std::unordered_map<std::string, T> s_Items{};
 	};
 
 }

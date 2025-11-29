@@ -31,7 +31,7 @@ public:
 //		auto mesh = Nut::Mesh::CreateTriangle();
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateTriangle());
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateRectangle());
-		auto meshID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::Mesh::CreateRectangle());
+		auto meshID = Nut::AssetManager<Ref<Nut::Mesh>>::Add("Mesh_Rectangle", Nut::Mesh::CreateRectangle());
 
 		Nut::HeightmapSpecification heightmapSpecification{};
 //		heightmapSpecification.UseNoise = false;
@@ -41,7 +41,8 @@ public:
 		heightmapSpecification.NoiseDivider3 = 19.0f;
 		heightmapSpecification.Divider = 16.0f;
 
-		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
+		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
+//		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
 //		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
 
 
@@ -56,8 +57,8 @@ public:
 
 		Ref<Nut::Texture2D> texture = Nut::Texture2D::Create(texSpec);
 
-		auto triangleModelID = Nut::AssetManager<Ref<Nut::Model>>::Add(Nut::Model::Create({ meshID }, { {Nut::TextureType::Albedo, texture} }));
-		auto terrainModelID = Nut::AssetManager<Ref<Nut::Model>>::Add(Nut::Model::Create({ terrainID }, { {Nut::TextureType::Albedo, texture} }));
+		auto triangleModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Rectangle", std::move(Nut::Model::Create({meshID}, {{Nut::TextureType::Albedo, texture}})));
+		auto terrainModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Terrain", std::move(Nut::Model::Create({terrainID}, {{Nut::TextureType::Albedo, texture}})));
 
 		m_TestEntity = Nut::Entity::Create(triangleModelID);
 		m_Entity2 = Nut::Entity::Create(triangleModelID);
