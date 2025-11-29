@@ -119,7 +119,7 @@ namespace Nut
 	
 	auto Renderer::DrawMesh(Ref<Mesh> mesh, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void
 	{
-		if (!s_RendererObjects.contains(mesh->MeshID()))
+		if (!s_RendererObjects.contains(mesh->ID()))
 		{
 			RendererObject newRendererObject{};
 
@@ -154,11 +154,11 @@ namespace Nut
 
 			glVertexArrayElementBuffer(newRendererObject.VertexArrayObject, newRendererObject.IndexBuffer->Handle());
 
-			s_RendererObjects[mesh->MeshID()] = newRendererObject;
+			s_RendererObjects[mesh->ID()] = newRendererObject;
 		}
 		else
 		{
-			auto& rendererObject = s_RendererObjects[mesh->MeshID()];
+			auto& rendererObject = s_RendererObjects[mesh->ID()];
 
 			glBindVertexArray(rendererObject.VertexArrayObject);
 

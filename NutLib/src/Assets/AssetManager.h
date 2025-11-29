@@ -41,7 +41,7 @@ namespace Nut
 			if (s_Items.contains(name))
 				return s_Items[name];
 
-			return nullptr;
+			return T{};
 		}
 
 		inline static std::unordered_map<std::string, T> s_Items{};

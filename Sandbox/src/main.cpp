@@ -33,32 +33,27 @@ public:
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateRectangle());
 		auto meshID = Nut::AssetManager<Ref<Nut::Mesh>>::Add("Mesh_Rectangle", Nut::Mesh::CreateRectangle());
 
-		Nut::HeightmapSpecification heightmapSpecification{};
-//		heightmapSpecification.UseNoise = false;
-//		heightmapSpecification.Filepath = "Assets/Textures/terrain.png";
-		heightmapSpecification.NoiseDivider1 = 14.0f;
-		heightmapSpecification.NoiseDivider2 = 28.0f;
-		heightmapSpecification.NoiseDivider3 = 19.0f;
-		heightmapSpecification.Divider = 16.0f;
+		{
+			Nut::HeightmapSpecification heightmapSpecification{};
 
-		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
-//		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
-//		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
+			heightmapSpecification.NoiseDivider1 = 14.0f;
+			heightmapSpecification.NoiseDivider2 = 28.0f;
+			heightmapSpecification.NoiseDivider3 = 19.0f;
+			heightmapSpecification.Divider = 16.0f;
 
+			//		heightmapSpecification.UseNoise = false;
+			//		heightmapSpecification.Filepath = "Assets/Textures/terrain.png";
 
-		Nut::TextureSpecification texSpec{};
-//		texSpec.Filepath = "Assets/Textures/grass.jpg";
-		texSpec.Filepath = "Assets/Textures/texture.png";
-//		texSpec.Filepath = "C:/Programming/Private/Nut25/Sandbox/Assets/Textures/texture.png";
-//		texSpec.Format = GL_RGBA;
-//		texSpec.UnitTexture = true;
-//		texSpec.Color = glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f };
-		
+			Nut::AssetManager<Ref<Nut::Mesh>>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
+			//		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
+			//		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
+		}
 
-		Ref<Nut::Texture2D> texture = Nut::Texture2D::Create(texSpec);
+		Nut::AssetManager<Ref<Nut::Texture2D>>::Add("Texture_Logo", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png" })));
+		Nut::AssetManager<Ref<Nut::Texture2D>>::Add("Texture_Grass", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg" })));
 
-		auto triangleModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Rectangle", std::move(Nut::Model::Create({meshID}, {{Nut::TextureType::Albedo, texture}})));
-		auto terrainModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Terrain", std::move(Nut::Model::Create({terrainID}, {{Nut::TextureType::Albedo, texture}})));
+		auto triangleModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Rectangle", std::move(Nut::Model::Create({meshID}, { {Nut::TextureType::Albedo, Nut::AssetManager<Ref<Nut::Texture2D>>::Get("Texture_Logo")}})));
+		auto terrainModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Terrain", std::move(Nut::Model::Create({ Nut::AssetManager<Nut::Mesh>::Get("Mesh_Terrain").ID()}, {{Nut::TextureType::Albedo, Nut::AssetManager<Ref<Nut::Texture2D>>::Get("Texture_Grass")}})));
 
 		m_TestEntity = Nut::Entity::Create(triangleModelID);
 		m_Entity2 = Nut::Entity::Create(triangleModelID);
