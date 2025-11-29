@@ -53,7 +53,7 @@ public:
 		Nut::AssetManager<Ref<Nut::Texture2D>>::Add("Texture_Grass", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg" })));
 
 		auto triangleModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Rectangle", std::move(Nut::Model::Create({meshID}, { {Nut::TextureType::Albedo, Nut::AssetManager<Ref<Nut::Texture2D>>::Get("Texture_Logo")}})));
-		auto terrainModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Terrain", std::move(Nut::Model::Create({ Nut::AssetManager<Nut::Mesh>::Get("Mesh_Terrain").ID()}, {{Nut::TextureType::Albedo, Nut::AssetManager<Ref<Nut::Texture2D>>::Get("Texture_Grass")}})));
+		auto terrainModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Terrain", std::move(Nut::Model::Create({ Nut::AssetManager<Ref<Nut::Mesh>>::Get("Mesh_Terrain")->ID()}, {{Nut::TextureType::Albedo, Nut::AssetManager<Ref<Nut::Texture2D>>::Get("Texture_Grass")}})));
 
 		m_TestEntity = Nut::Entity::Create(triangleModelID);
 		m_Entity2 = Nut::Entity::Create(triangleModelID);

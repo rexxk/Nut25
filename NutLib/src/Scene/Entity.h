@@ -36,7 +36,7 @@ namespace Nut
 		auto CreateDebugLines(std::vector<LineVertex>& vertexList) -> void;
 		auto GetTransform() -> EntityTransform& { return m_Transform; }
 
-		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
+//		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
 		auto EntityID() const -> const UUID { return m_EntityID; }
 
 		auto ModelID() -> const UUID { return m_ModelID; }

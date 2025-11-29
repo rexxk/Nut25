@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
+#include "Core/Log.h"
 #include "Core/UUID.h"
 
 #include <string>
@@ -20,9 +21,11 @@ namespace Nut
 			if (!s_Items.contains(name))
 			{
 				s_Items[name] = item;
+				return item->ID();
 			}
 
-			return item->ID();
+			LOG_CORE_WARN("Asset {} already exists", name);
+			return UUID{};
 		}
 
 		static auto Get(UUID uuid) -> T

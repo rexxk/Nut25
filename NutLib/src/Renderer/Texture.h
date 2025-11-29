@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
+#include "Core/UUID.h"
 
 #include <cstdint>
 #include <filesystem>
@@ -46,11 +47,13 @@ namespace Nut
 
 		auto BindToSlot(uint32_t slot) -> void;
 
-		auto ID() const -> const GLuint { return m_ID; }
-
+		auto TextureID() const -> const GLuint { return m_Handle; }
+		auto ID() const -> const UUID { return m_ID; }
 
 	private:
-		GLuint m_ID{ 0 };
+		GLuint m_Handle{ 0 };
+
+		UUID m_ID{};
 	};
 
 

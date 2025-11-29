@@ -74,7 +74,7 @@ namespace Nut
 
 			m_Attachments[attachmentSpec.Type].reset(new Texture2D(textureSpec));
 
-			glNamedFramebufferTexture(m_ID, FramebufferAttachmentTypeToEnum(attachmentSpec.Type), m_Attachments[attachmentSpec.Type]->ID(), 0);
+			glNamedFramebufferTexture(m_ID, FramebufferAttachmentTypeToEnum(attachmentSpec.Type), m_Attachments[attachmentSpec.Type]->TextureID(), 0);
 		}
 
 		if (glCheckNamedFramebufferStatus(m_ID, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

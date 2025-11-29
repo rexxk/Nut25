@@ -22,19 +22,19 @@ namespace Nut
 	 
 	Texture2D::Texture2D(const TextureSpecification& specification)
 	{
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_Handle);
 
 		if (specification.UnitTexture)
 		{
 
-			glTextureStorage2D(m_ID, 1, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, 1, 1);
-			glTextureSubImage2D(m_ID, 0, 0, 0, 1, 1, specification.Format, GL_FLOAT, glm::value_ptr(specification.Color));
+			glTextureStorage2D(m_Handle, 1, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, 1, 1);
+			glTextureSubImage2D(m_Handle, 0, 0, 0, 1, 1, specification.Format, GL_FLOAT, glm::value_ptr(specification.Color));
 
 			LOG_CORE_INFO("Unit texture created");
 		}
 		else if (specification.FramebufferAttachment)
 		{
-			glTextureStorage2D(m_ID, 1, specification.Format, specification.Width, specification.Height);
+			glTextureStorage2D(m_Handle, 1, specification.Format, specification.Width, specification.Height);
 //			glTextureSubImage2D(m_ID, 0, 0, 0, specification.Width, specification.Height, specification.Format, GL_UNSIGNED_BYTE, nullptr);
 		}
 		else
@@ -55,10 +55,10 @@ namespace Nut
 
 			GLsizei levels = 1 + static_cast<GLsizei>(std::floor(std::log2(std::max(imageWidth, imageHeight))));
 
-			glTextureStorage2D(m_ID, levels, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, imageWidth, imageHeight);
-			glTextureSubImage2D(m_ID, 0, 0, 0, imageWidth, imageHeight, specification.Format, GL_UNSIGNED_BYTE, imagePixels);
+			glTextureStorage2D(m_Handle, levels, specification.Format == GL_RGBA ? GL_RGBA8 : GL_RGB8, imageWidth, imageHeight);
+			glTextureSubImage2D(m_Handle, 0, 0, 0, imageWidth, imageHeight, specification.Format, GL_UNSIGNED_BYTE, imagePixels);
 
-			glGenerateTextureMipmap(m_ID);
+			glGenerateTextureMipmap(m_Handle);
 
 			stbi_image_free(imagePixels);
 		}
@@ -69,13 +69,13 @@ namespace Nut
 	Texture2D::~Texture2D()
 	{
 		if (m_ID != 0)
-			glDeleteTextures(1, &m_ID);
+			glDeleteTextures(1, &m_Handle);
 	}
 
 
 	auto Texture2D::BindToSlot(uint32_t slot) -> void
 	{
-		glBindTextureUnit(slot, m_ID);
+		glBindTextureUnit(slot, m_Handle);
 	}
 
 
