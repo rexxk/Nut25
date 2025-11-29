@@ -20,8 +20,9 @@ namespace Nut
 		{
 			if (!s_Items.contains(name))
 			{
-				s_Items[name] = item;
-				return item->ID();
+				auto ID = item->ID();
+				s_Items[name] = std::move(item);
+				return ID;
 			}
 
 			LOG_CORE_WARN("Asset {} already exists", name);
