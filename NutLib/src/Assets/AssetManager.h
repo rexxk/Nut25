@@ -26,7 +26,7 @@ namespace Nut
 			}
 
 			LOG_CORE_WARN("Asset {} already exists", name);
-			return UUID{};
+			return UUID{0ull};
 		}
 
 		static auto Get(UUID uuid) -> T
