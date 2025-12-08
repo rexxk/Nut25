@@ -18,37 +18,45 @@ namespace Nut
 	};
 
 
-	class Log
+	template<LogType Type, typename... Args>
+	class PrintString
 	{
 	public:
-
-		template<typename... Args>
-		static auto PrintString(LogType type, const std::string& string, Args&&... args) -> void
+		PrintString(std::format_string<Args...> fmt, Args&&... args)
 		{
-			std::string color;
+			std::string color{};
 
-			switch (type)
-			{
-				case LogType::Info: color = "32"; break;
-				case LogType::Warning: color = "93"; break;
-				case LogType::Error: color = "31"; break;
-				case LogType::Fatal: color = "41"; break;
-			}
+			if (Type == LogType::Info) color = "32";
+			if (Type == LogType::Warning) color = "93";
+			if (Type == LogType::Error) color = "31";
+			if (Type == LogType::Fatal) color = "41";
 
-			auto s = std::string("\033[" + color + "m" + string + "\033[m");
+			const auto log = std::format("\033[{}m{}\033[m", color, std::format(fmt, std::forward<Args>(args)...));
 
-			const auto log = std::vformat(s, std::make_format_args(std::forward<Args&&>(args)...));
-			std::cout << log << "\n";
-			//			std::cout << std::vformat(s, std::make_format_args(std::forward<Args&&>(args)...)) << "\n";
+			std::println("{}", log);
 		}
 	};
 
+	template<LogType Type = {}, class ... Args >
+	PrintString(std::format_string<Args...>, Args&& ...) -> PrintString<Type, Args...>;
+
+	template<class ... Args>
+	using info = PrintString<LogType::Info, Args...>;
+
+	template<class ... Args>
+	using warn = PrintString<LogType::Warning, Args...>;
+
+	template<class ... Args>
+	using error = PrintString<LogType::Error, Args...>;
+
+	template<class ... Args>
+	using fatal = PrintString<LogType::Fatal, Args...>;
 }
 
-#define UNPACK_VAARGS(...) __VA_ARGS__
 
-#define LOG_CORE_INFO(x, ...) Nut::Log::PrintString(Nut::LogType::Info, x, __VA_ARGS__)
-#define LOG_CORE_WARN(x, ...) Nut::Log::PrintString(Nut::LogType::Warning, x, __VA_ARGS__)
-#define LOG_CORE_ERROR(x, ...) Nut::Log::PrintString(Nut::LogType::Error, x, __VA_ARGS__)
-#define LOG_CORE_FATAL(x, ...) Nut::Log::PrintString(Nut::LogType::Fatal, x, __VA_ARGS__)
+#define UNPACK_VARARGS(...) __VA_ARGS__
 
+#define LOG_CORE_INFO(x, ...) Nut::info(x, __VA_ARGS__)
+#define LOG_CORE_WARN(x, ...) Nut::warn(x, __VA_ARGS__)
+#define LOG_CORE_ERROR(x, ...) Nut::error(x, __VA_ARGS__)
+#define LOG_CORE_FATAL(x, ...) Nut::fatal(x, __VA_ARGS__)
