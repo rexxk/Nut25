@@ -19,15 +19,15 @@ namespace Nut
 	{
 		if (s_Instance != nullptr)
 		{
-			std::println("Application object already exists");
+			LOG_CORE_WARN("Application object already exists");
 			return;
 		}
 
 		s_Instance = this;
 
-		std::println("Application constructor");
+		LOG_CORE_TRACE("Application constructor");
 
-		std::println("Settings: Fullscreen - {}", m_Settings.Fullscreen);
+		LOG_CORE_TRACE("Settings: Fullscreen - {}", m_Settings.Fullscreen);
 	
 		Input::Initialize();
 
@@ -47,9 +47,7 @@ namespace Nut
 		}
 		catch (Exception& ex)
 		{
-			std::string message(ex.what());
-			LOG_CORE_ERROR("Application error: {}", message);
-//			LOG_CORE_ERROR("Application error: {}", ex.what());
+			LOG_CORE_ERROR("Application error: {}", ex.what());
 
 			throw Exception("Error in application constructor"sv);
 		}
@@ -65,7 +63,7 @@ namespace Nut
 
 	auto Application::Run() -> void
 	{
-		std::println("Application::Run");
+		LOG_CORE_TRACE("Application::Run");
 
 		m_IsRunning = true;
 
@@ -100,7 +98,7 @@ namespace Nut
 
 			if (timer.ElapsedTime() > 1000.0)
 			{
-				std::println("FPS: {}", frameCount);
+				LOG_CORE_TRACE("FPS: {}", frameCount);
 				timer.Reset();
 
 				frameCount = 0;

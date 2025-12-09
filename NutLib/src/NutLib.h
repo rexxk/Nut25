@@ -8,6 +8,7 @@
 #include "Core/Exception.h"
 #include "Core/Input.h"
 #include "Core/Layer.h"
+#include "Core/Log.h"
 #include "Core/Timer.h"
 
 #include "Noise/PerlinNoise.h"

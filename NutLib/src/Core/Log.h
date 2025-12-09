@@ -11,6 +11,7 @@ namespace Nut
 
 	enum class LogType
 	{
+		Trace,
 		Info,
 		Warning,
 		Error,
@@ -19,13 +20,14 @@ namespace Nut
 
 
 	template<LogType Type, typename... Args>
-	class PrintString
+	class Log
 	{
 	public:
-		PrintString(std::format_string<Args...> fmt, Args&&... args)
+		Log(std::format_string<Args...> fmt, Args&&... args)
 		{
 			std::string color{};
 
+			if (Type == LogType::Trace) color = "37";
 			if (Type == LogType::Info) color = "32";
 			if (Type == LogType::Warning) color = "93";
 			if (Type == LogType::Error) color = "31";
@@ -38,24 +40,28 @@ namespace Nut
 	};
 
 	template<LogType Type = {}, class ... Args >
-	PrintString(std::format_string<Args...>, Args&& ...) -> PrintString<Type, Args...>;
+	Log(std::format_string<Args...>, Args&& ...) -> Log<Type, Args...>;
 
 	template<class ... Args>
-	using info = PrintString<LogType::Info, Args...>;
+	using trace = Log<LogType::Trace, Args...>;
 
 	template<class ... Args>
-	using warn = PrintString<LogType::Warning, Args...>;
+	using info = Log<LogType::Info, Args...>;
 
 	template<class ... Args>
-	using error = PrintString<LogType::Error, Args...>;
+	using warn = Log<LogType::Warning, Args...>;
 
 	template<class ... Args>
-	using fatal = PrintString<LogType::Fatal, Args...>;
+	using error = Log<LogType::Error, Args...>;
+
+	template<class ... Args>
+	using fatal = Log<LogType::Fatal, Args...>;
 }
 
 
 #define UNPACK_VARARGS(...) __VA_ARGS__
 
+#define LOG_CORE_TRACE(x, ...) Nut::trace(x, __VA_ARGS__)
 #define LOG_CORE_INFO(x, ...) Nut::info(x, __VA_ARGS__)
 #define LOG_CORE_WARN(x, ...) Nut::warn(x, __VA_ARGS__)
 #define LOG_CORE_ERROR(x, ...) Nut::error(x, __VA_ARGS__)

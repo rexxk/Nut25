@@ -22,7 +22,7 @@ public:
 
 	virtual auto OnAttach() -> void override
 	{
-		std::println("Attaching {} layer", m_DebugName);
+		LOG_CORE_TRACE("Attaching layer: {}", m_DebugName);
 
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 
@@ -79,7 +79,7 @@ public:
 
 	virtual auto OnDetach() -> void override
 	{
-		std::println("Detaching {} layer", m_DebugName);
+		LOG_CORE_TRACE("Detaching layer: {}", m_DebugName);
 	}
 
 	virtual auto OnUpdate(double timestep) -> void override
@@ -165,7 +165,7 @@ public:
 		}
 		catch (Nut::Exception& ex)
 		{
-			std::println("Exception: {}", ex.what());
+			LOG_CORE_ERROR("Exception: {}", ex.what());
 		}
 	}
 
@@ -183,8 +183,7 @@ Ref<Nut::Application> CreateApplication()
 	}
 	catch (Nut::Exception& ex)
 	{
-		std::string message{ ex.what() };
-		std::println("Failed to create application: {}", message);
+		LOG_CORE_ERROR("Failed to create application: {}", ex.what());
 	}
 
 	return application;
