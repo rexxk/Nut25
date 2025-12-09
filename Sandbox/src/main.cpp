@@ -11,6 +11,38 @@
 #include <imgui.h>
 
 
+struct MyComponent
+{
+	int x{ 5 };
+};
+
+struct TagComponent
+{
+	std::string Tag{};
+};
+
+namespace std
+{
+	template<>
+	struct hash<MyComponent>
+	{
+		auto operator()(const MyComponent& component) const -> std::size_t
+		{
+			return hash<MyComponent>()(component);
+		}
+	};
+
+	template<>
+	struct hash<TagComponent>
+	{
+		auto operator()(const TagComponent& component) const -> std::size_t
+		{
+			return hash<TagComponent>()(component);
+		}
+	};
+
+}
+
 class SandboxLayer : public Nut::Layer
 {
 public:
@@ -28,7 +60,12 @@ public:
 
 		ASSERT(m_RendererContext, "Application: Could not create renderer context");
 
-		LOG_CORE_TRACE("Entity ID: {}", Nut::ECS::GetEntityID());
+		MyComponent comp{};
+		TagComponent tag{ "Tag" };
+
+		auto entityID = Nut::ECS::GetEntityID();
+		LOG_CORE_TRACE("Entity ID: {}", entityID);
+		Nut::Component<MyComponent, TagComponent>::AddComponent(entityID, std::move(comp), std::move(tag)); // , { 5 }, { "Tag" });
 
 //		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
 //		auto mesh = Nut::Mesh::CreateTriangle();
