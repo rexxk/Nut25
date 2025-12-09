@@ -33,7 +33,7 @@ namespace Nut
 			if (Type == LogType::Error) color = "31";
 			if (Type == LogType::Fatal) color = "41";
 
-			const auto log = std::format("\033[{}m{}\033[m", color, std::format(fmt, std::forward<Args>(args)...));
+			const auto log = std::format("\033[{}m{}\033[m", color, std::format(fmt, std::forward<Args&&>(args)...));
 
 			std::println("{}", log);
 		}
@@ -59,10 +59,10 @@ namespace Nut
 }
 
 
-#define UNPACK_VARARGS(...) __VA_ARGS__
-
 #define LOG_CORE_TRACE(x, ...) Nut::trace(x, __VA_ARGS__)
 #define LOG_CORE_INFO(x, ...) Nut::info(x, __VA_ARGS__)
 #define LOG_CORE_WARN(x, ...) Nut::warn(x, __VA_ARGS__)
 #define LOG_CORE_ERROR(x, ...) Nut::error(x, __VA_ARGS__)
 #define LOG_CORE_FATAL(x, ...) Nut::fatal(x, __VA_ARGS__)
+
+#define ASSERT(x, msg, ...) { if (!x) { Nut::error(msg, __VA_ARGS__); __debugbreak(); } }

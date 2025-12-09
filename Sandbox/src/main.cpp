@@ -26,6 +26,7 @@ public:
 
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 
+		ASSERT(m_RendererContext, "Application: Could not create renderer context");
 
 //		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
 //		auto mesh = Nut::Mesh::CreateTriangle();
