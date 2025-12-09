@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <format>
 
 #include <unordered_map>
 
@@ -35,5 +36,21 @@ namespace std
 			return hash<uint64_t>()((uint64_t)uuid);
 		}
 	};
+
+
+	template<>
+	struct std::formatter<Nut::UUID>
+	{
+		constexpr auto parse(std::format_parse_context& ctx)
+		{
+			return std::begin(ctx);
+		}
+
+		auto format(Nut::UUID uuid, std::format_context& ctx) const
+		{
+			return std::format_to(ctx.out(), "{}", static_cast<uint64_t>(uuid));
+		}
+	};
+
 
 }

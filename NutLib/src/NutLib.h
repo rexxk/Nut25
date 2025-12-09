@@ -11,6 +11,8 @@
 #include "Core/Log.h"
 #include "Core/Timer.h"
 
+#include "ECS/ECS.h"
+
 #include "Noise/PerlinNoise.h"
 
 #include "Renderer/Mesh.h"

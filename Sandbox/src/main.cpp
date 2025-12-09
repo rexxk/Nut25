@@ -28,6 +28,8 @@ public:
 
 		ASSERT(m_RendererContext, "Application: Could not create renderer context");
 
+		LOG_CORE_TRACE("Entity ID: {}", Nut::ECS::GetEntityID());
+
 //		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
 //		auto mesh = Nut::Mesh::CreateTriangle();
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateTriangle());
