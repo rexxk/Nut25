@@ -14,11 +14,21 @@
 struct MyComponent
 {
 	int x{ 5 };
+
+	auto Print() -> void
+	{
+		LOG_CORE_TRACE("MyComponent: {}", x);
+	}
 };
 
 struct TagComponent
 {
 	std::string Tag{};
+
+	auto Print() -> void
+	{
+		LOG_CORE_TRACE("TagComponent: {}", Tag);
+	}
 };
 
 namespace std
@@ -65,7 +75,8 @@ public:
 
 		auto entityID = Nut::ECS::GetEntityID();
 		LOG_CORE_TRACE("Entity ID: {}", entityID);
-		Nut::Component<MyComponent, TagComponent>::AddComponent(entityID, std::move(comp), std::move(tag)); // , { 5 }, { "Tag" });
+		Nut::Component::AddComponent<TagComponent, MyComponent>(entityID, tag, comp); // , { 5 }, { "Tag" });
+//		Nut::Component<MyComponent, TagComponent>::AddComponent(entityID, std::move(comp), std::move(tag)); // , { 5 }, { "Tag" });
 
 //		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
 //		auto mesh = Nut::Mesh::CreateTriangle();
