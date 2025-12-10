@@ -47,33 +47,18 @@ namespace Nut
 		{
 			auto componentsSize = sizeof...(T);
 
-			LOG_CORE_TRACE("Sizeof T... : {}", sizeof...(T));
-			LOG_CORE_TRACE("Sizeof Args... : {}", sizeof...(Args));
-
 			InsertComponent<T...>(id, std::forward_as_tuple(args...));
 		}
 
-		template<class... T, class... Args>
-		static auto InsertComponent(const UUID id, Args... args)
+		template<class... T, class Args>
+		static auto InsertComponent(const UUID id, Args args)
 		{
-			LOG_CORE_TRACE("InsertComponent - {}", id);
-
-//			for_each(args..., [](Args... args) {LOG_CORE_TRACE("Helloooo"); });
-
-			for (auto i = 0u; i < sizeof...(Args); i++)
-			{
-//				auto arg = std::get<i>(args...);
-				auto arg = std::get<0>(args...);
-				arg.Print();
-//				LOG_CORE_TRACE("Arg {} - ", std::get<0>(args)...);
-
-//				ComponentMap[id].push_back(args...);
-			}
+			for_each(args, [](auto args) {args.Print(); });
 		}
 
 
 		template<class Tuple, class F>
-		constexpr decltype(auto) for_each(Tuple&& tuple, F&& f)
+		constexpr decltype(auto) static for_each(Tuple&& tuple, F&& f)
 		{
 			return[]<std::size_t... I>(Tuple && tuple, F && f, std::index_sequence<I...>)
 			{
