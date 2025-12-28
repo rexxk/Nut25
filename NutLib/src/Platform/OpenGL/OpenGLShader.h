@@ -14,7 +14,7 @@ namespace Nut
 		OpenGLShader(const ShaderSpecification& specification);
 		virtual ~OpenGLShader();
 
-		auto Reload() -> void;
+		virtual auto Reload() -> void override;
 
 		virtual auto Bind() const -> void override;
 

@@ -60,6 +60,7 @@ namespace Nut
 		Shader(const std::string& name);
 		virtual ~Shader() = default;
 
+		virtual auto Reload() -> void = 0;
 		virtual auto Bind() const -> void = 0;
 
 		auto GetName() const -> std::string;
