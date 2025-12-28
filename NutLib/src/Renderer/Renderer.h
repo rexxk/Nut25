@@ -37,9 +37,9 @@ namespace Nut
 	public:
 		static auto DrawTriangle() -> void;
 
-		static auto DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
-		static auto DrawMesh(Ref<Mesh> mesh, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
-		static auto DrawLines(const std::vector<LineVertex>& vertexList, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void;
+		static auto DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void;
+		static auto DrawMesh(Ref<Mesh> mesh, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void;
+		static auto DrawLines(const std::vector<LineVertex>& vertexList, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void;
 
 		static auto UpdateModel(Ref<Model> mesh) -> void;
 	};

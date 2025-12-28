@@ -3,6 +3,15 @@
 #include "Renderer/Shader.h"
 
 
+#include <filesystem>
+#include <ranges>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include <glad/glad.h>
+
+
 namespace Nut
 {
 
@@ -11,37 +20,28 @@ namespace Nut
 	{
 	public:
 		OpenGLShader(const std::string& shaderName, const std::unordered_map<ShaderDomain, std::string>& shaderSources);
+		OpenGLShader(ShaderDomain domain, const std::string& shaderName, const std::filesystem::path& filepath);
 		OpenGLShader(const ShaderSpecification& specification);
+		OpenGLShader(const OpenGLShader& other) = delete;
 		virtual ~OpenGLShader();
 
 		virtual auto Reload() -> void override;
 
-		virtual auto Bind() const -> void override;
+		virtual auto ID() const -> const uint32_t override { return m_ShaderID; }
 
-		auto ID() const -> const GLuint { return m_ProgramID; }
-
-		virtual auto GetLayout() const -> std::unordered_map<int32_t, ShaderLayoutInfo> const override { return m_Layout; }
-
-		virtual auto SetUniform(const std::string& uniformName, int32_t value) -> void override;
-		virtual auto SetUniform(const std::string& uniformName, const glm::vec3& value) -> void override;
-		virtual auto SetUniform(const std::string& uniformName, const glm::vec4& value) -> void override;
-		virtual auto SetUniform(const std::string& uniformName, const glm::mat4& value) -> void override;
 
 	private:
-		auto LoadSourceFileFromFile(const std::string& filepath) -> std::string;
-
-		auto CompileAndLink() -> void;
+		auto Compile() -> void;
 		auto FindUniforms() -> void;
 		auto FindAttributes() -> void;
 
 	private:
-		GLuint m_ProgramID{ 0u };
+		GLuint m_ShaderID{ 0u };
 
-		std::unordered_map<ShaderDomain, std::string> m_ShaderSources{};
-		std::unordered_map<std::string, ShaderUniformInfo> m_UniformInfos{};
-		std::unordered_map<int32_t, ShaderLayoutInfo> m_Layout{};
+		std::string m_ShaderSource{};
+		ShaderDomain m_Domain{ ShaderDomain::Vertex };
 
-		std::vector<GLuint> m_Shaders{};
 	};
+
 
 }

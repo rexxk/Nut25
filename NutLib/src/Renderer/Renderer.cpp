@@ -35,7 +35,7 @@ namespace Nut
 	}
 
 
-	auto Renderer::DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void
+	auto Renderer::DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void
 	{
 		if (!s_RendererObjects.contains(modelID))
 		{
@@ -117,7 +117,7 @@ namespace Nut
 		}
 	}
 	
-	auto Renderer::DrawMesh(Ref<Mesh> mesh, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void
+	auto Renderer::DrawMesh(Ref<Mesh> mesh, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void
 	{
 		if (!s_RendererObjects.contains(mesh->ID()))
 		{
@@ -167,7 +167,7 @@ namespace Nut
 
 	}
 
-	auto Renderer::DrawLines(const std::vector<LineVertex>& vertexList, const std::unordered_map<GLint, ShaderLayoutInfo>& shaderLayout) -> void
+	auto Renderer::DrawLines(const std::vector<LineVertex>& vertexList, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void
 	{
 		if (s_LineRendererObject.VertexArrayObject == 0)
 		{

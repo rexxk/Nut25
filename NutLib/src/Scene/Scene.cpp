@@ -250,8 +250,8 @@ namespace Nut
 
 		// Draw scene terrain
 		{
-			auto shader = ShaderLibrary::Get("TerrainShader");
-			shader->Bind();
+			auto program = ShaderLibrary::GetProgram("TerrainShader");
+			program->Bind();
 
 			glBindSampler(0, s_SceneData.NearestSampler->ID());
 
@@ -266,8 +266,8 @@ namespace Nut
 			auto terrainMesh = AssetManager<Ref<Mesh>>::Get(terrainModel->MeshIDs().at(0));
 
 //			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
-			shader->SetUniform("u_GrassTexture", 0);
-			shader->SetUniform("u_RockTexture", 1);
+			program->SetUniform("u_GrassTexture", 0);
+			program->SetUniform("u_RockTexture", 1);
 
 			auto& textures = terrainModel->GetTextures();
 
@@ -276,13 +276,13 @@ namespace Nut
 				textures.at(TextureType::Albedo)->BindToSlot(0);
 			}
 
-			Renderer::DrawMesh(terrainMesh, shader->GetLayout());
+			Renderer::DrawMesh(terrainMesh, program->GetLayout());
 		}
 
 		// Draw scene entities
 		{
-			auto shader = ShaderLibrary::Get("FlatShader");
-			shader->Bind();
+			auto program = ShaderLibrary::GetProgram("FlatShader");
+			program->Bind();
 
 			glBindSampler(0, s_SceneData.NearestSampler->ID());
 //			glBindSampler(0, s_SceneData.LinearSampler->ID());
@@ -297,7 +297,7 @@ namespace Nut
 			auto roughnessSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Roughness);
 			auto ambientOcclusionSlot = std::underlying_type<TextureSlot>::type(TextureSlot::AmbientOcclusion);
 
-			shader->SetUniform("u_Texture", albedoSlot);
+			program->SetUniform("u_Texture", albedoSlot);
 
 			for (auto& [modelID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
@@ -308,7 +308,7 @@ namespace Nut
 					textures.at(TextureType::Albedo)->BindToSlot(albedoSlot);
 				}
 
-				Renderer::DrawInstanced(modelID, transformMatrices, shader->GetLayout());
+				Renderer::DrawInstanced(modelID, transformMatrices, program->GetLayout());
 			}
 
 		}
@@ -316,12 +316,12 @@ namespace Nut
 		// Draw debug lines
 		if (s_SceneDrawData.DrawDebugLines)
 		{
-			auto shader = ShaderLibrary::Get("LineShader");
-			shader->Bind();
+			auto program = ShaderLibrary::GetProgram("LineShader");
+			program->Bind();
 
 			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 
-			Renderer::DrawLines(s_SceneDrawData.DebugLines, shader->GetLayout());
+			Renderer::DrawLines(s_SceneDrawData.DebugLines, program->GetLayout());
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -330,12 +330,12 @@ namespace Nut
 		glDisable(GL_CULL_FACE);
 
 		{
-			auto shader = ShaderLibrary::Get("CompositionShader");
-			shader->Bind();
+			auto program = ShaderLibrary::GetProgram("CompositionShader");
+			program->Bind();
 
 			s_SceneData.FlatFramebuffer->GetColorAttachment()->BindToSlot(0);
 
-			Renderer::DrawMesh(s_SceneData.DrawRectangle, shader->GetLayout());
+			Renderer::DrawMesh(s_SceneData.DrawRectangle, program->GetLayout());
 		}
 
 

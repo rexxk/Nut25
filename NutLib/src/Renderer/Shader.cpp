@@ -17,7 +17,7 @@ namespace Nut
 
 
 	static std::unordered_map<std::string, Ref<Shader>> s_Shaders{};
-
+	static std::unordered_map<std::string, Ref<Program>> s_Programs{};
 
 
 
@@ -152,6 +152,17 @@ namespace Nut
 //		return CreateRef<OpenGLShader>(specification);
 	}
 
+	auto Shader::Load(ShaderDomain domain, const std::string& shaderName, const std::filesystem::path& filepath) -> Ref<Shader>
+	{
+		switch (RendererContext::API())
+		{
+			case RendererAPI::OpenGL: return CreateRef<OpenGLShader>(domain, shaderName, filepath);
+			case RendererAPI::Vulkan: return nullptr;
+		}
+
+		return nullptr;
+	}
+
 
 	Shader::Shader(const std::string& name)
 		: m_Name(name)
@@ -173,6 +184,14 @@ namespace Nut
 		}
 	}
 
+	auto ShaderLibrary::Add(Ref<Program> program) -> void
+	{
+		if (!s_Programs.contains(program->GetName()))
+		{
+			s_Programs[program->GetName()] = program;
+		}
+	}
+
 	auto ShaderLibrary::Delete(const std::string& name) -> void
 	{
 		if (s_Shaders.contains(name))
@@ -181,10 +200,18 @@ namespace Nut
 		}
 	}
 
-	auto ShaderLibrary::Get(const std::string& name) -> Ref<Shader>
+	auto ShaderLibrary::GetShader(const std::string& name) -> Ref<Shader>
 	{
 		if (s_Shaders.contains(name))
 			return s_Shaders[name];
+
+		return nullptr;
+	}
+
+	auto ShaderLibrary::GetProgram(const std::string& name) -> Ref<Program>
+	{
+		if (s_Programs.contains(name))
+			return s_Programs[name];
 
 		return nullptr;
 	}

@@ -33,42 +33,57 @@ namespace Nut
 
 		// FlatShader
 		{
-			ShaderSpecification shaderSpec{};
-			shaderSpec.ShaderName = "FlatShader";
-			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/FlatShader.vs");
-			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/FlatShader.fs");
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "FlatShader.Vertex", "Assets/Shaders/FlatShader.vs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "TerrainShader.Vertex", "Assets/Shaders/TerrainShader.vs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "CompositionShader.Vertex", "Assets/Shaders/CompositionShader.vs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "LineShader.Vertex", "Assets/Shaders/LineShader.vs"));
 
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "FlatShader.Fragment", "Assets/Shaders/FlatShader.fs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "TerrainShader.Fragment", "Assets/Shaders/TerrainShader.fs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "CompositionShader.Fragment", "Assets/Shaders/CompositionShader.fs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "LineShader.Fragment", "Assets/Shaders/LineShader.fs"));
+
+			Nut::ShaderLibrary::Add(Nut::Program::Link("FlatShader", { "FlatShader.Vertex", "FlatShader.Fragment" }));
+			Nut::ShaderLibrary::Add(Nut::Program::Link("TerrainShader", { "TerrainShader.Vertex", "TerrainShader.Fragment" }));
+			Nut::ShaderLibrary::Add(Nut::Program::Link("CompositionShader", { "CompositionShader.Vertex", "CompositionShader.Fragment" }));
+			Nut::ShaderLibrary::Add(Nut::Program::Link("LineShader", { "LineShader.Vertex", "LineShader.Fragment" }));
+
+//			ShaderSpecification shaderSpec{};
+//			shaderSpec.ShaderName = "FlatShader";
+//			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/FlatShader.vs");
+//			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/FlatShader.fs");
+//
+//			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
 		}
 
 		// TerrainShader
 		{
-			ShaderSpecification shaderSpec{};
-			shaderSpec.ShaderName = "TerrainShader";
-			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/TerrainShader.vs");
-			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/TerrainShader.fs");
-
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
+//			ShaderSpecification shaderSpec{};
+//			shaderSpec.ShaderName = "TerrainShader";
+//			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/TerrainShader.vs");
+//			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/TerrainShader.fs");
+//
+//			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
 		}
 
 		// Composition
 		{
-			ShaderSpecification shaderSpec{};
-			shaderSpec.ShaderName = "CompositionShader";
-			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/CompositionShader.vs");
-			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/CompositionShader.fs");
-
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
+//			ShaderSpecification shaderSpec{};
+//			shaderSpec.ShaderName = "CompositionShader";
+//			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/CompositionShader.vs");
+//			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/CompositionShader.fs");
+//
+//			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
 		}
 
 		// LineShader
 		{
-			ShaderSpecification shaderSpec{};
-			shaderSpec.ShaderName = "LineShader";
-			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/LineShader.vs");
-			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/LineShader.fs");
-
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
+//			ShaderSpecification shaderSpec{};
+//			shaderSpec.ShaderName = "LineShader";
+//			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/LineShader.vs");
+//			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/LineShader.fs");
+//
+//			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
 		}
 
 

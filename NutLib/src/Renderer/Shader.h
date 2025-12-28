@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
+#include "Renderer/Program.h"
 
 #include <filesystem>
 #include <string>
@@ -35,42 +33,20 @@ namespace Nut
 	};
 
 
-	struct ShaderUniformInfo
-	{
-		GLint Location{ -1 };
-		GLsizei Count{ 0 };
-	};
-
-	struct ShaderLayoutInfo
-	{
-		GLsizei Count{ 0 };
-		GLsizei Size{ 0 };
-		GLenum Type{ GL_NONE };
-
-		uint32_t VertexBufferPosition{ 0 };
-
-		bool IsMatrix{ false };
-	};
-
 	class Shader
 	{
 	public:
 		static auto Load(const ShaderSpecification& specification) -> Ref<Shader>;
+		static auto Load(ShaderDomain domain, const std::string& shaderName, const std::filesystem::path& filepath) -> Ref<Shader>;
 
 		Shader(const std::string& name);
 		virtual ~Shader() = default;
 
 		virtual auto Reload() -> void = 0;
-		virtual auto Bind() const -> void = 0;
+		virtual auto ID() const -> const uint32_t = 0;
 
 		auto GetName() const -> std::string;
 
-		virtual auto GetLayout() const -> std::unordered_map<int32_t, ShaderLayoutInfo> const { return {}; }
-
-		virtual auto SetUniform(const std::string& uniformName, int32_t value) -> void {}
-		virtual auto SetUniform(const std::string& uniformName, const glm::vec3& value) -> void {}
-		virtual auto SetUniform(const std::string& uniformName, const glm::vec4& value) -> void {}
-		virtual auto SetUniform(const std::string& uniformName, const glm::mat4& value) -> void {}
 
 	private:
 		std::string m_Name{};
@@ -81,10 +57,11 @@ namespace Nut
 	{
 	public:
 		static auto Add(Ref<Shader> shader) -> void;
+		static auto Add(Ref<Program> program) -> void;
 		static auto Delete(const std::string& name) -> void;
 
-		static auto Get(const std::string& name) -> Ref<Shader>;
-
+		static auto GetShader(const std::string& name) -> Ref<Shader>;
+		static auto GetProgram(const std::string& name) -> Ref<Program>;
 	};
 
 }
