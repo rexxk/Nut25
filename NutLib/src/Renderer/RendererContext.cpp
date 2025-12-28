@@ -2,7 +2,7 @@
 
 #include "Core/Log.h"
 #include "Events/EventHandler.h"
-#include "Renderer/OpenGLShader.h"
+#include "Renderer/Shader.h"
 
 #include <cstdint>
 #include <format>
@@ -25,8 +25,10 @@ namespace Nut
 	static ContextData s_ContextData{ 0 };
 
 
-	Ref<RendererContext> RendererContext::Create(int32_t windowWidth, int32_t windowHeight)
+	Ref<RendererContext> RendererContext::Create(RendererAPI api, int32_t windowWidth, int32_t windowHeight)
 	{
+		s_RendererAPI = api;
+
 		LOG_CORE_INFO("RenderContext created, size {},{}", windowWidth, windowHeight);
 
 		// FlatShader
@@ -36,7 +38,7 @@ namespace Nut
 			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/FlatShader.vs");
 			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/FlatShader.fs");
 
-			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
 		}
 
 		// TerrainShader
@@ -46,7 +48,7 @@ namespace Nut
 			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/TerrainShader.vs");
 			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/TerrainShader.fs");
 
-			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
 		}
 
 		// Composition
@@ -56,7 +58,7 @@ namespace Nut
 			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/CompositionShader.vs");
 			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/CompositionShader.fs");
 
-			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
 		}
 
 		// LineShader
@@ -66,7 +68,7 @@ namespace Nut
 			shaderSpec.AddSourceFilePath(ShaderDomain::Vertex, "Assets/Shaders/LineShader.vs");
 			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/LineShader.fs");
 
-			Nut::ShaderLibrary::Add(Nut::OpenGLShader::Load(shaderSpec));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
 		}
 
 

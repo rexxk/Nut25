@@ -8,7 +8,7 @@
 #include "Renderer/Mesh.h"
 #include "Renderer/OpenGLBuffer.h"
 #include "Renderer/OpenGLFramebuffer.h"
-#include "Renderer/OpenGLShader.h"
+#include "Renderer/Shader.h"
 #include "Renderer/TerrainMesh.h"
 #include "Renderer/Texture.h"
 #include "Scene/Camera.h"
@@ -237,8 +237,6 @@ namespace Nut
 		}
 
 
-
-		OpenGLShader::ReleaseBinding();
 
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();
 		glViewport(0, 0, windowWidth, windowHeight);

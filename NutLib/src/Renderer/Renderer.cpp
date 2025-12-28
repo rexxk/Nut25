@@ -4,7 +4,7 @@
 #include "Core/Base.h"
 #include "Core/UUID.h"
 #include "Renderer/OpenGLBuffer.h"
-#include "Renderer/OpenGLShader.h"
+#include "Renderer/Shader.h"
 #include "Scene/Model.h"
 
 #include <glad/glad.h>

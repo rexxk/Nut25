@@ -72,7 +72,7 @@ namespace Nut
 
 			gladLoadGL();
 
-			m_RendererContext = RendererContext::Create(m_Specification.Width, m_Specification.Height);
+			m_RendererContext = RendererContext::Create(m_Specification.GraphicsAPI, m_Specification.Width, m_Specification.Height);
 
 			glfwSetWindowCloseCallback(m_Handle, [](GLFWwindow* window)
 				{

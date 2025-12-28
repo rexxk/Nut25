@@ -2,7 +2,5 @@
 
 
 target_sources(NutLib PRIVATE
-	Event.h
-	EventHandler.h
 	
 )

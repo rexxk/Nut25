@@ -25,6 +25,8 @@ namespace Nut
 		bool VSync{ false };
 
 		std::string Title{ "WindowTitle" };
+
+		RendererAPI GraphicsAPI{ RendererAPI::OpenGL };
 	};
 
 

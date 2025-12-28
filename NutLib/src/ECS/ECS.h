@@ -53,6 +53,11 @@ namespace Nut
 		template<class... T, class Args>
 		static auto InsertComponent(const UUID id, Args args)
 		{
+//			template for (auto& arg : args)
+//			{
+//
+//			}
+
 			for_each(args, [](auto args) {args.Print(); });
 		}
 

@@ -1,7 +1,7 @@
 #include "Renderer/Mesh.h"
 
 #include "Noise/PerlinNoise.h"
-#include "Renderer/OpenGLShader.h"
+#include "Renderer/Shader.h"
 #include "Renderer/Renderer.h"
 
 #include <stb_image.h>
