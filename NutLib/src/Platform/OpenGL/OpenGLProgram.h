@@ -23,6 +23,13 @@ namespace Nut
 
 	class OpenGLProgram : public Program
 	{
+		struct ProgramBinary
+		{
+			GLenum BinaryFormat{};
+			int32_t BinaryLength{};
+			std::vector<uint8_t> BinaryData{};
+		};
+
 	public:
 		OpenGLProgram(const std::string& name, const std::vector<std::string>& shaderList);
 		~OpenGLProgram();
@@ -47,6 +54,8 @@ namespace Nut
 
 		std::unordered_map<std::string, ShaderUniformInfo> m_UniformInfos{};
 		std::unordered_map<int32_t, ShaderLayoutInfo> m_Layout{};
+
+		ProgramBinary m_ProgramBinary;
 
 	};
 

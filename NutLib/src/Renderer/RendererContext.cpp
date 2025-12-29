@@ -31,22 +31,35 @@ namespace Nut
 
 		LOG_CORE_INFO("RenderContext created, size {},{}", windowWidth, windowHeight);
 
-		// FlatShader
+		// FlatShader - instanced
 		{
 			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "FlatShader.Vertex", "Assets/Shaders/FlatShader.vs"));
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "TerrainShader.Vertex", "Assets/Shaders/TerrainShader.vs"));
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "CompositionShader.Vertex", "Assets/Shaders/CompositionShader.vs"));
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "LineShader.Vertex", "Assets/Shaders/LineShader.vs"));
-
 			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "FlatShader.Fragment", "Assets/Shaders/FlatShader.fs"));
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "TerrainShader.Fragment", "Assets/Shaders/TerrainShader.fs"));
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "CompositionShader.Fragment", "Assets/Shaders/CompositionShader.fs"));
-			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "LineShader.Fragment", "Assets/Shaders/LineShader.fs"));
+		}
+		// TerrainShader
+		{
 
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "TerrainShader.Vertex", "Assets/Shaders/TerrainShader.vs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "TerrainShader.Fragment", "Assets/Shaders/TerrainShader.fs"));
+		}
+		// CompositionShader
+		{
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "CompositionShader.Vertex", "Assets/Shaders/CompositionShader.vs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "CompositionShader.Fragment", "Assets/Shaders/CompositionShader.fs"));
+		}
+		// LineShader
+		{
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Vertex, "LineShader.Vertex", "Assets/Shaders/LineShader.vs"));
+			Nut::ShaderLibrary::Add(Nut::Shader::Load(ShaderDomain::Fragment, "LineShader.Fragment", "Assets/Shaders/LineShader.fs"));
+		}
+
+		// Shader programs
+		{
 			Nut::ShaderLibrary::Add(Nut::Program::Link("FlatShader", { "FlatShader.Vertex", "FlatShader.Fragment" }));
 			Nut::ShaderLibrary::Add(Nut::Program::Link("TerrainShader", { "TerrainShader.Vertex", "TerrainShader.Fragment" }));
 			Nut::ShaderLibrary::Add(Nut::Program::Link("CompositionShader", { "CompositionShader.Vertex", "CompositionShader.Fragment" }));
 			Nut::ShaderLibrary::Add(Nut::Program::Link("LineShader", { "LineShader.Vertex", "LineShader.Fragment" }));
+		}
 
 //			ShaderSpecification shaderSpec{};
 //			shaderSpec.ShaderName = "FlatShader";
@@ -54,7 +67,6 @@ namespace Nut
 //			shaderSpec.AddSourceFilePath(ShaderDomain::Fragment, "Assets/Shaders/FlatShader.fs");
 //
 //			Nut::ShaderLibrary::Add(Nut::Shader::Load(shaderSpec));
-		}
 
 		// TerrainShader
 		{

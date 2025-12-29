@@ -49,8 +49,15 @@ namespace Nut
 			glDetachShader(m_ProgramID, shader->ID());
 		}
 
+		glGetProgramiv(m_ProgramID, GL_PROGRAM_BINARY_LENGTH, &m_ProgramBinary.BinaryLength);
+
+		m_ProgramBinary.BinaryData.resize(m_ProgramBinary.BinaryLength);
+
+		glGetProgramBinary(m_ProgramID, m_ProgramBinary.BinaryLength, &m_ProgramBinary.BinaryLength, &m_ProgramBinary.BinaryFormat, m_ProgramBinary.BinaryData.data());
+
 		FindUniforms();
 		FindAttributes();
+
 	}
 
 	OpenGLProgram::~OpenGLProgram()
