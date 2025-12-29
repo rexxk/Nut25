@@ -7,7 +7,7 @@
 #include "Core/Window.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/Buffer.h"
-#include "Renderer/OpenGLFramebuffer.h"
+#include "Renderer/Framebuffer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/TerrainMesh.h"
 #include "Renderer/Texture.h"
@@ -47,7 +47,7 @@ namespace Nut
 		Ref<Sampler> NearestSampler{ nullptr };
 		Ref<Sampler> LinearSampler{ nullptr };
 
-		Ref<OpenGLFramebuffer> FlatFramebuffer{ nullptr };
+		Ref<Framebuffer> FlatFramebuffer{ nullptr };
 
 		Ref<Camera> SceneCamera{ nullptr };
 		Ref<CameraController> CameraController{ nullptr };
@@ -127,7 +127,7 @@ namespace Nut
 			framebufferSpec.Attachments.emplace_back(depthAttachment);
 		}
 
-		s_SceneData.FlatFramebuffer = OpenGLFramebuffer::Create(framebufferSpec);
+		s_SceneData.FlatFramebuffer = Framebuffer::Create(framebufferSpec);
 
 //		s_SceneData.DrawRectangle = Mesh::CreateRectangle("FlatShader");
 		s_SceneData.DrawRectangle = Mesh::CreateRectangle();

@@ -4,7 +4,7 @@
 target_sources(NutLib PRIVATE
 	Mesh.cpp
 	Buffer.cpp
-	OpenGLFramebuffer.cpp
+	Framebuffer.cpp
 	Program.cpp
 	Shader.cpp
 	Renderer.cpp

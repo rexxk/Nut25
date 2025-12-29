@@ -1,4 +1,4 @@
-#include "Renderer/OpenGLFramebuffer.h"
+#include "Platform/OpenGL/OpenGLFramebuffer.h"
 
 #include "Core/Log.h"
 #include "Events/EventHandler.h"
@@ -19,12 +19,6 @@ namespace Nut
 		}
 
 		return GL_NONE;
-	}
-
-
-	auto OpenGLFramebuffer::Create(const FramebufferSpecification& specification) -> Ref<OpenGLFramebuffer>
-	{
-		return CreateRef<OpenGLFramebuffer>(specification);
 	}
 
 
