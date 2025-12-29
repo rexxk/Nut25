@@ -100,8 +100,8 @@ public:
 			//		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
 		}
 
-		Nut::AssetManager<Ref<Nut::Texture2D>>::Add("Texture_Logo", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png" }));
-		Nut::AssetManager<Ref<Nut::Texture2D>>::Add("Texture_Grass", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg" }));
+		Nut::AssetManager<Ref<Nut::Texture2D>>::Add("Texture_Logo", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA }));
+		Nut::AssetManager<Ref<Nut::Texture2D>>::Add("Texture_Grass", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA }));
 
 		auto triangleModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Rectangle", Nut::Model::Create({meshID}, { {Nut::TextureType::Albedo, Nut::AssetManager<Ref<Nut::Texture2D>>::Get("Texture_Logo")}}));
 		auto terrainModelID = Nut::AssetManager<Ref<Nut::Model>>::Add("Model_Terrain", Nut::Model::Create({ Nut::AssetManager<Ref<Nut::Mesh>>::Get("Mesh_Terrain")->ID()}, {{Nut::TextureType::Albedo, Nut::AssetManager<Ref<Nut::Texture2D>>::Get("Texture_Grass")}}));

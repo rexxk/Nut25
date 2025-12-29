@@ -6,5 +6,6 @@ target_sources(NutLib PRIVATE
 	OpenGLFramebuffer.cpp
 	OpenGLProgram.cpp
 	OpenGLShader.cpp
+	OpenGLTexture.cpp
 	OpenGLUtils.cpp
 )

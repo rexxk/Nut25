@@ -28,7 +28,7 @@ namespace Nut
 
 		std::filesystem::path Filepath{};
 
-		GLenum Format{ GL_RGBA };
+		uint32_t Format{ 0u };
 
 		bool UnitTexture{ false };
 		glm::vec4 Color{ 1.0f, 0.0f, 1.0f, 1.0f };
@@ -42,18 +42,13 @@ namespace Nut
 	public:
 		static auto Create(const TextureSpecification& specification) -> Ref<Texture2D>;
 
-		Texture2D(const TextureSpecification& specification);
-		~Texture2D();
+		Texture2D() = default;
+		virtual ~Texture2D() = default;
 
-		auto BindToSlot(uint32_t slot) -> void;
+		virtual auto BindToSlot(uint32_t slot) -> void {}
 
-		auto TextureID() const -> const GLuint { return m_Handle; }
-		auto ID() const -> const UUID { return m_ID; }
-
-	private:
-		GLuint m_Handle{ 0 };
-
-		UUID m_ID{};
+		virtual auto TextureID() const -> const uint32_t = 0;
+		virtual auto ID() const -> const UUID { return UUID(); }
 	};
 
 
@@ -62,13 +57,10 @@ namespace Nut
 	public:
 		static auto Create(SamplerFilterType filter) -> Ref<Sampler>;
 
-		Sampler(SamplerFilterType filter);
-		~Sampler();
+		Sampler() = default;
+		virtual ~Sampler() = default;
 
-		auto ID() const -> const GLuint { return m_ID; }
-
-	private:
-		GLuint m_ID{ 0 };
+		virtual auto ID() const -> const uint32_t = 0;
 	};
 
 }
