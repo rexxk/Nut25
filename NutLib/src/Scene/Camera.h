@@ -2,6 +2,8 @@
 
 #include "Core/Base.h"
 
+#include "Renderer/Renderer.h"
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -61,6 +63,20 @@ namespace Nut
 		Plane FarFace{};
 	};
 
+	struct FrustumPoints
+	{
+		glm::vec3 NearTopLeft{};
+		glm::vec3 NearTopRight{};
+		glm::vec3 NearBottomLeft{};
+		glm::vec3 NearBottomRight{};
+	
+		glm::vec3 FarTopLeft{};
+		glm::vec3 FarTopRight{};
+		glm::vec3 FarBottomLeft{};
+		glm::vec3 FarBottomRight{};
+	};
+
+
 
 	class Camera
 	{
@@ -73,6 +89,7 @@ namespace Nut
 		auto ViewMatrix() -> glm::mat4 { return m_ViewMatrix; }
 
 		auto Update() -> void;
+		auto UpdateFOV() -> void;
 
 		auto ViewProjectionMatrix() -> glm::mat4 { return m_ProjectionMatrix * m_ViewMatrix; }
 
@@ -83,6 +100,9 @@ namespace Nut
 		auto ForwardDirection() const -> const glm::vec3 { return glm::rotate(GetOrientation(), glm::vec3{ 0.0f, 0.0f, -1.0f }); }
 
 		auto GetFrustum() -> Frustum;
+
+		auto GetFrustumPoints() const -> const FrustumPoints& { return m_FrustumPoints; }
+		auto CreateFrustumLines(std::vector<LineVertex>& vertexList) -> void;
 
 	private:
 		auto Resize(int32_t canvasWidth, int32_t canvasHeight) -> void;
@@ -95,6 +115,7 @@ namespace Nut
 	private:
 		CameraProperties m_Properties{};
 
+		FrustumPoints m_FrustumPoints{};
 
 		glm::mat4 m_ProjectionMatrix{ 1.0f };
 		glm::mat4 m_ViewMatrix{ 1.0f };

@@ -36,8 +36,14 @@ namespace Nut
 	auto Camera::Resize(int32_t canvasWidth, int32_t canvasHeight) -> void
 	{
 		m_Properties.Aspect = static_cast<float>(canvasWidth) / static_cast<float>(canvasHeight);
-		m_ProjectionMatrix = glm::perspective(m_Properties.FieldOfView, m_Properties.Aspect, 0.1f, 1000.0f);
+		UpdateFOV();
+//		m_ProjectionMatrix = glm::perspective(glm::radians(m_Properties.FieldOfView), m_Properties.Aspect, m_Properties.NearPlane, m_Properties.FarPlane);
 
+	}
+
+	auto Camera::UpdateFOV() -> void
+	{
+		m_ProjectionMatrix = glm::perspective(glm::radians(m_Properties.FieldOfView), m_Properties.Aspect, m_Properties.NearPlane, m_Properties.FarPlane);
 	}
 
 	auto Camera::CalculateViewMatrix() -> void
@@ -77,8 +83,98 @@ namespace Nut
 		frustum.BottomFace = { m_Properties.Position, glm::cross(frontMultiplicationFar + UpDirection() * halfVerticalSide, RightDirection()) };
 
 
+		glm::vec3 farCenter = m_Properties.Position + ForwardDirection() * m_Properties.FarPlane;
+		glm::vec3 nearCenter = m_Properties.Position + ForwardDirection() * m_Properties.NearPlane;
+
+		auto fov = glm::radians(m_Properties.FieldOfView) / 2.0f;
+		auto nearHeight = 2.0f * std::tanf(fov) * m_Properties.NearPlane;
+		auto farHeight = 2.0f * std::tanf(fov) * m_Properties.FarPlane;
+		auto nearWidth = nearHeight * m_Properties.Aspect;
+		auto farWidth = farHeight * m_Properties.Aspect;
+
+		m_FrustumPoints.FarTopLeft = farCenter + (UpDirection() * (farHeight * 0.5f)) - RightDirection() * (farWidth * 0.5f);
+		m_FrustumPoints.FarTopRight = farCenter + (UpDirection() * (farHeight * 0.5f)) + RightDirection() * (farWidth * 0.5f);
+		m_FrustumPoints.FarBottomLeft = farCenter - (UpDirection() * (farHeight * 0.5f)) - RightDirection() * (farWidth * 0.5f);
+		m_FrustumPoints.FarBottomRight = farCenter - (UpDirection() * (farHeight * 0.5f)) + RightDirection() * (farWidth * 0.5f);
+
+		m_FrustumPoints.NearTopLeft = nearCenter + (UpDirection() * (nearHeight * 0.5f)) - RightDirection() * (nearWidth * 0.5f);
+		m_FrustumPoints.NearTopRight = nearCenter + (UpDirection() * (nearHeight * 0.5f)) + RightDirection() * (nearWidth * 0.5f);
+		m_FrustumPoints.NearBottomLeft = nearCenter - (UpDirection() * (nearHeight * 0.5f)) - RightDirection() * (nearWidth * 0.5f);
+		m_FrustumPoints.NearBottomRight = nearCenter - (UpDirection() * (nearHeight * 0.5f)) + RightDirection() * (nearWidth * 0.5f);
+
 		return frustum;
 	}
 
+	auto Camera::CreateFrustumLines(std::vector<LineVertex>& vertexList) -> void
+	{
+		{
+			LineVertex vertex{};
+			vertex.Color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+
+			// Near square
+			vertex.Position = m_FrustumPoints.NearBottomLeft;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.NearBottomRight;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.NearBottomRight;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.NearTopRight;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.NearTopRight;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.NearTopLeft;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.NearTopLeft;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.NearBottomLeft;
+			vertexList.push_back(vertex);
+
+			// Far square
+			vertex.Position = m_FrustumPoints.FarBottomLeft;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.FarBottomRight;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.FarBottomRight;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.FarTopRight;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.FarTopRight;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.FarTopLeft;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.FarTopLeft;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.FarBottomLeft;
+			vertexList.push_back(vertex);
+
+			// Near-far connections
+			vertex.Position = m_FrustumPoints.NearBottomLeft;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.FarBottomLeft;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.NearBottomRight;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.FarBottomRight;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.NearTopLeft;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.FarTopLeft;
+			vertexList.push_back(vertex);
+
+			vertex.Position = m_FrustumPoints.NearTopRight;
+			vertexList.push_back(vertex);
+			vertex.Position = m_FrustumPoints.FarTopRight;
+			vertexList.push_back(vertex);
+		}
+
+	}
 
 }

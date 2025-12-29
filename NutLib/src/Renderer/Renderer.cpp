@@ -103,7 +103,7 @@ namespace Nut
 
 			s_RendererObjects[modelID] = newRendererObject;
 		}
-		else
+//		else
 		{
 			auto& rendererObject = s_RendererObjects[modelID];
 
@@ -156,7 +156,7 @@ namespace Nut
 
 			s_RendererObjects[mesh->ID()] = newRendererObject;
 		}
-		else
+//		else
 		{
 			auto& rendererObject = s_RendererObjects[mesh->ID()];
 
@@ -196,7 +196,7 @@ namespace Nut
 
 			glVertexArrayVertexBuffer(s_LineRendererObject.VertexArrayObject, i++, s_LineRendererObject.VertexBuffers[0]->Handle(), 0, s_LineRendererObject.VertexBuffers[0]->Stride());
 		}
-		else
+//		else
 		{
 			s_LineRendererObject.VertexBuffers[0]->SetData(vertexList.data(), static_cast<uint32_t>(vertexList.size()));
 

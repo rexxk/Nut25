@@ -68,6 +68,7 @@ namespace Nut
 
 		bool DrawDebugLines{ false };
 		bool DrawTerrainLines{ false };
+		bool DrawCameraFrustum{ false };
 	};
 
 	static SceneDrawData s_SceneDrawData;
@@ -157,6 +158,18 @@ namespace Nut
 			ImGui::End();
 		}
 
+		// Camera lens
+		{
+			ImGui::Begin("Camera lens");
+
+			ImGui::Text("FOV");
+			if (ImGui::DragFloat("##Fov", &s_SceneData.SceneCamera->GetProperties().FieldOfView, 1.0f, 20.0f, 90.0f, "%.1f"))
+			{
+				s_SceneData.SceneCamera->UpdateFOV();
+			}
+
+			ImGui::End();
+		}
 
 		// Heightmap creation properties
 		if (s_SceneData.TerrainEntity != nullptr)
@@ -212,6 +225,10 @@ namespace Nut
 			ImGui::Checkbox("Draw terrain lines", &s_SceneDrawData.DrawTerrainLines);
 			ImGui::PopID();
 
+			ImGui::PushID("##debugCameraFrustum");
+			ImGui::Checkbox("Draw camera frustum", &s_SceneDrawData.DrawCameraFrustum);
+			ImGui::PopID();
+
 			ImGui::End();
 		}
 	}
@@ -233,6 +250,11 @@ namespace Nut
 
 				if (s_SceneDrawData.DrawDebugLines)
 					entity->CreateDebugLines(s_SceneDrawData.DebugLines);
+
+				if (s_SceneDrawData.DrawCameraFrustum)
+				{
+					s_SceneData.SceneCamera->CreateFrustumLines(s_SceneDrawData.DebugLines);
+				}
 			}
 		}
 
