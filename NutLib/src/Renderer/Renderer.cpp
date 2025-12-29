@@ -3,7 +3,7 @@
 #include "Assets/AssetManager.h"
 #include "Core/Base.h"
 #include "Core/UUID.h"
-#include "Renderer/OpenGLBuffer.h"
+#include "Renderer/Buffer.h"
 #include "Renderer/Shader.h"
 #include "Scene/Model.h"
 

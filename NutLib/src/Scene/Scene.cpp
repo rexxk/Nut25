@@ -6,7 +6,7 @@
 #include "Core/UUID.h"
 #include "Core/Window.h"
 #include "Renderer/Mesh.h"
-#include "Renderer/OpenGLBuffer.h"
+#include "Renderer/Buffer.h"
 #include "Renderer/OpenGLFramebuffer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/TerrainMesh.h"

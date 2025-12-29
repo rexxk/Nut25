@@ -16,7 +16,7 @@
 #include "Noise/PerlinNoise.h"
 
 #include "Renderer/Mesh.h"
-#include "Renderer/OpenGLBuffer.h"
+#include "Renderer/Buffer.h"
 #include "Renderer/OpenGLFramebuffer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Renderer.h"
