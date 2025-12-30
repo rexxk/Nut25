@@ -5,6 +5,7 @@ target_sources(NutLib PRIVATE
 	Mesh.cpp
 	Buffer.cpp
 	Framebuffer.cpp
+	Material.cpp
 	Program.cpp
 	Shader.cpp
 	Renderer.cpp

@@ -4,6 +4,7 @@
 #include "Core/Base.h"
 #include "Core/UUID.h"
 
+#include "Renderer/Material.h"
 #include "Renderer/Renderer.h"
 
 #include <glm/glm.hpp>
@@ -43,11 +44,13 @@ namespace Nut
 
 
 	private:
+		UUID m_EntityID{};
 		UUID m_ModelID{};
+
+		Material m_Material{};
 
 		EntityTransform m_Transform{};
 
-		UUID m_EntityID{};
 	};
 
 
