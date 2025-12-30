@@ -11,6 +11,23 @@
 namespace Nut
 {
 
+	auto Frustum::IsOnFrustum(const AABB& aabb, const glm::mat4& transform) -> bool
+	{
+		const glm::vec3 globalCenter{ transform * glm::vec4(aabb.Center, 1.0f) };
+
+		return (IsOnOrForwardPlane(aabb, LeftFace) && IsOnOrForwardPlane(aabb, RightFace) &&
+			IsOnOrForwardPlane(aabb, TopFace) && IsOnOrForwardPlane(aabb, BottomFace) &&
+			IsOnOrForwardPlane(aabb, NearFace) && IsOnOrForwardPlane(aabb, FarFace));
+	}
+
+	auto Frustum::IsOnOrForwardPlane(const AABB& aabb, const Plane& plane) const -> bool
+	{
+		const float r = aabb.Extents.x * std::abs(plane.Normal.x) + aabb.Extents.y * std::abs(plane.Normal.y) + aabb.Extents.z * std::abs(plane.Normal.z);
+
+		return -r <= plane.GetSignedDistanceToPlane(aabb.Center);
+	}
+
+
 
 	Camera::Camera(const glm::vec3& position, const glm::vec3& rotation, int32_t canvasWidth, int32_t canvasHeight)
 	{

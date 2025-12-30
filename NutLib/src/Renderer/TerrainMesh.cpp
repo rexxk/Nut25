@@ -150,16 +150,24 @@ namespace Nut
 			}
 		}
 
+		// Calculate AABB
+
+		glm::vec3 min{ std::numeric_limits<float>::max() };
+		glm::vec3 max{ std::numeric_limits<float>::min() };
+
 		for (auto& vertex : m_Vertices)
 		{
-			m_AABB.Min.x = std::min(m_AABB.Min.x, vertex.Position.x);
-			m_AABB.Min.y = std::min(m_AABB.Min.y, vertex.Position.y);
-			m_AABB.Min.z = std::min(m_AABB.Min.z, vertex.Position.z);
+			min.x = std::min(min.x, vertex.Position.x);
+			min.y = std::min(min.y, vertex.Position.y);
+			min.z = std::min(min.z, vertex.Position.z);
 
-			m_AABB.Max.x = std::max(m_AABB.Max.x, vertex.Position.x);
-			m_AABB.Max.y = std::max(m_AABB.Max.y, vertex.Position.y);
-			m_AABB.Max.z = std::max(m_AABB.Max.z, vertex.Position.z);
+			max.x = std::max(max.x, vertex.Position.x);
+			max.y = std::max(max.y, vertex.Position.y);
+			max.z = std::max(max.z, vertex.Position.z);
 		}
+
+		m_AABB.Center = (max + min) / 2.0f;
+		m_AABB.Extents = { max.x - m_AABB.Center.x, max.y - m_AABB.Center.y, max.z - m_AABB.Center.z };
 
 		CalculateNormals(width, height, m_Vertices);
 	}

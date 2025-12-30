@@ -241,12 +241,28 @@ namespace Nut
 		if (s_SceneDrawData.DrawTerrainLines && s_SceneDrawData.DrawDebugLines)
 			s_SceneData.TerrainEntity->CreateDebugLines(s_SceneDrawData.DebugLines);
 
+		auto&& frustum = s_SceneData.SceneCamera->GetFrustum();
+
 		for (auto& entity : s_SceneData.Entities)
 		{
 			if (entity->ModelID() != 0)
 			{
-				entity->CalculateTransformMatrix();
-				s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(entity->GetTransform().TransformMatrix);
+				// Do frustum culling
+				auto mesh = AssetManager<Ref<Mesh>>::Get(AssetManager<Ref<Model>>::Get(entity->ModelID())->MeshIDs()[0]);
+
+				if (mesh)
+				{
+					auto& aabb = mesh->GetBoundingBox();
+					entity->CalculateTransformMatrix();
+					auto& transformMatrix = entity->GetTransform().TransformMatrix;
+
+					if (frustum.IsOnFrustum(aabb, transformMatrix))
+					{
+						s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(transformMatrix);
+					}
+
+				}
+
 
 				if (s_SceneDrawData.DrawDebugLines)
 					entity->CreateDebugLines(s_SceneDrawData.DebugLines);
@@ -257,7 +273,6 @@ namespace Nut
 				}
 			}
 		}
-
 
 
 		auto [windowWidth, windowHeight] = s_SceneData.Window->GetSize();

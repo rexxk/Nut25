@@ -3,6 +3,7 @@
 #include "Core/Base.h"
 
 #include "Renderer/Renderer.h"
+#include "Renderer/Mesh.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
@@ -61,6 +62,9 @@ namespace Nut
 
 		Plane NearFace{};
 		Plane FarFace{};
+
+		auto IsOnFrustum(const AABB& aabb, const glm::mat4& transform) -> bool;
+		auto IsOnOrForwardPlane(const AABB& aabb, const Plane& plane) const -> bool;
 	};
 
 	struct FrustumPoints

@@ -23,8 +23,8 @@ namespace Nut
 
 	struct AABB
 	{
-		glm::vec3 Min{ std::numeric_limits<float>::max() };
-		glm::vec3 Max{ std::numeric_limits<float>::min() };
+		glm::vec3 Center{ 0.0f };
+		glm::vec3 Extents{ 0.0f };
 	};
 
 
