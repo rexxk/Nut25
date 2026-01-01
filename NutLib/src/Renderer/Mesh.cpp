@@ -15,6 +15,87 @@
 namespace Nut
 {
 
+	auto AABB::CreateDebugLineMesh(std::vector<LineVertex>& lineVertices, const glm::mat4& transformMatrix, bool OnFrustum) const -> void
+	{
+		LineVertex newVertex{ .Color = {0.0f, 1.0f, 0.0f, 1.0f} };
+
+		if (!OnFrustum)
+			newVertex.Color = { 1.0f, 0.0f, 0.0f, 1.0f };
+
+		auto p1 = transformMatrix * glm::vec4{ glm::vec3{ Center.x - Extents.x, Center.y - Extents.y, Center.z - Extents.z }, 1.0f };
+		auto p2 = transformMatrix * glm::vec4{ glm::vec3{ Center.x + Extents.x, Center.y - Extents.y, Center.z - Extents.z }, 1.0f };
+		auto p3 = transformMatrix * glm::vec4{ glm::vec3{ Center.x + Extents.x, Center.y + Extents.y, Center.z - Extents.z }, 1.0f };
+		auto p4 = transformMatrix * glm::vec4{ glm::vec3{ Center.x - Extents.x, Center.y + Extents.y, Center.z - Extents.z }, 1.0f };
+
+		auto p5 = transformMatrix * glm::vec4{ glm::vec3{ Center.x - Extents.x, Center.y - Extents.y, Center.z + Extents.z }, 1.0f };
+		auto p6 = transformMatrix * glm::vec4{ glm::vec3{ Center.x + Extents.x, Center.y - Extents.y, Center.z + Extents.z }, 1.0f };
+		auto p7 = transformMatrix * glm::vec4{ glm::vec3{ Center.x + Extents.x, Center.y + Extents.y, Center.z + Extents.z }, 1.0f };
+		auto p8 = transformMatrix * glm::vec4{ glm::vec3{ Center.x - Extents.x, Center.y + Extents.y, Center.z + Extents.z }, 1.0f };
+
+		newVertex.Position = p1;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p2;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p2;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p3;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p3;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p4;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p4;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p1;
+		lineVertices.push_back(newVertex);
+
+
+		newVertex.Position = p5;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p6;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p6;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p7;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p7;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p8;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p8;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p5;
+		lineVertices.push_back(newVertex);
+
+
+		newVertex.Position = p1;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p5;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p2;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p6;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p3;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p7;
+		lineVertices.push_back(newVertex);
+
+		newVertex.Position = p4;
+		lineVertices.push_back(newVertex);
+		newVertex.Position = p8;
+		lineVertices.push_back(newVertex);
+	}
+
+
 
 	auto Mesh::Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name) -> Ref<Mesh>
 	{

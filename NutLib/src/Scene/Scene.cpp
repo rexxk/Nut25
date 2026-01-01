@@ -69,6 +69,7 @@ namespace Nut
 		bool DrawDebugLines{ false };
 		bool DrawTerrainLines{ false };
 		bool DrawCameraFrustum{ false };
+		bool DrawAABB{ true };
 	};
 
 	static SceneDrawData s_SceneDrawData;
@@ -229,6 +230,10 @@ namespace Nut
 			ImGui::Checkbox("Draw camera frustum", &s_SceneDrawData.DrawCameraFrustum);
 			ImGui::PopID();
 
+			ImGui::PushID("##debugAABB");
+			ImGui::Checkbox("Draw AABB box", &s_SceneDrawData.DrawAABB);
+			ImGui::PopID();
+
 			ImGui::End();
 		}
 	}
@@ -256,10 +261,18 @@ namespace Nut
 					entity->CalculateTransformMatrix();
 					auto& transformMatrix = entity->GetTransform().TransformMatrix;
 
-					if (frustum.IsOnFrustum(aabb, transformMatrix))
+					auto onFrustum = frustum.IsOnFrustum(aabb, transformMatrix);
+					if (onFrustum)
+//					if (frustum.IsOnFrustum(aabb, transformMatrix))
 					{
 						s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(transformMatrix);
 					}
+
+					if (s_SceneDrawData.DrawAABB)
+					{
+						aabb.CreateDebugLineMesh(s_SceneDrawData.DebugLines, transformMatrix, onFrustum);
+					}
+
 
 				}
 

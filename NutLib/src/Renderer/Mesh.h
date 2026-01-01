@@ -25,6 +25,8 @@ namespace Nut
 	{
 		glm::vec3 Center{ 0.0f };
 		glm::vec3 Extents{ 0.0f };
+
+		auto CreateDebugLineMesh(std::vector<LineVertex>& lineVertices, const glm::mat4& transformMatrix, bool OnFrustum) const -> void;
 	};
 
 

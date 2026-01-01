@@ -15,9 +15,28 @@ namespace Nut
 	{
 		const glm::vec3 globalCenter{ transform * glm::vec4(aabb.Center, 1.0f) };
 
-		return (IsOnOrForwardPlane(aabb, LeftFace) && IsOnOrForwardPlane(aabb, RightFace) &&
-			IsOnOrForwardPlane(aabb, TopFace) && IsOnOrForwardPlane(aabb, BottomFace) &&
-			IsOnOrForwardPlane(aabb, NearFace) && IsOnOrForwardPlane(aabb, FarFace));
+		const glm::vec3 right = glm::vec3{ transform[0] } * glm::vec3{ 1.0f, 0.0f, 0.0f } * aabb.Extents.x;
+		const glm::vec3 up = glm::vec3{ transform[1] } * glm::vec3{ 0.0f, 1.0f, 0.0f } * aabb.Extents.y;
+		const glm::vec3 forward = glm::vec3{ transform[2] } * glm::vec3{ 0.0f, 0.0f, -1.0f } * aabb.Extents.z;
+
+		const float newIi = std::abs(glm::dot(glm::vec3{ 1.0f, 0.0f, 0.0f }, right)) +
+			std::abs(glm::dot(glm::vec3{ 1.0f, 0.0f, 0.0f }, up)) +
+			std::abs(glm::dot(glm::vec3{ 1.0f, 0.0f, 0.0f }, forward));
+
+		const float newIj = std::abs(glm::dot(glm::vec3{ 0.0f, 1.0f, 0.0f }, right)) +
+			std::abs(glm::dot(glm::vec3{ 0.0f, 1.0f, 0.0f }, up)) +
+			std::abs(glm::dot(glm::vec3{ 0.0f, 1.0f, 0.0f }, forward));
+
+		const float newIk = std::abs(glm::dot(glm::vec3{ 0.0f, 0.0f, -1.0f }, right)) +
+			std::abs(glm::dot(glm::vec3{ 0.0f, 0.0f, -1.0f }, up)) +
+			std::abs(glm::dot(glm::vec3{ 0.0f, 0.0f, -1.0f }, forward));
+
+		AABB globalAABB{ .Center = globalCenter, .Extents{ newIi, newIj, newIk } };
+
+
+		return (IsOnOrForwardPlane(globalAABB, LeftFace) && IsOnOrForwardPlane(globalAABB, RightFace) &&
+			IsOnOrForwardPlane(globalAABB, TopFace) && IsOnOrForwardPlane(globalAABB, BottomFace) &&
+			IsOnOrForwardPlane(globalAABB, NearFace) && IsOnOrForwardPlane(globalAABB, FarFace));
 	}
 
 	auto Frustum::IsOnOrForwardPlane(const AABB& aabb, const Plane& plane) const -> bool
