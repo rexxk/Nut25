@@ -22,6 +22,8 @@ namespace Nut
 		glm::vec3 Scale{ 1.0f };
 
 		glm::mat4 TransformMatrix{ 1.0f };
+
+		auto CalculateTransformMatrix() -> const glm::mat4&;
 	};
 
 	class Mesh;
@@ -33,7 +35,6 @@ namespace Nut
 
 		Entity(UUID meshID);
 
-		auto CalculateTransformMatrix() -> void;
 		auto CreateDebugLines(std::vector<LineVertex>& vertexList) -> void;
 		auto GetTransform() -> EntityTransform& { return m_Transform; }
 

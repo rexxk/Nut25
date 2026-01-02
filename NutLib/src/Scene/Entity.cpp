@@ -11,6 +11,20 @@ namespace Nut
 {
 
 
+
+	auto EntityTransform::CalculateTransformMatrix() -> const glm::mat4&
+	{
+		TransformMatrix = glm::mat4(1.0f) * glm::translate(glm::mat4(1.0f), Position)
+			* glm::rotate(glm::mat4{ 1.0f }, Rotation.x, glm::vec3{ 1.0f, 0.0f, 0.0f })
+			* glm::rotate(glm::mat4{ 1.0f }, Rotation.y, glm::vec3{ 0.0f, 1.0f, 0.0f })
+			* glm::rotate(glm::mat4{ 1.0f }, Rotation.z, glm::vec3{ 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4{ 1.0f }, Scale);
+
+		return TransformMatrix;
+	}
+
+
+
 	auto Entity::Create(UUID modelID) -> Ref<Entity>
 	{
 		return CreateRef<Entity>(modelID);
@@ -20,15 +34,6 @@ namespace Nut
 		: m_ModelID(modelID)
 	{
 
-	}
-
-	auto Entity::CalculateTransformMatrix() -> void
-	{
-		m_Transform.TransformMatrix = glm::mat4(1.0f) * glm::translate(glm::mat4(1.0f), m_Transform.Position)
-			* glm::rotate(glm::mat4{ 1.0f }, m_Transform.Rotation.x, glm::vec3{ 1.0f, 0.0f, 0.0f })
-			* glm::rotate(glm::mat4{ 1.0f }, m_Transform.Rotation.y, glm::vec3{ 0.0f, 1.0f, 0.0f })
-			* glm::rotate(glm::mat4{ 1.0f }, m_Transform.Rotation.z, glm::vec3{ 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4{ 1.0f }, m_Transform.Scale);
 	}
 
 	auto Entity::CreateDebugLines(std::vector<LineVertex>& vertexList) -> void

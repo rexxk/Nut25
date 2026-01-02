@@ -15,9 +15,9 @@ namespace Nut
 	{
 		const glm::vec3 globalCenter{ transform * glm::vec4(aabb.Center, 1.0f) };
 
-		const glm::vec3 right = glm::vec3{ transform[0] } * glm::vec3{ 1.0f, 0.0f, 0.0f } * aabb.Extents.x;
-		const glm::vec3 up = glm::vec3{ transform[1] } * glm::vec3{ 0.0f, 1.0f, 0.0f } * aabb.Extents.y;
-		const glm::vec3 forward = glm::vec3{ transform[2] } * glm::vec3{ 0.0f, 0.0f, -1.0f } * aabb.Extents.z;
+		const glm::vec3 right = glm::vec3{ transform[0] } /** glm::vec3{ 1.0f, 0.0f, 0.0f }*/ * aabb.Extents.x;
+		const glm::vec3 up = glm::vec3{ transform[1] } /** glm::vec3{ 0.0f, 1.0f, 0.0f }*/ * aabb.Extents.y;
+		const glm::vec3 forward = glm::vec3{ transform[2] } /** glm::vec3{ 0.0f, 0.0f, -1.0f }*/ * aabb.Extents.z;
 
 		const float newIi = std::abs(glm::dot(glm::vec3{ 1.0f, 0.0f, 0.0f }, right)) +
 			std::abs(glm::dot(glm::vec3{ 1.0f, 0.0f, 0.0f }, up)) +
