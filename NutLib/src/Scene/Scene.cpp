@@ -189,8 +189,8 @@ namespace Nut
 			if (ImGui::Button("Generate"))
 			{
 				auto& model = AssetManager<Scope<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
-//				static_cast<Scope<TerrainMesh>>(AssetManager<Scope<Mesh>>::Get(model->MeshIDs()[0]))->UpdateHeightmap(s_HeightmapSpecification);
-//				Renderer::UpdateModel(model);
+				static_cast<TerrainMesh*>(AssetManager<Scope<Mesh>>::Get(model->MeshIDs()[0]).get())->UpdateHeightmap(s_HeightmapSpecification);
+				Renderer::UpdateModel(model);
 			}
 
 			ImGui::End();

@@ -207,7 +207,7 @@ namespace Nut
 
 	}
 
-	auto Renderer::UpdateModel(Scope<Model> model) -> void
+	auto Renderer::UpdateModel(Scope<Model>& model) -> void
 	{
 //		if (!s_RendererObjects.contains(model->ModelID()))
 		if (!s_RendererObjects.contains(model->MeshIDs()[0]))
