@@ -20,7 +20,7 @@ namespace Nut
 		{
 			if (!s_Items.contains(name))
 			{
-				auto ID = item->ID();
+				auto ID = item.ID();
 				s_Items[name] = std::move(item);
 				return ID;
 			}
@@ -29,23 +29,21 @@ namespace Nut
 			return UUID{0ull};
 		}
 
-		static auto Get(UUID uuid) -> T
+		static auto Get(UUID uuid) -> T&
 		{
 			for (auto& [name, item] : s_Items)
 			{
-				if (item->ID() == uuid)
+				if (item.ID() == uuid)
 					return item;
 			}
 
-			return nullptr;
+//			return T{};
 		}
 
-		static auto Get(const std::string& name) -> T
+		static auto Get(const std::string& name) -> T&
 		{
 			if (s_Items.contains(name))
 				return s_Items[name];
-
-			return T{};
 		}
 
 		inline static std::unordered_map<std::string, T> s_Items{};

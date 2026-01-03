@@ -28,7 +28,7 @@ namespace Nut
 	{
 	public:
 		Material() = default;
-
+		Material(Ref<Shader> shader);
 
 
 	private:

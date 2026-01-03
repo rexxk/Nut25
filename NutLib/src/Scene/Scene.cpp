@@ -40,7 +40,7 @@ namespace Nut
 	{
 		std::vector<Ref<Entity>> Entities;
 
-		Ref<Mesh> DrawRectangle{ nullptr };
+		Mesh DrawRectangle{ };
 //		Ref<Model> TerrainModel{ nullptr };
 		Ref<Entity> TerrainEntity{ nullptr };
 
@@ -188,9 +188,9 @@ namespace Nut
 
 			if (ImGui::Button("Generate"))
 			{
-				auto model = AssetManager<Ref<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
-				std::dynamic_pointer_cast<TerrainMesh>(AssetManager<Ref<Mesh>>::Get(model->MeshIDs()[0]))->UpdateHeightmap(s_HeightmapSpecification);
-				Renderer::UpdateModel(model);
+				auto& model = AssetManager<Model>::Get(s_SceneData.TerrainEntity->ModelID());
+//				static_cast<TerrainMesh>(AssetManager<Mesh>::Get(model.MeshIDs()[0])).UpdateHeightmap(s_HeightmapSpecification);
+//				Renderer::UpdateModel(model);
 			}
 
 			ImGui::End();
@@ -253,11 +253,11 @@ namespace Nut
 			if (entity->ModelID() != 0)
 			{
 				// Do frustum culling
-				auto mesh = AssetManager<Ref<Mesh>>::Get(AssetManager<Ref<Model>>::Get(entity->ModelID())->MeshIDs()[0]);
+				auto& mesh = AssetManager<Mesh>::Get(AssetManager<Model>::Get(entity->ModelID()).MeshIDs()[0]);
 
-				if (mesh)
+				if (mesh.ID() != 0)
 				{
-					auto& aabb = mesh->GetBoundingBox();
+					auto& aabb = mesh.GetBoundingBox();
 //					entity->CalculateTransformMatrix();
 					auto& transformMatrix = entity->GetTransform().CalculateTransformMatrix();
 
@@ -313,18 +313,18 @@ namespace Nut
 			glBindBufferRange(GL_UNIFORM_BUFFER, 1, s_SceneData.EntityTransformUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 
-			auto terrainModel = AssetManager<Ref<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
-			auto terrainMesh = AssetManager<Ref<Mesh>>::Get(terrainModel->MeshIDs().at(0));
+			auto terrainModel = AssetManager<Model>::Get(s_SceneData.TerrainEntity->ModelID());
+			auto terrainMesh = AssetManager<Mesh>::Get(terrainModel.MeshIDs().at(0));
 
 //			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
 			program->SetUniform("u_GrassTexture", 0);
 			program->SetUniform("u_RockTexture", 1);
 
-			auto& textures = terrainModel->GetTextures();
+			auto& textures = terrainModel.GetTextures();
 
 			if (textures.contains(TextureType::Albedo))
 			{
-				textures.at(TextureType::Albedo)->BindToSlot(0);
+				textures.at(TextureType::Albedo).BindToSlot(0);
 			}
 
 			Renderer::DrawMesh(terrainMesh, program->GetLayout());
@@ -352,11 +352,11 @@ namespace Nut
 
 			for (auto& [modelID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
-				auto& textures = AssetManager<Ref<Model>>::Get(modelID)->GetTextures();
+				auto& textures = AssetManager<Model>::Get(modelID).GetTextures();
 
 				if (textures.contains(TextureType::Albedo))
 				{
-					textures.at(TextureType::Albedo)->BindToSlot(albedoSlot);
+					textures.at(TextureType::Albedo).BindToSlot(albedoSlot);
 				}
 
 				Renderer::DrawInstanced(modelID, transformMatrices, program->GetLayout());

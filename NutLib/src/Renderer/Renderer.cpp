@@ -39,16 +39,16 @@ namespace Nut
 	{
 		if (!s_RendererObjects.contains(modelID))
 		{
-			auto meshIDs = AssetManager<Ref<Model>>::Get(modelID)->MeshIDs();
+			auto meshIDs = AssetManager<Model>::Get(modelID).MeshIDs();
 
 			RendererObject newRendererObject{};
 
 			for (auto& meshID : meshIDs)
 			{
-				auto mesh = AssetManager<Ref<Mesh>>::Get(meshID);
+				auto mesh = AssetManager<Mesh>::Get(meshID);
 
-				newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()), sizeof(Vertex)));
-				newRendererObject.IndexBuffer = IndexBuffer::Create(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size()) * sizeof(uint32_t));
+				newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(mesh.GetVertices().data(), static_cast<uint32_t>(mesh.GetVertices().size()), sizeof(Vertex)));
+				newRendererObject.IndexBuffer = IndexBuffer::Create(mesh.GetIndices().data(), static_cast<uint32_t>(mesh.GetIndices().size()) * sizeof(uint32_t));
 			}
 
 			newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(transformMatrices.data(), static_cast<uint32_t>(transformMatrices.size()), sizeof(glm::mat4)));
@@ -117,14 +117,14 @@ namespace Nut
 		}
 	}
 	
-	auto Renderer::DrawMesh(Ref<Mesh> mesh, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void
+	auto Renderer::DrawMesh(const Mesh& mesh, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void
 	{
-		if (!s_RendererObjects.contains(mesh->ID()))
+		if (!s_RendererObjects.contains(mesh.ID()))
 		{
 			RendererObject newRendererObject{};
 
-			newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()), sizeof(Vertex)));
-			newRendererObject.IndexBuffer = IndexBuffer::Create(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size()) * sizeof(uint32_t));
+			newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(mesh.GetVertices().data(), static_cast<uint32_t>(mesh.GetVertices().size()), sizeof(Vertex)));
+			newRendererObject.IndexBuffer = IndexBuffer::Create(mesh.GetIndices().data(), static_cast<uint32_t>(mesh.GetIndices().size()) * sizeof(uint32_t));
 		
 			glCreateVertexArrays(1, &newRendererObject.VertexArrayObject);
 
@@ -154,11 +154,11 @@ namespace Nut
 
 			glVertexArrayElementBuffer(newRendererObject.VertexArrayObject, newRendererObject.IndexBuffer->Handle());
 
-			s_RendererObjects[mesh->ID()] = newRendererObject;
+			s_RendererObjects[mesh.ID()] = newRendererObject;
 		}
 //		else
 		{
-			auto& rendererObject = s_RendererObjects[mesh->ID()];
+			auto& rendererObject = s_RendererObjects[mesh.ID()];
 
 			glBindVertexArray(rendererObject.VertexArrayObject);
 
@@ -217,9 +217,9 @@ namespace Nut
 		auto& rendererObject = s_RendererObjects[model->MeshIDs()[0]];
 		
 		auto meshID = model->MeshIDs()[0];
-		auto mesh = AssetManager<Ref<Mesh>>::Get(meshID);
-		rendererObject.VertexBuffers[0]->SetData(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()));
-		rendererObject.IndexBuffer->SetData(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size() * sizeof(uint32_t)));
+		auto& mesh = AssetManager<Mesh>::Get(meshID);
+		rendererObject.VertexBuffers[0]->SetData(mesh.GetVertices().data(), static_cast<uint32_t>(mesh.GetVertices().size()));
+		rendererObject.IndexBuffer->SetData(mesh.GetIndices().data(), static_cast<uint32_t>(mesh.GetIndices().size() * sizeof(uint32_t)));
 	}
 
 }

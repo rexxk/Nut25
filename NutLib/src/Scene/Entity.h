@@ -1,14 +1,15 @@
 #pragma once
 
+#include "Assets/AssetManager.h"
 
 #include "Core/Base.h"
 #include "Core/UUID.h"
 
 #include "Renderer/Material.h"
+#include "Renderer/Mesh.h"
 #include "Renderer/Renderer.h"
 
 #include <glm/glm.hpp>
-
 
 
 namespace Nut
@@ -26,7 +27,6 @@ namespace Nut
 		auto CalculateTransformMatrix() -> const glm::mat4&;
 	};
 
-	class Mesh;
 
 	class Entity
 	{
@@ -40,17 +40,20 @@ namespace Nut
 
 //		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
 		auto EntityID() const -> const UUID { return m_EntityID; }
+		auto GetMesh() const -> const Mesh& { return AssetManager<Mesh>::Get(m_MeshID); }
 
 		auto ModelID() -> const UUID { return m_ModelID; }
 
 
 	private:
 		UUID m_EntityID{};
-		UUID m_ModelID{};
-
+		UUID m_MeshID{};
 		Material m_Material{};
 
 		EntityTransform m_Transform{};
+
+		// OBSOLETE
+		UUID m_ModelID{};
 
 	};
 

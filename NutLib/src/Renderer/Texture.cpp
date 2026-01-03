@@ -15,11 +15,21 @@ namespace Nut
 {
 
 
-	auto Texture2D::Create(const TextureSpecification& specification) -> Ref<Texture2D>
+	auto Texture2D::Create(const TextureSpecification& specification) -> Texture2D
 	{
 		switch (RendererContext::API())
 		{
-			case RendererAPI::OpenGL: return CreateRef<OpenGLTexture2D>(specification);
+			case RendererAPI::OpenGL: return OpenGLTexture2D(specification);
+		}
+
+		return {};
+	}
+
+	auto Texture2D::CreatePointer(const TextureSpecification& specification) -> Ref<Texture2D>
+	{
+		switch (RendererContext::API())
+		{
+		case RendererAPI::OpenGL: return CreateRef<OpenGLTexture2D>(specification);
 		}
 
 		return nullptr;

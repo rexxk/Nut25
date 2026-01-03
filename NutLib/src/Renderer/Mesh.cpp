@@ -97,12 +97,12 @@ namespace Nut
 
 
 
-	auto Mesh::Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name) -> Ref<Mesh>
+	auto Mesh::Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name) -> Mesh
 	{
-		return CreateRef<Mesh>(vertices, indices, name);
+		return Mesh{ vertices, indices, name };
 	}
 
-	auto Mesh::CreateTriangle() -> Ref<Mesh>
+	auto Mesh::CreateTriangle() -> Mesh
 	{
 		std::vector<Nut::Vertex> vertices{
 			{.Position{ -0.5f, -0.5f, 0.0f }, .TexCoord{ 0.0f, 0.0f }, .Normal{0.0f, 0.0f, 1.0f}, .Color{ 1.0f, 0.0f, 0.0f, 1.0f }},
@@ -114,10 +114,10 @@ namespace Nut
 			0, 1, 2,
 		};
 
-		return CreateRef<Mesh>(vertices, indices, "Triangle");
+		return Mesh{ vertices, indices, "Triangle" };
 	}
 
-	auto Mesh::CreateRectangle() -> Ref<Mesh>
+	auto Mesh::CreateRectangle() -> Mesh
 	{
 		std::vector<Vertex> vertices
 		{
@@ -132,7 +132,7 @@ namespace Nut
 			0, 1, 2, 2, 3, 0,
 		};
 
-		return CreateRef<Mesh>(vertices, indices, "Rectangle");
+		return Mesh{ vertices, indices, "Rectangle" };
 
 	}
 
