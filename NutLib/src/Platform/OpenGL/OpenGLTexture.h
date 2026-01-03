@@ -14,7 +14,12 @@ namespace Nut
 	{
 	public:
 		OpenGLTexture2D(const TextureSpecification& specification);
+		OpenGLTexture2D(const OpenGLTexture2D& other);
+		OpenGLTexture2D(OpenGLTexture2D&& other);
 		virtual ~OpenGLTexture2D();
+
+		OpenGLTexture2D& operator=(const OpenGLTexture2D& other);
+		OpenGLTexture2D& operator=(const OpenGLTexture2D&& other);
 
 		virtual auto BindToSlot(uint32_t slot) -> void override;
 

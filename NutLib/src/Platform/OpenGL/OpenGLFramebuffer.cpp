@@ -66,7 +66,7 @@ namespace Nut
 			textureSpec.Height = m_Specification.Height;
 			textureSpec.Format = attachmentSpec.Format;
 
-			m_Attachments[attachmentSpec.Type] = Texture2D::CreatePointer(textureSpec);
+			m_Attachments[attachmentSpec.Type] = Texture2D::Create(textureSpec);
 //			m_Attachments[attachmentSpec.Type].reset(new Texture2D(textureSpec));
 
 			glNamedFramebufferTexture(m_ID, FramebufferAttachmentTypeToEnum(attachmentSpec.Type), m_Attachments[attachmentSpec.Type]->TextureID(), 0);

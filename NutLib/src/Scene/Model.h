@@ -27,25 +27,25 @@ namespace Nut
 	class Model
 	{
 	public:
-		static auto Create(const std::vector<UUID> meshIDs, const std::unordered_map<TextureType, Texture2D&>& textures) -> Model;
+		static auto Create(const std::vector<UUID>& meshIDs, const std::unordered_map<TextureType, Scope<Texture2D>&>& textures) -> Scope<Model>;
 
 		Model() = default;
 		Model(const Model& other);
-		Model(const std::vector<UUID> meshIDs, const std::unordered_map<TextureType, Texture2D&>& textures);
+		Model(const std::vector<UUID>& meshIDs, const std::unordered_map<TextureType, Scope<Texture2D>&>& textures);
 
 
 		auto ModelID() const -> const UUID { return m_ModelID; }
 		auto ID() const -> const UUID { return m_ModelID; }
 		auto MeshIDs() const -> const std::vector<UUID> { return m_MeshIDs; }
 
-		auto GetTextures() -> const std::unordered_map<TextureType, Texture2D&>& { return m_Textures; }
+		auto GetTextures() -> const std::unordered_map<TextureType, Scope<Texture2D>&>& { return m_Textures; }
 
 	private:
 		UUID m_ModelID{};
 
 		std::vector<UUID> m_MeshIDs{};
 
-		std::unordered_map<TextureType, Texture2D&> m_Textures{};
+		std::unordered_map<TextureType, Scope<Texture2D>&> m_Textures{};
 	};
 
 }

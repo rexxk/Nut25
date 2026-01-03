@@ -40,7 +40,7 @@ namespace Nut
 
 //		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
 		auto EntityID() const -> const UUID { return m_EntityID; }
-		auto GetMesh() const -> const Mesh& { return AssetManager<Mesh>::Get(m_MeshID); }
+		auto GetMesh() const -> const Scope<Mesh>& { return AssetManager<Scope<Mesh>>::Get(m_MeshID); }
 
 		auto ModelID() -> const UUID { return m_ModelID; }
 

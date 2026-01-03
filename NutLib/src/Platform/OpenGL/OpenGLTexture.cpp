@@ -60,6 +60,34 @@ namespace Nut
 
 	}
 
+	OpenGLTexture2D::OpenGLTexture2D(const OpenGLTexture2D& other)
+	{
+		m_TextureID = other.m_TextureID;
+		m_EntityID = other.m_EntityID;
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(OpenGLTexture2D&& other)
+	{
+		m_TextureID = other.m_TextureID;
+		m_EntityID = other.m_EntityID;
+	}
+
+	OpenGLTexture2D& OpenGLTexture2D::operator=(const OpenGLTexture2D& other)
+	{
+		m_TextureID = other.m_TextureID;
+		m_EntityID = other.m_EntityID;
+
+		return *this;
+	}
+	
+	OpenGLTexture2D& OpenGLTexture2D::operator=(const OpenGLTexture2D && other)
+	{
+		m_TextureID = other.m_TextureID;
+		m_EntityID = other.m_EntityID;
+
+		return *this;
+	}
+
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		if (m_TextureID != 0)

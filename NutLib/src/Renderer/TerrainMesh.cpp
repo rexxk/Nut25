@@ -58,9 +58,9 @@ namespace Nut
 
 
 
-	auto TerrainMesh::Create(uint32_t width, uint32_t height, const HeightmapSpecification& specification) -> Mesh
+	auto TerrainMesh::Create(uint32_t width, uint32_t height, const HeightmapSpecification& specification) -> Scope<Mesh>
 	{
-		return TerrainMesh{ width, height, specification };
+		return CreateScope<TerrainMesh>(width, height, specification);
 	}
 
 

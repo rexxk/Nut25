@@ -33,10 +33,10 @@ namespace Nut
 	class Mesh
 	{
 	public:
-		static auto Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name = "<mesh>") -> Mesh;
+		static auto Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name = "<mesh>") -> Scope<Mesh>;
 
-		static auto CreateTriangle() -> Mesh;
-		static auto CreateRectangle() -> Mesh;
+		static auto CreateTriangle() -> Scope<Mesh>;
+		static auto CreateRectangle() -> Scope<Mesh>;
 
 		Mesh() = default;
 		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name = "<mesh>");

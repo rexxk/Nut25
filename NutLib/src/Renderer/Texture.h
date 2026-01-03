@@ -40,13 +40,12 @@ namespace Nut
 	class Texture2D
 	{
 	public:
-		static auto Create(const TextureSpecification& specification) -> Texture2D;
-		static auto CreatePointer(const TextureSpecification& specification) -> Ref<Texture2D>;
+		static auto Create(const TextureSpecification& specification) -> Scope<Texture2D>;
 
 		Texture2D() = default;
 		virtual ~Texture2D() = default;
 
-		virtual auto BindToSlot(uint32_t slot) -> void {}
+		virtual auto BindToSlot(uint32_t slot) -> void = 0;
 
 		virtual auto TextureID() const -> const uint32_t { return 0u; }
 		virtual auto ID() const -> const UUID { return UUID(); }
