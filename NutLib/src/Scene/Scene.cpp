@@ -253,6 +253,29 @@ namespace Nut
 		{
 			if (entity->ModelID() != 0)
 			{
+				if (entity->HasComponent<MeshComponent>())
+				{
+					auto& meshComponent = entity->GetComponent<MeshComponent>();
+					for (auto& [meshID, localTransform] : meshComponent.Meshes)
+					{
+						auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
+
+						auto& aabb = mesh->GetBoundingBox();
+						auto transformMatrix = entity->GetComponent<TransformComponent>().CalculateTransformMatrix();
+						transformMatrix *= localTransform.CalculateTransformMatrix();
+
+						auto onFrustum = frustum.IsOnFrustum(aabb, transformMatrix);
+
+						if (onFrustum)
+							s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(transformMatrix);
+
+						if (s_SceneDrawData.DrawAABB)
+							aabb.CreateDebugLineMesh(s_SceneDrawData.DebugLines, transformMatrix, onFrustum);
+					}
+
+				}
+
+#if 0
 				// Do frustum culling
 				auto& mesh = AssetManager<Scope<Mesh>>::Get(AssetManager<Scope<Model>>::Get(entity->ModelID())->MeshIDs()[0]);
 
@@ -277,7 +300,7 @@ namespace Nut
 
 
 				}
-
+#endif
 
 				if (s_SceneDrawData.DrawDebugLines)
 					entity->CreateDebugLines(s_SceneDrawData.DebugLines);

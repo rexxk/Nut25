@@ -22,8 +22,7 @@ namespace Nut
 	Entity::Entity(UUID modelID, const std::string& tag)
 		: m_ModelID(modelID)
 	{
-		TagComponent tagComponent{ .Tag{tag} };
-		AddComponent<TagComponent>(tagComponent);
+		AddComponent<TagComponent>(TagComponent{ .Tag{tag} });
 	}
 
 	auto Entity::CreateDebugLines(std::vector<LineVertex>& vertexList) -> void
