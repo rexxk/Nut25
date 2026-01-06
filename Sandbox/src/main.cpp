@@ -11,47 +11,6 @@
 #include <imgui.h>
 
 
-struct MyComponent
-{
-	int x{ 5 };
-
-	auto Print() -> void
-	{
-		LOG_CORE_TRACE("MyComponent: {}", x);
-	}
-};
-
-struct TagComponent
-{
-	std::string Tag{};
-
-	auto Print() -> void
-	{
-		LOG_CORE_TRACE("TagComponent: {}", Tag);
-	}
-};
-
-namespace std
-{
-	template<>
-	struct hash<MyComponent>
-	{
-		auto operator()(const MyComponent& component) const -> std::size_t
-		{
-			return hash<MyComponent>()(component);
-		}
-	};
-
-	template<>
-	struct hash<TagComponent>
-	{
-		auto operator()(const TagComponent& component) const -> std::size_t
-		{
-			return hash<TagComponent>()(component);
-		}
-	};
-
-}
 
 class SandboxLayer : public Nut::Layer
 {
@@ -70,18 +29,12 @@ public:
 
 		ASSERT(m_RendererContext, "Application: Could not create renderer context");
 
-		MyComponent comp{};
-		TagComponent tag{ "Tag" };
+		Nut::TagComponent tag{ "Tag" };
 
-//		auto entityID = Nut::ECS::GetEntityID();
 		auto entityID = Nut::EntityRegistry::Generate();
 		LOG_CORE_TRACE("Entity ID: {}", entityID);
-//		Nut::Component::AddComponent<TagComponent, MyComponent>(entityID, tag, comp); // , { 5 }, { "Tag" });
-//		Nut::Component<MyComponent, TagComponent>::AddComponent(entityID, std::move(comp), std::move(tag)); // , { 5 }, { "Tag" });
-//		Nut::ComponentContainer<TagComponent>::Add(entityID, tag);
-//		auto t2 = Nut::ComponentContainer<TagComponent>::Get(entityID);
-		Nut::EntitySystem::AddComponent<TagComponent>(entityID, tag);
-		auto& t2 = Nut::EntitySystem::GetComponent<TagComponent>(entityID);
+		Nut::EntitySystem::AddComponent<Nut::TagComponent>(entityID, tag);
+		auto& t2 = Nut::EntitySystem::GetComponent<Nut::TagComponent>(entityID);
 
 		LOG_CORE_TRACE("Tag: {}", t2.Tag);
 
@@ -118,9 +71,16 @@ public:
 		m_Entity3 = Nut::Entity::Create(triangleModelID);
 
 		m_Terrain = Nut::Entity::Create(terrainModelID);
-		
-		m_Entity2->GetTransform().Position = glm::vec3{ 5.0f, 0.0f, 0.0f };
-		m_Entity3->GetTransform().Position = glm::vec3{ -5.0f, 0.0f, 0.0f };
+
+		Nut::TransformComponent transform{};
+		m_TestEntity->AddComponent<Nut::TransformComponent>(transform);
+
+		transform.Position = glm::vec3{ 5.0f, 0.0f, 0.0f };
+		m_Entity2->AddComponent<Nut::TransformComponent>(transform);
+
+		transform.Position = glm::vec3{ -5.0f, 0.0f, 0.0f };
+		m_Entity3->AddComponent<Nut::TransformComponent>(transform);
+
 
 		m_Scene.AddEntity(m_TestEntity);
 		m_Scene.AddEntity(m_Entity2);
@@ -128,7 +88,9 @@ public:
 
 //		m_Scene.SetTerrainModel(Nut::AssetManager::GetModel(terrainModelID));
 
-		m_Terrain->GetTransform().Position = glm::vec3{ 0.0f, -2.0f, 0.0f };
+		transform.Position = glm::vec3{ 0.0f, -2.0f, 0.0f };
+		m_Terrain->AddComponent<Nut::TransformComponent>(transform);
+//		m_Terrain->GetTransform().Position = glm::vec3{ 0.0f, -2.0f, 0.0f };
 
 		m_Scene.SetTerrainEntity(m_Terrain);
 
@@ -148,7 +110,8 @@ public:
 		constexpr auto twoPi = glm::two_pi<float>();
 
 		{
-			auto& transform = m_TestEntity->GetTransform();
+//			auto& transform = m_TestEntity->GetTransform();
+			auto& transform = m_TestEntity->GetComponent<Nut::TransformComponent>();
 
 			transform.Position.x = 1.5f * std::sinf(twoPi * 0.15f * elapsedTime);
 			transform.Position.y = 2.0f * std::cosf(twoPi * 0.35f * elapsedTime);
@@ -159,21 +122,24 @@ public:
 		}
 
 		{
-			auto& transform = m_Entity2->GetTransform();
+//			auto& transform = m_Entity2->GetTransform();
+			auto& transform = m_Entity2->GetComponent<Nut::TransformComponent>();
 			transform.Position.y = 2.5f * std::cosf(twoPi * 0.25f * elapsedTime);
 
 			transform.Rotation.y = 2.0f * std::sinf(twoPi * 0.05f * elapsedTime);
 		}
 	
 		{
-			auto& transform = m_Entity3->GetTransform();
+//			auto& transform = m_Entity3->GetTransform();
+			auto& transform = m_Entity3->GetComponent<Nut::TransformComponent>();
 			transform.Position.y = 2.5f * std::sinf(twoPi * 0.1f * elapsedTime);
 
 			transform.Rotation.x = 5.0f * std::cosf(twoPi * 0.075f * elapsedTime);
 		}
 
 		{
-			auto& transform = m_Terrain->GetTransform();
+//			auto& transform = m_Terrain->GetTransform();
+			auto& transform = m_Terrain->GetComponent<Nut::TransformComponent>();
 			transform.Position.x = 10.0f * std::sinf(twoPi * 0.1f * elapsedTime);
 			transform.Position.y = 3 * std::cosf(twoPi * 0.05f * elapsedTime) - 15.0f;
 

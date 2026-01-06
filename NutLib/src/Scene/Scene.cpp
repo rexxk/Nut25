@@ -13,6 +13,7 @@
 #include "Renderer/Texture.h"
 #include "Scene/Camera.h"
 #include "Scene/CameraController.h"
+#include "Scene/Components.h"
 #include "Scene/Entity.h"
 #include "Scene/Model.h"
 
@@ -259,7 +260,8 @@ namespace Nut
 				{
 					auto& aabb = mesh->GetBoundingBox();
 //					entity->CalculateTransformMatrix();
-					auto& transformMatrix = entity->GetTransform().CalculateTransformMatrix();
+//					auto& transformMatrix = entity->GetTransform().CalculateTransformMatrix();
+					auto& transformMatrix = entity->GetComponent<TransformComponent>().CalculateTransformMatrix();
 
 					auto onFrustum = frustum.IsOnFrustum(aabb, transformMatrix);
 					if (onFrustum)
@@ -306,7 +308,8 @@ namespace Nut
 			glBindSampler(0, s_SceneData.NearestSampler->ID());
 
 //			s_SceneData.TerrainEntity->CalculateTransformMatrix();
-			auto transformMatrix = s_SceneData.TerrainEntity->GetTransform().CalculateTransformMatrix();
+//			auto transformMatrix = s_SceneData.TerrainEntity->GetTransform().CalculateTransformMatrix();
+			auto& transformMatrix = s_SceneData.TerrainEntity->GetComponent<TransformComponent>().CalculateTransformMatrix();
 			s_SceneData.EntityTransformUniformBuffer->SetData(&transformMatrix, sizeof(glm::mat4));
 
 			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));

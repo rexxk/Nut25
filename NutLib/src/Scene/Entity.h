@@ -5,6 +5,8 @@
 #include "Core/Base.h"
 #include "Core/UUID.h"
 
+#include "ECS/ECS.h"
+
 #include "Renderer/Material.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/Renderer.h"
@@ -16,16 +18,6 @@ namespace Nut
 {
 
 
-	struct EntityTransform
-	{
-		glm::vec3 Position{ 0.0f };
-		glm::vec3 Rotation{ 0.0f };
-		glm::vec3 Scale{ 1.0f };
-
-		glm::mat4 TransformMatrix{ 1.0f };
-
-		auto CalculateTransformMatrix() -> const glm::mat4&;
-	};
 
 
 	class Entity
@@ -36,7 +28,6 @@ namespace Nut
 		Entity(UUID meshID);
 
 		auto CreateDebugLines(std::vector<LineVertex>& vertexList) -> void;
-		auto GetTransform() -> EntityTransform& { return m_Transform; }
 
 //		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
 		auto EntityID() const -> const UUID { return m_EntityID; }
@@ -44,13 +35,35 @@ namespace Nut
 
 		auto ModelID() -> const UUID { return m_ModelID; }
 
+		template<typename T, typename ... Args>
+		auto AddComponent(Args&&... args) -> void
+		{
+			EntitySystem::AddComponent<T>(m_EntityID, std::forward<Args&&>(args)...);
+		}
+
+		template<typename T>
+		auto RemoveComponent() -> void
+		{
+			EntitySystem::RemoveComponent<T>(m_EntityID);
+		}
+
+		template<typename T>
+		auto HasComponent() -> bool
+		{
+			return EntitySystem::HasComponent<T>(m_EntityID);
+		}
+
+		template<typename T>
+		auto GetComponent() -> T&
+		{
+			return EntitySystem::GetComponent<T>(m_EntityID);
+		}
+
 
 	private:
 		UUID m_EntityID{};
 		UUID m_MeshID{};
 		Material m_Material{};
-
-		EntityTransform m_Transform{};
 
 		// OBSOLETE
 		UUID m_ModelID{};
