@@ -38,6 +38,36 @@ namespace Nut
 		}
 	};
 
+	struct MeshComponent
+	{
+		UUID MeshID{};
+		std::string MeshName{};
+
+		// Mesh id and local transform for each submesh
+		std::vector<std::pair<UUID, TransformComponent>> Meshes{};
+
+		MeshComponent(const std::string& meshName, const TransformComponent& transform)
+			: MeshName(meshName)
+		{
+			UUID id = AssetManager<Scope<Mesh>>::Get(meshName)->ID();
+			AddMesh(id, transform);
+		}
+
+		auto AddMesh(UUID uuid, const TransformComponent& localTransform) -> void
+		{
+			Meshes.push_back(std::make_pair(uuid, localTransform));
+		}
+	};
+
+	struct MaterialComponent
+	{
+
+	};
+
+	struct TerrainComponent
+	{
+
+	};
 
 //	template<>
 //	struct hash<TagComponent>

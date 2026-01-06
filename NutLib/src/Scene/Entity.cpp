@@ -14,15 +14,16 @@ namespace Nut
 
 
 
-	auto Entity::Create(UUID modelID) -> Ref<Entity>
+	auto Entity::Create(UUID modelID, const std::string& tag) -> Ref<Entity>
 	{
-		return CreateRef<Entity>(modelID);
+		return CreateRef<Entity>(modelID, tag);
 	}
 
-	Entity::Entity(UUID modelID)
+	Entity::Entity(UUID modelID, const std::string& tag)
 		: m_ModelID(modelID)
 	{
-
+		TagComponent tagComponent{ .Tag{tag} };
+		AddComponent<TagComponent>(tagComponent);
 	}
 
 	auto Entity::CreateDebugLines(std::vector<LineVertex>& vertexList) -> void

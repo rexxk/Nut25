@@ -13,6 +13,8 @@
 
 #include <glm/glm.hpp>
 
+#include <string>
+
 
 namespace Nut
 {
@@ -23,9 +25,9 @@ namespace Nut
 	class Entity
 	{
 	public:
-		static auto Create(UUID meshID) -> Ref<Entity>;
+		static auto Create(UUID meshID, const std::string& tag) -> Ref<Entity>;
 
-		Entity(UUID meshID);
+		Entity(UUID meshID, const std::string& tag);
 
 		auto CreateDebugLines(std::vector<LineVertex>& vertexList) -> void;
 

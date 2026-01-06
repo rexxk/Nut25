@@ -26,17 +26,7 @@ public:
 		LOG_CORE_TRACE("Attaching layer: {}", m_DebugName);
 
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
-
 		ASSERT(m_RendererContext, "Application: Could not create renderer context");
-
-		Nut::TagComponent tag{ "Tag" };
-
-		auto entityID = Nut::EntityRegistry::Generate();
-		LOG_CORE_TRACE("Entity ID: {}", entityID);
-		Nut::EntitySystem::AddComponent<Nut::TagComponent>(entityID, tag);
-		auto& t2 = Nut::EntitySystem::GetComponent<Nut::TagComponent>(entityID);
-
-		LOG_CORE_TRACE("Tag: {}", t2.Tag);
 
 //		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
 //		auto mesh = Nut::Mesh::CreateTriangle();
@@ -66,11 +56,16 @@ public:
 		auto triangleModelID = Nut::AssetManager<Scope<Nut::Model>>::Add("Model_Rectangle", std::move(Nut::Model::Create({meshID}, { {Nut::TextureType::Albedo, Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Logo")}})));
 		auto terrainModelID = Nut::AssetManager<Scope<Nut::Model>>::Add("Model_Terrain", std::move(Nut::Model::Create({ Nut::AssetManager<Scope<Nut::Mesh>>::Get("Mesh_Terrain")->ID()}, {{Nut::TextureType::Albedo, Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Grass")}})));
 
-		m_TestEntity = Nut::Entity::Create(triangleModelID);
-		m_Entity2 = Nut::Entity::Create(triangleModelID);
-		m_Entity3 = Nut::Entity::Create(triangleModelID);
+		m_TestEntity = Nut::Entity::Create(triangleModelID, "TestEntity");
+		m_TestEntity->AddComponent<Nut::MeshComponent>("Mesh_Rectangle", Nut::TransformComponent{});
 
-		m_Terrain = Nut::Entity::Create(terrainModelID);
+		m_Entity2 = Nut::Entity::Create(triangleModelID, "Entity2");
+		m_Entity2->AddComponent<Nut::MeshComponent>("Mesh_Rectangle", Nut::TransformComponent{});
+
+		m_Entity3 = Nut::Entity::Create(triangleModelID, "Entity3");
+		m_Entity3->AddComponent<Nut::MeshComponent>("Mesh_Rectangle", Nut::TransformComponent{});
+
+		m_Terrain = Nut::Entity::Create(terrainModelID, "Terrain");
 
 		Nut::TransformComponent transform{};
 		m_TestEntity->AddComponent<Nut::TransformComponent>(transform);
