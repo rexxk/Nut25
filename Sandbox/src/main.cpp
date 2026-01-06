@@ -73,16 +73,23 @@ public:
 		MyComponent comp{};
 		TagComponent tag{ "Tag" };
 
-		auto entityID = Nut::ECS::GetEntityID();
+//		auto entityID = Nut::ECS::GetEntityID();
+		auto entityID = Nut::EntityRegistry::Generate();
 		LOG_CORE_TRACE("Entity ID: {}", entityID);
-		Nut::Component::AddComponent<TagComponent, MyComponent>(entityID, tag, comp); // , { 5 }, { "Tag" });
+//		Nut::Component::AddComponent<TagComponent, MyComponent>(entityID, tag, comp); // , { 5 }, { "Tag" });
 //		Nut::Component<MyComponent, TagComponent>::AddComponent(entityID, std::move(comp), std::move(tag)); // , { 5 }, { "Tag" });
+//		Nut::ComponentContainer<TagComponent>::Add(entityID, tag);
+//		auto t2 = Nut::ComponentContainer<TagComponent>::Get(entityID);
+		Nut::EntitySystem::AddComponent<TagComponent>(entityID, tag);
+		auto& t2 = Nut::EntitySystem::GetComponent<TagComponent>(entityID);
+
+		LOG_CORE_TRACE("Tag: {}", t2.Tag);
 
 //		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
 //		auto mesh = Nut::Mesh::CreateTriangle();
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateTriangle());
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateRectangle());
-		auto meshID = Nut::AssetManager<Scope<Nut::Mesh>>::Add("Mesh_Rectangle", Nut::Mesh::CreateRectangle());
+		auto meshID = Nut::AssetManager<Scope<Nut::Mesh>>::Add("Mesh_Rectangle", std::move(Nut::Mesh::CreateRectangle()));
 
 		{
 			Nut::HeightmapSpecification heightmapSpecification{};
@@ -95,7 +102,7 @@ public:
 			//		heightmapSpecification.UseNoise = false;
 			//		heightmapSpecification.Filepath = "Assets/Textures/terrain.png";
 
-			Nut::AssetManager<Scope<Nut::Mesh>>::Add("Mesh_Terrain", Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
+			Nut::AssetManager<Scope<Nut::Mesh>>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
 			//		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
 			//		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
 		}
@@ -103,8 +110,8 @@ public:
 		Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Logo", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA })));
 		Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Grass", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA })));
 
-		auto triangleModelID = Nut::AssetManager<Scope<Nut::Model>>::Add("Model_Rectangle", Nut::Model::Create({meshID}, { {Nut::TextureType::Albedo, Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Logo")}}));
-		auto terrainModelID = Nut::AssetManager<Scope<Nut::Model>>::Add("Model_Terrain", Nut::Model::Create({ Nut::AssetManager<Scope<Nut::Mesh>>::Get("Mesh_Terrain")->ID()}, {{Nut::TextureType::Albedo, Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Grass")}}));
+		auto triangleModelID = Nut::AssetManager<Scope<Nut::Model>>::Add("Model_Rectangle", std::move(Nut::Model::Create({meshID}, { {Nut::TextureType::Albedo, Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Logo")}})));
+		auto terrainModelID = Nut::AssetManager<Scope<Nut::Model>>::Add("Model_Terrain", std::move(Nut::Model::Create({ Nut::AssetManager<Scope<Nut::Mesh>>::Get("Mesh_Terrain")->ID()}, {{Nut::TextureType::Albedo, Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Grass")}})));
 
 		m_TestEntity = Nut::Entity::Create(triangleModelID);
 		m_Entity2 = Nut::Entity::Create(triangleModelID);

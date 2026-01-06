@@ -29,6 +29,8 @@ namespace Nut
 			return UUID{0ull};
 		}
 
+#pragma warning(push)
+#pragma warning(disable : 4715)
 		static auto Get(UUID uuid) -> T&
 		{
 			for (auto& [name, item] : s_Items)
@@ -47,7 +49,7 @@ namespace Nut
 
 //			return nullptr;
 		}
-
+#pragma warning(pop)
 		inline static std::unordered_map<std::string, T> s_Items{};
 	};
 
