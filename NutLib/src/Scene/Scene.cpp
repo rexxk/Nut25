@@ -251,64 +251,34 @@ namespace Nut
 
 		for (auto& entity : s_SceneData.Entities)
 		{
-			if (entity->ModelID() != 0)
+			if (entity->HasComponent<MeshComponent>())
 			{
-				if (entity->HasComponent<MeshComponent>())
+				auto& meshComponent = entity->GetComponent<MeshComponent>();
+				for (auto& [meshID, localTransform] : meshComponent.Meshes)
 				{
-					auto& meshComponent = entity->GetComponent<MeshComponent>();
-					for (auto& [meshID, localTransform] : meshComponent.Meshes)
-					{
-						auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
+					auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
 
-						auto& aabb = mesh->GetBoundingBox();
-						auto transformMatrix = entity->GetComponent<TransformComponent>().CalculateTransformMatrix();
-						transformMatrix *= localTransform.CalculateTransformMatrix();
-
-						auto onFrustum = frustum.IsOnFrustum(aabb, transformMatrix);
-
-						if (onFrustum)
-							s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(transformMatrix);
-
-						if (s_SceneDrawData.DrawAABB)
-							aabb.CreateDebugLineMesh(s_SceneDrawData.DebugLines, transformMatrix, onFrustum);
-					}
-
-				}
-
-#if 0
-				// Do frustum culling
-				auto& mesh = AssetManager<Scope<Mesh>>::Get(AssetManager<Scope<Model>>::Get(entity->ModelID())->MeshIDs()[0]);
-
-				if (mesh->ID() != 0)
-				{
 					auto& aabb = mesh->GetBoundingBox();
-//					entity->CalculateTransformMatrix();
-//					auto& transformMatrix = entity->GetTransform().CalculateTransformMatrix();
-					auto& transformMatrix = entity->GetComponent<TransformComponent>().CalculateTransformMatrix();
+					auto transformMatrix = entity->GetComponent<TransformComponent>().CalculateTransformMatrix();
+					transformMatrix *= localTransform.CalculateTransformMatrix();
 
 					auto onFrustum = frustum.IsOnFrustum(aabb, transformMatrix);
+
 					if (onFrustum)
-//					if (frustum.IsOnFrustum(aabb, transformMatrix))
-					{
-						s_SceneDrawData.InstanceMap[entity->ModelID()].push_back(transformMatrix);
-					}
+						s_SceneDrawData.InstanceMap[entity->EntityID()].push_back(transformMatrix);
 
 					if (s_SceneDrawData.DrawAABB)
-					{
 						aabb.CreateDebugLineMesh(s_SceneDrawData.DebugLines, transformMatrix, onFrustum);
-					}
-
-
 				}
-#endif
 
-				if (s_SceneDrawData.DrawDebugLines)
-					entity->CreateDebugLines(s_SceneDrawData.DebugLines);
+			}
 
-				if (s_SceneDrawData.DrawCameraFrustum)
-				{
-					s_SceneData.SceneCamera->CreateFrustumLines(s_SceneDrawData.DebugLines);
-				}
+			if (s_SceneDrawData.DrawDebugLines)
+				entity->CreateDebugLines(s_SceneDrawData.DebugLines);
+
+			if (s_SceneDrawData.DrawCameraFrustum)
+			{
+				s_SceneData.SceneCamera->CreateFrustumLines(s_SceneDrawData.DebugLines);
 			}
 		}
 
@@ -324,6 +294,7 @@ namespace Nut
 		s_SceneData.FlatFramebuffer->Clear();
 
 		// Draw scene terrain
+#if 0
 		{
 			auto program = ShaderLibrary::GetProgram("TerrainShader");
 			program->Bind();
@@ -355,6 +326,7 @@ namespace Nut
 
 			Renderer::DrawMesh(terrainMesh, program->GetLayout());
 		}
+#endif
 
 		// Draw scene entities
 		{
@@ -376,16 +348,22 @@ namespace Nut
 
 			program->SetUniform("u_Texture", albedoSlot);
 
-			for (auto& [modelID, transformMatrices] : s_SceneDrawData.InstanceMap)
+			for (auto& [entityID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
-				auto& textures = AssetManager<Scope<Model>>::Get(modelID)->GetTextures();
-
-				if (textures.contains(TextureType::Albedo))
+				if (EntitySystem::HasComponent<MeshComponent>(entityID))
 				{
-					textures.at(TextureType::Albedo)->BindToSlot(albedoSlot);
-				}
+					auto& meshComponent = EntitySystem::GetComponent<MeshComponent>(entityID);
 
-				Renderer::DrawInstanced(modelID, transformMatrices, program->GetLayout());
+					for (auto& [meshID, localTransform] : meshComponent.Meshes)
+						Renderer::DrawInstanced(meshID, transformMatrices, program->GetLayout());
+				}
+//				auto& textures = AssetManager<Scope<Model>>::Get(modelID)->GetTextures();
+
+//				if (textures.contains(TextureType::Albedo))
+//				{
+//					textures.at(TextureType::Albedo)->BindToSlot(albedoSlot);
+//				}
+
 			}
 
 		}

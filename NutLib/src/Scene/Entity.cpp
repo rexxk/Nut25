@@ -27,16 +27,18 @@ namespace Nut
 
 	auto Entity::CreateDebugLines(std::vector<LineVertex>& vertexList) -> void
 	{
-		auto& model = AssetManager<Scope<Model>>::Get(m_ModelID);
-
-		auto& meshIDs = model->MeshIDs();
-
-		for (auto& meshID : meshIDs)
+		if (HasComponent<MeshComponent>())
 		{
-			auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
-			auto& transform = GetComponent<TransformComponent>();
-			mesh->CreateDebugLines(vertexList, transform.CalculateTransformMatrix());
+			auto& meshComponent = GetComponent<MeshComponent>();
+
+			for (auto& [meshID, localTransform] : meshComponent.Meshes)
+			{
+				auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
+				auto& transform = GetComponent<TransformComponent>();
+				mesh->CreateDebugLines(vertexList, transform.CalculateTransformMatrix() * localTransform.TransformMatrix);
+			}
 		}
+
 	}
 
 }

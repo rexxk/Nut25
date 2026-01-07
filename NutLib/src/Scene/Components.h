@@ -46,6 +46,11 @@ namespace Nut
 		// Mesh id and local transform for each submesh
 		std::vector<std::pair<UUID, TransformComponent>> Meshes{};
 
+		MeshComponent()
+		{
+
+		}
+
 		MeshComponent(const std::string& meshName, const TransformComponent& transform)
 			: MeshName(meshName)
 		{

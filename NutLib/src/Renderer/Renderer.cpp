@@ -35,21 +35,16 @@ namespace Nut
 	}
 
 
-	auto Renderer::DrawInstanced(UUID modelID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void
+	auto Renderer::DrawInstanced(UUID meshID, const std::vector<glm::mat4>& transformMatrices, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void
 	{
-		if (!s_RendererObjects.contains(modelID))
+		if (!s_RendererObjects.contains(meshID))
 		{
-			auto meshIDs = AssetManager<Scope<Model>>::Get(modelID)->MeshIDs();
-
 			RendererObject newRendererObject{};
 
-			for (auto& meshID : meshIDs)
-			{
-				auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
+			auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
 
-				newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()), sizeof(Vertex)));
-				newRendererObject.IndexBuffer = IndexBuffer::Create(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size()) * sizeof(uint32_t));
-			}
+			newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()), sizeof(Vertex)));
+			newRendererObject.IndexBuffer = IndexBuffer::Create(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size()) * sizeof(uint32_t));
 
 			newRendererObject.VertexBuffers.push_back(VertexBuffer::Create(transformMatrices.data(), static_cast<uint32_t>(transformMatrices.size()), sizeof(glm::mat4)));
 
@@ -101,14 +96,13 @@ namespace Nut
 			glVertexArrayElementBuffer(newRendererObject.VertexArrayObject, newRendererObject.IndexBuffer->Handle());
 
 
-			s_RendererObjects[modelID] = newRendererObject;
+			s_RendererObjects[meshID] = newRendererObject;
 		}
-//		else
+
 		{
-			auto& rendererObject = s_RendererObjects[modelID];
+			auto& rendererObject = s_RendererObjects[meshID];
 
 			rendererObject.VertexBuffers[1]->UpdateData(transformMatrices.data(), static_cast<uint32_t>(transformMatrices.size()) * sizeof(glm::mat4));
-//			rendererObject.VertexBuffers.back()->SetData(transformMatrices.data(), static_cast<uint32_t>(transformMatrices.size()) * sizeof(glm::mat4));
 			rendererObject.InstanceCount = static_cast<uint32_t>(transformMatrices.size());
 
 			glBindVertexArray(rendererObject.VertexArrayObject);
