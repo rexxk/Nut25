@@ -330,34 +330,64 @@ namespace Nut
 
 		// Draw scene entities
 		{
-			auto program = ShaderLibrary::GetProgram("FlatShader");
-			program->Bind();
-
-			glBindSampler(0, s_SceneData.NearestSampler->ID());
-//			glBindSampler(0, s_SceneData.LinearSampler->ID());
-
-			glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
-			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
-//			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
-
 			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
 			auto normalSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Normal);
 			auto metalnessSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Metalness);
 			auto roughnessSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Roughness);
 			auto ambientOcclusionSlot = std::underlying_type<TextureSlot>::type(TextureSlot::AmbientOcclusion);
 
-			program->SetUniform("u_Texture", albedoSlot);
-
 			for (auto& [entityID, transformMatrices] : s_SceneDrawData.InstanceMap)
 			{
-				if (EntitySystem::HasComponent<MeshComponent>(entityID))
+				if (EntitySystem::HasComponent<MaterialComponent>(entityID))
 				{
-					auto& meshComponent = EntitySystem::GetComponent<MeshComponent>(entityID);
+					auto& materialComponent = EntitySystem::GetComponent<MaterialComponent>(entityID);
 
-					for (auto& [meshID, localTransform] : meshComponent.Meshes)
-						Renderer::DrawInstanced(meshID, transformMatrices, program->GetLayout());
+					materialComponent.Shader->Bind();
+	//				auto program = ShaderLibrary::GetProgram("FlatShader");
+	//				program->Bind();
+	
+					glBindSampler(0, s_SceneData.NearestSampler->ID());
+		//			glBindSampler(0, s_SceneData.LinearSampler->ID());
+	
+					glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
+					glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
+		//			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
+	
+					for (auto& [type, textureIDs] : materialComponent.Textures)
+					{
+						uint32_t slot{};
+
+						switch (type)
+						{
+						case MaterialType::AlbedoTexture: slot = albedoSlot; break;
+						case MaterialType::NormalMap: slot = normalSlot; break;
+						case MaterialType::MetalnessMap: slot = metalnessSlot; break;
+						case MaterialType::RoughnessMap: slot = roughnessSlot; break;
+
+//						case MaterialType::TerrainDirt: slot = terrainDirtSlot; break;
+//						case MaterialType::TerrainGrass: slot = albedoSlot; break;
+//						case MaterialType::TerrainStone: slot = albedoSlot; break;
+//						case MaterialType::TerrainSnow: slot = albedoSlot; break;
+						}
+
+						materialComponent.Shader->SetUniform("u_Texture", slot);
+
+						for (auto& textureID : textureIDs)
+						{
+							auto& texture = AssetManager<Scope<Texture2D>>::Get(textureID);
+							texture->BindToSlot(slot);
+						}
+					}
+	
+					if (EntitySystem::HasComponent<MeshComponent>(entityID))
+					{
+						auto& meshComponent = EntitySystem::GetComponent<MeshComponent>(entityID);
+
+						for (auto& [meshID, localTransform] : meshComponent.Meshes)
+							Renderer::DrawInstanced(meshID, transformMatrices, materialComponent.Shader->GetLayout());
 				}
-//				auto& textures = AssetManager<Scope<Model>>::Get(modelID)->GetTextures();
+				}
+				//				auto& textures = AssetManager<Scope<Model>>::Get(modelID)->GetTextures();
 
 //				if (textures.contains(TextureType::Albedo))
 //				{

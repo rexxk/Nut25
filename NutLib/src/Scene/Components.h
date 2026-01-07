@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Renderer/Material.h"
+
 
 namespace Nut
 {
@@ -66,7 +68,24 @@ namespace Nut
 
 	struct MaterialComponent
 	{
+		Ref<Program> Shader{ nullptr };
+		std::unordered_map<MaterialType, std::vector<UUID>> Textures{};
 
+		MaterialComponent()
+		{
+
+		}
+
+		MaterialComponent(Ref<Program> shader)
+			: Shader(shader)
+		{
+
+		}
+
+		auto AddTexture(MaterialType type, UUID textureID) -> void
+		{
+			Textures[type].push_back(textureID);
+		}
 	};
 
 	struct TerrainComponent
