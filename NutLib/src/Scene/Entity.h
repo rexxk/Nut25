@@ -25,17 +25,15 @@ namespace Nut
 	class Entity
 	{
 	public:
-		static auto Create(UUID meshID, const std::string& tag) -> Ref<Entity>;
+		static auto Create(const std::string& tag) -> Ref<Entity>;
 
-		Entity(UUID meshID, const std::string& tag);
+		Entity(const std::string& tag);
 
 		auto CreateDebugLines(std::vector<LineVertex>& vertexList) -> void;
 
 //		auto SetEntityID(UUID uuid) -> void { m_EntityID = uuid; }
 		auto EntityID() const -> const UUID { return m_EntityID; }
 		auto GetMesh() const -> const Scope<Mesh>& { return AssetManager<Scope<Mesh>>::Get(m_MeshID); }
-
-		auto ModelID() -> const UUID { return m_ModelID; }
 
 		template<typename T, typename ... Args>
 		auto AddComponent(Args&&... args) -> void
@@ -66,9 +64,6 @@ namespace Nut
 		UUID m_EntityID{};
 		UUID m_MeshID{};
 		Material m_Material{};
-
-		// OBSOLETE
-		UUID m_ModelID{};
 
 	};
 

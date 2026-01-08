@@ -4,8 +4,8 @@
 #include "Core/Base.h"
 #include "Core/UUID.h"
 #include "Renderer/Buffer.h"
+#include "Renderer/Mesh.h"
 #include "Renderer/Shader.h"
-#include "Scene/Model.h"
 
 #include <glad/glad.h>
 
@@ -201,6 +201,7 @@ namespace Nut
 
 	}
 
+#if 0
 	auto Renderer::UpdateModel(Scope<Model>& model) -> void
 	{
 //		if (!s_RendererObjects.contains(model->ModelID()))
@@ -215,5 +216,6 @@ namespace Nut
 		rendererObject.VertexBuffers[0]->SetData(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()));
 		rendererObject.IndexBuffer->SetData(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size() * sizeof(uint32_t)));
 	}
+#endif
 
 }

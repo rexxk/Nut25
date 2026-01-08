@@ -5,6 +5,8 @@
 
 #include "Renderer/Material.h"
 
+#include <unordered_map>
+
 
 namespace Nut
 {
@@ -82,10 +84,12 @@ namespace Nut
 
 		}
 
-		auto AddTexture(MaterialType type, UUID textureID) -> void
+		MaterialComponent(Ref<Program> shader, const std::unordered_map<MaterialType, std::vector<UUID>>& textures)
+			: Shader(shader), Textures(textures)
 		{
-			Textures[type].push_back(textureID);
+
 		}
+
 	};
 
 	struct TerrainComponent
@@ -93,13 +97,19 @@ namespace Nut
 
 	};
 
-//	template<>
-//	struct hash<TagComponent>
-//	{
-//		auto operator()(const TagComponent& component) const -> std::size_t
-//		{
-//			return hash<TagComponent>()(component);
-//		}
-//	};
+
 
 }
+
+//namespace std
+//{
+//	template<>
+//	struct hash<Nut::MaterialType>
+//	{
+//		auto operator()(Nut::MaterialType materialType) const -> std::size_t
+//		{
+//			return hash<Nut::MaterialType>()(materialType);
+//		}
+//	};
+//
+//}

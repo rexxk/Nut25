@@ -3,7 +3,6 @@
 #include "Assets/AssetManager.h"
 #include "Renderer/Mesh.h"
 #include "Scene/Components.h"
-#include "Scene/Model.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -14,13 +13,12 @@ namespace Nut
 
 
 
-	auto Entity::Create(UUID modelID, const std::string& tag) -> Ref<Entity>
+	auto Entity::Create(const std::string& tag) -> Ref<Entity>
 	{
-		return CreateRef<Entity>(modelID, tag);
+		return CreateRef<Entity>(tag);
 	}
 
-	Entity::Entity(UUID modelID, const std::string& tag)
-		: m_ModelID(modelID)
+	Entity::Entity(const std::string& tag)
 	{
 		AddComponent<TagComponent>(TagComponent{ .Tag{tag} });
 	}

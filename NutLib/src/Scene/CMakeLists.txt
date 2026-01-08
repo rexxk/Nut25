@@ -3,7 +3,6 @@
 target_sources(NutLib PRIVATE
 	Camera.cpp
 	CameraController.cpp
-	Entity.cpp
-	Model.cpp
+	Entity.cpp	
 	Scene.cpp
 )
