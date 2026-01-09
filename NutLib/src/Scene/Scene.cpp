@@ -62,7 +62,8 @@ namespace Nut
 
 	struct SceneDrawData
 	{
-		std::unordered_map<UUID, std::vector<glm::mat4>> InstanceMap;
+		std::unordered_map<UUID, std::unordered_map<MaterialComponent, std::vector<glm::mat4>>> InstanceMap;
+//		std::unordered_map<UUID, std::vector<glm::mat4>> InstanceMap;
 
 		std::vector<LineVertex> DebugLines;
 
@@ -261,10 +262,12 @@ namespace Nut
 					auto transformMatrix = entity->GetComponent<TransformComponent>().CalculateTransformMatrix();
 					transformMatrix *= localTransform.CalculateTransformMatrix();
 
+					auto& materialComponent = entity->GetComponent<MaterialComponent>();
+
 					auto onFrustum = frustum.IsOnFrustum(aabb, transformMatrix);
 
 					if (onFrustum)
-						s_SceneDrawData.InstanceMap[entity->EntityID()].push_back(transformMatrix);
+						s_SceneDrawData.InstanceMap[meshID][materialComponent].push_back(transformMatrix);
 
 					if (s_SceneDrawData.DrawAABB)
 						aabb.CreateDebugLineMesh(s_SceneDrawData.DebugLines, transformMatrix, onFrustum);
@@ -335,23 +338,17 @@ namespace Nut
 			auto roughnessSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Roughness);
 			auto ambientOcclusionSlot = std::underlying_type<TextureSlot>::type(TextureSlot::AmbientOcclusion);
 
-			for (auto& [entityID, transformMatrices] : s_SceneDrawData.InstanceMap)
+			for (auto& [meshID, meshData] : s_SceneDrawData.InstanceMap)
 			{
-				if (EntitySystem::HasComponent<MaterialComponent>(entityID))
+				for (auto& [materialComponent, transformMatrices] : meshData)
 				{
-					auto& materialComponent = EntitySystem::GetComponent<MaterialComponent>(entityID);
-
 					materialComponent.Shader->Bind();
-	//				auto program = ShaderLibrary::GetProgram("FlatShader");
-	//				program->Bind();
-	
+
 					glBindSampler(0, s_SceneData.NearestSampler->ID());
-		//			glBindSampler(0, s_SceneData.LinearSampler->ID());
-	
+
 					glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 					glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
-		//			shader->SetUniform("u_ViewProjection", s_SceneData.SceneCamera->ViewProjectionMatrix());
-	
+
 					for (auto& [type, textureIDs] : materialComponent.Textures)
 					{
 						uint32_t slot{};
@@ -363,10 +360,10 @@ namespace Nut
 						case MaterialType::MetalnessMap: slot = metalnessSlot; break;
 						case MaterialType::RoughnessMap: slot = roughnessSlot; break;
 
-//						case MaterialType::TerrainDirt: slot = terrainDirtSlot; break;
-//						case MaterialType::TerrainGrass: slot = albedoSlot; break;
-//						case MaterialType::TerrainStone: slot = albedoSlot; break;
-//						case MaterialType::TerrainSnow: slot = albedoSlot; break;
+							//						case MaterialType::TerrainDirt: slot = terrainDirtSlot; break;
+							//						case MaterialType::TerrainGrass: slot = albedoSlot; break;
+							//						case MaterialType::TerrainStone: slot = albedoSlot; break;
+							//						case MaterialType::TerrainSnow: slot = albedoSlot; break;
 						}
 
 						materialComponent.Shader->SetUniform("u_Texture", slot);
@@ -376,25 +373,13 @@ namespace Nut
 							auto& texture = AssetManager<Scope<Texture2D>>::Get(textureID);
 							texture->BindToSlot(slot);
 						}
+
 					}
-	
-					if (EntitySystem::HasComponent<MeshComponent>(entityID))
-					{
-						auto& meshComponent = EntitySystem::GetComponent<MeshComponent>(entityID);
 
-						for (auto& [meshID, localTransform] : meshComponent.Meshes)
-							Renderer::DrawInstanced(meshID, transformMatrices, materialComponent.Shader->GetLayout());
+					Renderer::DrawInstanced(meshID, transformMatrices, materialComponent.Shader->GetLayout());
 				}
-				}
-				//				auto& textures = AssetManager<Scope<Model>>::Get(modelID)->GetTextures();
-
-//				if (textures.contains(TextureType::Albedo))
-//				{
-//					textures.at(TextureType::Albedo)->BindToSlot(albedoSlot);
-//				}
 
 			}
-
 		}
 
 		// Draw debug lines
