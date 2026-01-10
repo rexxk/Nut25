@@ -1,11 +1,15 @@
 #pragma once
 
 #include "Core/Base.h"
+#include "Core/UUID.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Texture.h"
 
 #include <unordered_map>
 #include <vector>
+
+#include <glm/glm.hpp>
+
 
 namespace Nut
 {
@@ -24,17 +28,41 @@ namespace Nut
 	};
 
 
+
+	struct MaterialSpecification
+	{
+		struct MaterialTextures
+		{
+			UUID Albedo{ 0ull };
+			UUID Normal{ 0ull };
+			UUID Metalness{ 0ull };
+			UUID Roughness{ 0ull };
+		} Textures;
+
+		glm::vec4 Color{1.0f, 0.0f, 1.0f, 1.0f};
+		float Metalness{ 0.0f };
+		float Roughness{ 1.0f };
+	};
+
 	class Material
 	{
 	public:
-		Material() = default;
-		Material(Ref<Shader> shader);
+		static auto Create(Ref<Program> shader, const MaterialSpecification& specification) -> Scope<Material>;
 
+		Material() = default;
+		Material(Ref<Program> shader, const MaterialSpecification& specification);
+		
+		auto GetTextures() -> auto& { return m_Specification.Textures; }
+
+		auto ID() const -> const UUID { return m_ID; }
+		auto Shader() -> auto { return m_Shader; }
 
 	private:
-		Ref<Shader> m_Shader{ nullptr };
+		UUID m_ID{};
 
-		std::unordered_map<MaterialType, std::vector<Ref<Texture2D>>> m_Textures{};
+		Ref<Program> m_Shader{ nullptr };
+
+		MaterialSpecification m_Specification;
 	};
 
 

@@ -62,10 +62,11 @@ namespace Nut
 
 	struct SceneDrawData
 	{
-		std::unordered_map<UUID, std::unordered_map<MaterialComponent, std::vector<glm::mat4>>> InstanceMap;
+		std::unordered_map<UUID, std::unordered_map<UUID, std::vector<glm::mat4>>> InstanceMap{};
+//		std::unordered_map<UUID, std::unordered_map<MaterialComponent, std::vector<glm::mat4>>> InstanceMap;
 //		std::unordered_map<UUID, std::vector<glm::mat4>> InstanceMap;
 
-		std::vector<LineVertex> DebugLines;
+		std::vector<LineVertex> DebugLines{};
 
 		bool DrawDebugLines{ false };
 		bool DrawTerrainLines{ false };
@@ -267,7 +268,7 @@ namespace Nut
 					auto onFrustum = frustum.IsOnFrustum(aabb, transformMatrix);
 
 					if (onFrustum)
-						s_SceneDrawData.InstanceMap[meshID][materialComponent].push_back(transformMatrix);
+						s_SceneDrawData.InstanceMap[meshID][materialComponent.MaterialID].push_back(transformMatrix);
 
 					if (s_SceneDrawData.DrawAABB)
 						aabb.CreateDebugLineMesh(s_SceneDrawData.DebugLines, transformMatrix, onFrustum);
@@ -340,15 +341,23 @@ namespace Nut
 
 			for (auto& [meshID, meshData] : s_SceneDrawData.InstanceMap)
 			{
-				for (auto& [materialComponent, transformMatrices] : meshData)
+				for (auto& [materialID, transformMatrices] : meshData)
 				{
-					materialComponent.Shader->Bind();
+					auto& material = AssetManager<Scope<Material>>::Get(materialID);
+					material->Shader()->Bind();
 
 					glBindSampler(0, s_SceneData.NearestSampler->ID());
 
 					glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 					glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 
+					if (material->GetTextures().Albedo != 0ull)
+					{
+						material->Shader()->SetUniform("u_Texture", albedoSlot);
+						auto& texture = AssetManager<Scope<Texture2D>>::Get(material->GetTextures().Albedo);
+						texture->BindToSlot(albedoSlot);
+					}
+#if 0
 					for (auto& [type, textureIDs] : materialComponent.Textures)
 					{
 						uint32_t slot{};
@@ -375,8 +384,8 @@ namespace Nut
 						}
 
 					}
-
-					Renderer::DrawInstanced(meshID, transformMatrices, materialComponent.Shader->GetLayout());
+#endif
+					Renderer::DrawInstanced(meshID, transformMatrices, material->Shader()->GetLayout());
 				}
 
 			}

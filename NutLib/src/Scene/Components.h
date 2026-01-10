@@ -73,33 +73,14 @@ namespace Nut
 		UUID MaterialID{};
 		std::string MaterialName{};
 
-		Ref<Program> Shader{ nullptr };
-		std::unordered_map<MaterialType, std::vector<UUID>> Textures{};
-
-		MaterialComponent()
+		MaterialComponent() = default;
+		MaterialComponent(const MaterialComponent& other) = default;
+		MaterialComponent(const std::string& materialName, UUID materialID)
+			: MaterialName(materialName), MaterialID(materialID)
 		{
 
 		}
 
-		MaterialComponent(Ref<Program> shader)
-			: Shader(shader)
-		{
-
-		}
-
-		MaterialComponent(Ref<Program> shader, const std::unordered_map<MaterialType, std::vector<UUID>>& textures)
-			: Shader(shader), Textures(textures)
-		{
-
-		}
-
-		auto operator==(const MaterialComponent& other) const -> bool
-		{
-			if (MaterialID == other.MaterialID)
-				return true;
-
-			return false;
-		}
 
 	};
 
@@ -127,13 +108,13 @@ namespace Nut
 
 namespace std
 {
-	template<>
-	struct hash<Nut::MaterialComponent>
-	{
-		auto operator()(Nut::MaterialComponent materialComponent) const -> std::size_t
-		{
-			return hash<size_t>()(materialComponent.Textures.size() ^ 32);
-		}
-	};
+//	template<>
+//	struct hash<Nut::MaterialComponent>
+//	{
+//		auto operator()(Nut::MaterialComponent materialComponent) const -> std::size_t
+//		{
+//			return hash<size_t>()(materialComponent.Textures.size() ^ 32);
+//		}
+//	};
 
 }

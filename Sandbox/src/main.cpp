@@ -67,22 +67,42 @@ public:
 		auto texLogoID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Logo", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA })));
 		auto texGrassID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Grass", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA })));
 
+		{
+			Nut::MaterialSpecification matSpec{};
+			matSpec.Textures.Albedo = Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Logo")->ID();
+
+			auto newMaterial = Nut::Material::Create(Nut::ShaderLibrary::GetProgram("FlatShader"), matSpec);
+
+			Nut::AssetManager<Scope<Nut::Material>>::Add("mtlLogo", std::move(newMaterial));
+		}
+		{
+			Nut::MaterialSpecification matSpec{};
+			matSpec.Textures.Albedo = Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Grass")->ID();
+
+			auto newMaterial = Nut::Material::Create(Nut::ShaderLibrary::GetProgram("FlatShader"), matSpec);
+
+			Nut::AssetManager<Scope<Nut::Material>>::Add("mtlGrass", std::move(newMaterial));
+		}
+
 		Nut::TransformComponent transform{};
 		m_TestEntity->AddComponent<Nut::TransformComponent>(transform);
-		m_TestEntity->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"), 
-			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texGrassID }} });
+		m_TestEntity->AddComponent<Nut::MaterialComponent>("mtlLogo", Nut::AssetManager<Scope<Nut::Material>>::Get("mtlLogo")->ID());
+//		m_TestEntity->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"), 
+//			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texGrassID }} });
 //		auto& materialComponent = m_TestEntity->GetComponent<Nut::MaterialComponent>();
 //		materialComponent.AddTexture(Nut::MaterialType::AlbedoTexture, texLogoID);
 
 		transform.Position = glm::vec3{ 5.0f, 0.0f, 0.0f };
 		m_Entity2->AddComponent<Nut::TransformComponent>(transform);
-		m_Entity2->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"),
-			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texLogoID }} });
+		m_Entity2->AddComponent<Nut::MaterialComponent>("mtlGrass", Nut::AssetManager<Scope<Nut::Material>>::Get("mtlGrass")->ID());
+//		m_Entity2->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"),
+//			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texLogoID }} });
 
 		transform.Position = glm::vec3{ -5.0f, 0.0f, 0.0f };
 		m_Entity3->AddComponent<Nut::TransformComponent>(transform);
-		m_Entity3->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"),
-			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texLogoID }} });
+		m_Entity3->AddComponent<Nut::MaterialComponent>("mtlLogo", Nut::AssetManager<Scope<Nut::Material>>::Get("mtlLogo")->ID());
+//		m_Entity3->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"),
+//			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texLogoID }} });
 
 
 		m_Scene.AddEntity(m_TestEntity);
