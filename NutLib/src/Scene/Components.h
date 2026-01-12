@@ -58,7 +58,7 @@ namespace Nut
 		MeshComponent(const std::string& meshName, const TransformComponent& transform)
 			: MeshName(meshName)
 		{
-			UUID id = AssetManager<Scope<Mesh>>::Get(meshName)->ID();
+			UUID id = AssetManager<Mesh>::Get(meshName).ID();
 			AddMesh(id, transform);
 		}
 

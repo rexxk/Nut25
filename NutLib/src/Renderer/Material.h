@@ -47,7 +47,7 @@ namespace Nut
 	class Material
 	{
 	public:
-		static auto Create(Ref<Program> shader, const MaterialSpecification& specification) -> Scope<Material>;
+		static auto Create(Ref<Program> shader, const MaterialSpecification& specification) -> Material;
 
 		Material() = default;
 		Material(Ref<Program> shader, const MaterialSpecification& specification);

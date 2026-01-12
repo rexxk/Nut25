@@ -20,7 +20,7 @@ namespace Nut
 		{
 			if (!s_Items.contains(name))
 			{
-				auto ID = item->ID();
+				auto ID = item.ID();
 				s_Items[name] = std::move(item);
 				return ID;
 			}
@@ -34,7 +34,7 @@ namespace Nut
 		{
 			for (auto& [name, item] : s_Items)
 			{
-				if (item->ID() == uuid)
+				if (item.ID() == uuid)
 					return item;
 			}
 

@@ -40,7 +40,7 @@ namespace Nut
 	{
 		std::vector<Ref<Entity>> Entities;
 
-		Scope<Mesh> DrawRectangle{ };
+		Mesh DrawRectangle{ };
 //		Ref<Model> TerrainModel{ nullptr };
 		Ref<Entity> TerrainEntity{ nullptr };
 
@@ -257,9 +257,9 @@ namespace Nut
 				auto& meshComponent = entity->GetComponent<MeshComponent>();
 				for (auto& [meshID, localTransform] : meshComponent.Meshes)
 				{
-					auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
+					auto& mesh = AssetManager<Mesh>::Get(meshID);
 
-					auto& aabb = mesh->GetBoundingBox();
+					auto& aabb = mesh.GetBoundingBox();
 					auto transformMatrix = entity->GetComponent<TransformComponent>().CalculateTransformMatrix();
 					transformMatrix *= localTransform.CalculateTransformMatrix();
 
@@ -343,18 +343,18 @@ namespace Nut
 			{
 				for (auto& [materialID, transformMatrices] : meshData)
 				{
-					auto& material = AssetManager<Scope<Material>>::Get(materialID);
-					material->Shader()->Bind();
+					auto& material = AssetManager<Material>::Get(materialID);
+					material.Shader()->Bind();
 
 					glBindSampler(0, s_SceneData.NearestSampler->ID());
 
 					glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 					glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 
-					if (material->GetTextures().Albedo != nullptr)
+					if (material.GetTextures().Albedo != nullptr)
 					{
-						material->Shader()->SetUniform("u_Texture", albedoSlot);
-						material->GetTextures().Albedo->BindToSlot(albedoSlot);
+						material.Shader()->SetUniform("u_Texture", albedoSlot);
+						material.GetTextures().Albedo->BindToSlot(albedoSlot);
 					}
 #if 0
 					for (auto& [type, textureIDs] : materialComponent.Textures)
@@ -384,7 +384,7 @@ namespace Nut
 
 					}
 #endif
-					Renderer::DrawInstanced(meshID, transformMatrices, material->Shader()->GetLayout());
+					Renderer::DrawInstanced(meshID, transformMatrices, material.Shader()->GetLayout());
 				}
 
 			}

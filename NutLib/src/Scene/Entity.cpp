@@ -31,9 +31,9 @@ namespace Nut
 
 			for (auto& [meshID, localTransform] : meshComponent.Meshes)
 			{
-				auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
+				auto& mesh = AssetManager<Mesh>::Get(meshID);
 				auto& transform = GetComponent<TransformComponent>();
-				mesh->CreateDebugLines(vertexList, transform.CalculateTransformMatrix() * localTransform.TransformMatrix);
+				mesh.CreateDebugLines(vertexList, transform.CalculateTransformMatrix() * localTransform.TransformMatrix);
 			}
 		}
 

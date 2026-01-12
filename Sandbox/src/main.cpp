@@ -32,7 +32,7 @@ public:
 //		auto mesh = Nut::Mesh::CreateTriangle();
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateTriangle());
 //		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateRectangle());
-		auto meshID = Nut::AssetManager<Scope<Nut::Mesh>>::Add("Mesh_Rectangle", std::move(Nut::Mesh::CreateRectangle()));
+		auto meshID = Nut::AssetManager<Nut::Mesh>::Add("Mesh_Rectangle", std::move(Nut::Mesh::CreateRectangle()));
 
 		{
 			Nut::HeightmapSpecification heightmapSpecification{};
@@ -45,7 +45,7 @@ public:
 			//		heightmapSpecification.UseNoise = false;
 			//		heightmapSpecification.Filepath = "Assets/Textures/terrain.png";
 
-			Nut::AssetManager<Scope<Nut::Mesh>>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
+//			Nut::AssetManager<Nut::Mesh>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
 			//		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
 			//		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
 		}
@@ -75,7 +75,7 @@ public:
 
 			auto newMaterial = Nut::Material::Create(Nut::ShaderLibrary::GetProgram("FlatShader"), matSpec);
 
-			Nut::AssetManager<Scope<Nut::Material>>::Add("mtlLogo", std::move(newMaterial));
+			Nut::AssetManager<Nut::Material>::Add("mtlLogo", std::move(newMaterial));
 		}
 		{
 			Nut::MaterialSpecification matSpec{};
@@ -83,12 +83,12 @@ public:
 
 			auto newMaterial = Nut::Material::Create(Nut::ShaderLibrary::GetProgram("FlatShader"), matSpec);
 
-			Nut::AssetManager<Scope<Nut::Material>>::Add("mtlGrass", std::move(newMaterial));
+			Nut::AssetManager<Nut::Material>::Add("mtlGrass", std::move(newMaterial));
 		}
 
 		Nut::TransformComponent transform{};
 		m_TestEntity->AddComponent<Nut::TransformComponent>(transform);
-		m_TestEntity->AddComponent<Nut::MaterialComponent>("mtlLogo", Nut::AssetManager<Scope<Nut::Material>>::Get("mtlLogo")->ID());
+		m_TestEntity->AddComponent<Nut::MaterialComponent>("mtlLogo", Nut::AssetManager<Nut::Material>::Get("mtlLogo").ID());
 //		m_TestEntity->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"), 
 //			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texGrassID }} });
 //		auto& materialComponent = m_TestEntity->GetComponent<Nut::MaterialComponent>();
@@ -96,13 +96,13 @@ public:
 
 		transform.Position = glm::vec3{ 5.0f, 0.0f, 0.0f };
 		m_Entity2->AddComponent<Nut::TransformComponent>(transform);
-		m_Entity2->AddComponent<Nut::MaterialComponent>("mtlGrass", Nut::AssetManager<Scope<Nut::Material>>::Get("mtlGrass")->ID());
+		m_Entity2->AddComponent<Nut::MaterialComponent>("mtlGrass", Nut::AssetManager<Nut::Material>::Get("mtlGrass").ID());
 //		m_Entity2->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"),
 //			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texLogoID }} });
 
 		transform.Position = glm::vec3{ -5.0f, 0.0f, 0.0f };
 		m_Entity3->AddComponent<Nut::TransformComponent>(transform);
-		m_Entity3->AddComponent<Nut::MaterialComponent>("mtlLogo", Nut::AssetManager<Scope<Nut::Material>>::Get("mtlLogo")->ID());
+		m_Entity3->AddComponent<Nut::MaterialComponent>("mtlLogo", Nut::AssetManager<Nut::Material>::Get("mtlLogo").ID());
 //		m_Entity3->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"),
 //			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texLogoID }} });
 

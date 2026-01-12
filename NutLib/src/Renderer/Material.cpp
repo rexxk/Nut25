@@ -5,9 +5,9 @@
 namespace Nut
 {
 
-	auto Material::Create(Ref<Program> shader, const MaterialSpecification& specification) -> Scope<Material>
+	auto Material::Create(Ref<Program> shader, const MaterialSpecification& specification) -> Material
 	{
-		return CreateScope<Material>(shader, specification);
+		return Material{ shader, specification };
 	}
 
 	Material::Material(Ref<Program> shader, const MaterialSpecification& specification)
