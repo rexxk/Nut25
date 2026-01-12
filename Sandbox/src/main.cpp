@@ -64,12 +64,14 @@ public:
 
 		m_Terrain = Nut::Entity::Create("Terrain");
 
-		auto texLogoID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Logo", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA })));
-		auto texGrassID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Grass", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA })));
+		Nut::TextureLibrary::Add("Logo", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA }));
+		Nut::TextureLibrary::Add("Grass", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA }));
+//		auto texLogoID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Logo", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA })));
+//		auto texGrassID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Grass", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA })));
 
 		{
 			Nut::MaterialSpecification matSpec{};
-			matSpec.Textures.Albedo = Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Logo")->ID();
+			matSpec.Textures.Albedo = Nut::TextureLibrary::Get("Logo");
 
 			auto newMaterial = Nut::Material::Create(Nut::ShaderLibrary::GetProgram("FlatShader"), matSpec);
 
@@ -77,7 +79,7 @@ public:
 		}
 		{
 			Nut::MaterialSpecification matSpec{};
-			matSpec.Textures.Albedo = Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Grass")->ID();
+			matSpec.Textures.Albedo = Nut::TextureLibrary::Get("Grass");
 
 			auto newMaterial = Nut::Material::Create(Nut::ShaderLibrary::GetProgram("FlatShader"), matSpec);
 

@@ -351,11 +351,10 @@ namespace Nut
 					glBindBufferRange(GL_UNIFORM_BUFFER, 0, s_SceneData.ViewProjectionUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 					glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 
-					if (material->GetTextures().Albedo != 0ull)
+					if (material->GetTextures().Albedo != nullptr)
 					{
 						material->Shader()->SetUniform("u_Texture", albedoSlot);
-						auto& texture = AssetManager<Scope<Texture2D>>::Get(material->GetTextures().Albedo);
-						texture->BindToSlot(albedoSlot);
+						material->GetTextures().Albedo->BindToSlot(albedoSlot);
 					}
 #if 0
 					for (auto& [type, textureIDs] : materialComponent.Textures)

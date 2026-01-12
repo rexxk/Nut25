@@ -15,11 +15,11 @@ namespace Nut
 {
 
 
-	auto Texture2D::Create(const TextureSpecification& specification) -> Scope<Texture2D>
+	auto Texture2D::Create(const TextureSpecification& specification) -> Ref<Texture2D>
 	{
 		switch (RendererContext::API())
 		{
-			case RendererAPI::OpenGL: return CreateScope<OpenGLTexture2D>(specification);
+			case RendererAPI::OpenGL: return CreateRef<OpenGLTexture2D>(specification);
 		}
 
 		return nullptr;
@@ -46,5 +46,25 @@ namespace Nut
 		return nullptr;
 	}
 
+
+
+	auto TextureLibrary::Add(const std::string& textureName, Ref<Texture2D> texture) -> void
+	{
+		if (s_Textures.contains(textureName))
+		{
+			LOG_CORE_WARN("Texture {} already exists in TextureLibrary", textureName);
+			return;
+		}
+
+		s_Textures[textureName] = texture;
+	}
+
+	auto TextureLibrary::Get(const std::string& textureName) -> Ref<Texture2D>
+	{
+		if (s_Textures.contains(textureName))
+			return s_Textures[textureName];
+
+		return nullptr;
+	}
 
 }

@@ -40,7 +40,7 @@ namespace Nut
 	class Texture2D
 	{
 	public:
-		static auto Create(const TextureSpecification& specification) -> Scope<Texture2D>;
+		static auto Create(const TextureSpecification& specification) -> Ref<Texture2D>;
 
 		Texture2D() = default;
 		virtual ~Texture2D() = default;
@@ -61,6 +61,16 @@ namespace Nut
 		virtual ~Sampler() = default;
 
 		virtual auto ID() const -> const uint32_t = 0;
+	};
+
+	class TextureLibrary
+	{
+	public:
+		static auto Add(const std::string& textureName, Ref<Texture2D> texture) -> void;
+		static auto Get(const std::string& textureName) -> Ref<Texture2D>;
+
+	private:
+		inline static std::unordered_map<std::string, Ref<Texture2D>> s_Textures{};
 	};
 
 }

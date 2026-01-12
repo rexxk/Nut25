@@ -33,10 +33,10 @@ namespace Nut
 	{
 		struct MaterialTextures
 		{
-			UUID Albedo{ 0ull };
-			UUID Normal{ 0ull };
-			UUID Metalness{ 0ull };
-			UUID Roughness{ 0ull };
+			Ref<Texture2D> Albedo { nullptr };
+			Ref<Texture2D> Normal { nullptr };
+			Ref<Texture2D> Metalness { nullptr };
+			Ref<Texture2D> Roughness { nullptr };
 		} Textures;
 
 		glm::vec4 Color{1.0f, 0.0f, 1.0f, 1.0f};
