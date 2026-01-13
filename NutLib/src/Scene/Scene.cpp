@@ -190,6 +190,11 @@ namespace Nut
 
 			if (ImGui::Button("Generate"))
 			{
+				auto& terrainMesh = AssetManager<TerrainMesh>::Get(s_SceneData.TerrainEntity->GetComponent<MeshComponent>().MeshName);
+				terrainMesh.UpdateHeightmap(s_HeightmapSpecification);
+
+//				Renderer::
+
 //				auto& model = AssetManager<Scope<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
 //				static_cast<TerrainMesh*>(AssetManager<Scope<Mesh>>::Get(model->MeshIDs()[0]).get())->UpdateHeightmap(s_HeightmapSpecification);
 //				Renderer::UpdateModel(model);
@@ -333,7 +338,7 @@ namespace Nut
 //				textures.at(TextureType::Albedo)->BindToSlot(0);
 			}
 
-			Renderer::DrawMesh(AssetManager<Mesh>::Get(terrainMesh.MeshName), program->GetLayout());
+			Renderer::DrawMesh(AssetManager<TerrainMesh>::Get(terrainMesh.MeshName), program->GetLayout());
 		}
 //#endif
 

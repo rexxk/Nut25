@@ -30,7 +30,13 @@ namespace Nut
 	class TerrainMesh : public Mesh
 	{
 	public:
-		static auto Create(uint32_t width, uint32_t height, const HeightmapSpecification& specification) -> Mesh;
+		static auto Create(uint32_t width, uint32_t height, const HeightmapSpecification& specification) -> TerrainMesh;
+
+		TerrainMesh() : Mesh() {}
+		TerrainMesh(const TerrainMesh& other) : Mesh()
+		{
+
+		}
 
 		TerrainMesh(uint32_t width, uint32_t height, const HeightmapSpecification& specification);
 

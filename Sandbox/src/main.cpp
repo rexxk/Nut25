@@ -45,7 +45,7 @@ public:
 			//		heightmapSpecification.UseNoise = false;
 			//		heightmapSpecification.Filepath = "Assets/Textures/terrain.png";
 
-			Nut::AssetManager<Nut::Mesh>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
+			Nut::AssetManager<Nut::TerrainMesh>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
 			//		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
 			//		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
 		}
