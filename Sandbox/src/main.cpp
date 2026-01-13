@@ -68,6 +68,7 @@ public:
 
 		Nut::TextureLibrary::Add("Logo", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA }));
 		Nut::TextureLibrary::Add("Grass", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA }));
+		Nut::TextureLibrary::Add("Fortress", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/fortress.png", .Format = GL_RGBA }));
 //		auto texLogoID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Logo", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA })));
 //		auto texGrassID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Grass", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA })));
 
@@ -87,10 +88,18 @@ public:
 
 			Nut::AssetManager<Nut::Material>::Add("mtlGrass", std::move(newMaterial));
 		}
+		{
+			Nut::MaterialSpecification matSpec{};
+			matSpec.Textures.Albedo = Nut::TextureLibrary::Get("Fortress");
+
+			auto newMaterial = Nut::Material::Create(Nut::ShaderLibrary::GetProgram("FlatShader"), matSpec);
+
+			Nut::AssetManager<Nut::Material>::Add("mtlFortress", std::move(newMaterial));
+		}
 
 		Nut::TransformComponent transform{};
 		m_TestEntity->AddComponent<Nut::TransformComponent>(transform);
-		m_TestEntity->AddComponent<Nut::MaterialComponent>("mtlLogo", Nut::AssetManager<Nut::Material>::Get("mtlLogo").ID());
+		m_TestEntity->AddComponent<Nut::MaterialComponent>("mtlFortress", Nut::AssetManager<Nut::Material>::Get("mtlFortress").ID());
 //		m_TestEntity->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"), 
 //			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texGrassID }} });
 //		auto& materialComponent = m_TestEntity->GetComponent<Nut::MaterialComponent>();
