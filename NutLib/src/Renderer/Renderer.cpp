@@ -150,7 +150,7 @@ namespace Nut
 
 			s_RendererObjects[mesh.ID()] = newRendererObject;
 		}
-//		else
+
 		{
 			auto& rendererObject = s_RendererObjects[mesh.ID()];
 
@@ -190,32 +190,25 @@ namespace Nut
 
 			glVertexArrayVertexBuffer(s_LineRendererObject.VertexArrayObject, i++, s_LineRendererObject.VertexBuffers[0]->Handle(), 0, s_LineRendererObject.VertexBuffers[0]->Stride());
 		}
-//		else
+
 		{
 			s_LineRendererObject.VertexBuffers[0]->SetData(vertexList.data(), static_cast<uint32_t>(vertexList.size()));
 
 			glBindVertexArray(s_LineRendererObject.VertexArrayObject);
 			glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(vertexList.size()));
-//			glDrawElements(GL_TRIANGLES, rendererObject.IndexBuffer->IndexCount(), GL_UNSIGNED_INT, nullptr);
 		}
 
 	}
 
-#if 0
-	auto Renderer::UpdateModel(Scope<Model>& model) -> void
+	auto Renderer::UpdateMesh(const Mesh& mesh) -> void
 	{
-//		if (!s_RendererObjects.contains(model->ModelID()))
-		if (!s_RendererObjects.contains(model->MeshIDs()[0]))
+		if (!s_RendererObjects.contains(mesh.ID()))
 			return;
 
-//		auto& rendererObject = s_RendererObjects[model->ModelID()];
-		auto& rendererObject = s_RendererObjects[model->MeshIDs()[0]];
+		auto& rendererObject = s_RendererObjects[mesh.ID()];
 		
-		auto meshID = model->MeshIDs()[0];
-		auto& mesh = AssetManager<Scope<Mesh>>::Get(meshID);
-		rendererObject.VertexBuffers[0]->SetData(mesh->GetVertices().data(), static_cast<uint32_t>(mesh->GetVertices().size()));
-		rendererObject.IndexBuffer->SetData(mesh->GetIndices().data(), static_cast<uint32_t>(mesh->GetIndices().size() * sizeof(uint32_t)));
+		rendererObject.VertexBuffers[0]->SetData(mesh.GetVertices().data(), static_cast<uint32_t>(mesh.GetVertices().size()));
+		rendererObject.IndexBuffer->SetData(mesh.GetIndices().data(), static_cast<uint32_t>(mesh.GetIndices().size() * sizeof(uint32_t)));
 	}
-#endif
 
 }

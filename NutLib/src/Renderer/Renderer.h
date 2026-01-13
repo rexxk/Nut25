@@ -41,7 +41,7 @@ namespace Nut
 		static auto DrawMesh(const Mesh& mesh, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void;
 		static auto DrawLines(const std::vector<LineVertex>& vertexList, const std::unordered_map<int32_t, ShaderLayoutInfo>& shaderLayout) -> void;
 
-//		static auto UpdateModel(Scope<Model>& model) -> void;
+		static auto UpdateMesh(const Mesh& mesh) -> void;
 	};
 
 }

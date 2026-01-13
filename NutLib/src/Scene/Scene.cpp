@@ -9,7 +9,6 @@
 #include "Renderer/Buffer.h"
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Shader.h"
-#include "Renderer/TerrainMesh.h"
 #include "Renderer/Texture.h"
 #include "Scene/Camera.h"
 #include "Scene/CameraController.h"
@@ -41,7 +40,6 @@ namespace Nut
 		std::vector<Ref<Entity>> Entities;
 
 		Mesh DrawRectangle{ };
-//		Ref<Model> TerrainModel{ nullptr };
 		Ref<Entity> TerrainEntity{ nullptr };
 
 		Ref<Sampler> NearestSampler{ nullptr };
@@ -63,8 +61,6 @@ namespace Nut
 	struct SceneDrawData
 	{
 		std::unordered_map<UUID, std::unordered_map<UUID, std::vector<glm::mat4>>> InstanceMap{};
-//		std::unordered_map<UUID, std::unordered_map<MaterialComponent, std::vector<glm::mat4>>> InstanceMap;
-//		std::unordered_map<UUID, std::vector<glm::mat4>> InstanceMap;
 
 		std::vector<LineVertex> DebugLines{};
 
@@ -133,7 +129,6 @@ namespace Nut
 
 		s_SceneData.FlatFramebuffer = Framebuffer::Create(framebufferSpec);
 
-//		s_SceneData.DrawRectangle = Mesh::CreateRectangle("FlatShader");
 		s_SceneData.DrawRectangle = Mesh::CreateRectangle();
 
 	}
@@ -190,14 +185,10 @@ namespace Nut
 
 			if (ImGui::Button("Generate"))
 			{
-				auto& terrainMesh = AssetManager<TerrainMesh>::Get(s_SceneData.TerrainEntity->GetComponent<MeshComponent>().MeshName);
-				terrainMesh.UpdateHeightmap(s_HeightmapSpecification);
+				auto& terrainMesh = AssetManager<Mesh>::Get(s_SceneData.TerrainEntity->GetComponent<MeshComponent>().MeshName);
+				Mesh::UpdateFromHeightmapData(terrainMesh, s_HeightmapSpecification);
 
-//				Renderer::
-
-//				auto& model = AssetManager<Scope<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
-//				static_cast<TerrainMesh*>(AssetManager<Scope<Mesh>>::Get(model->MeshIDs()[0]).get())->UpdateHeightmap(s_HeightmapSpecification);
-//				Renderer::UpdateModel(model);
+				Renderer::UpdateMesh(terrainMesh);
 			}
 
 			ImGui::End();
@@ -302,15 +293,12 @@ namespace Nut
 		s_SceneData.FlatFramebuffer->Clear();
 
 		// Draw scene terrain
-//#if 0
 		{
 			auto program = ShaderLibrary::GetProgram("TerrainShader");
 			program->Bind();
 
 			glBindSampler(0, s_SceneData.NearestSampler->ID());
 
-//			s_SceneData.TerrainEntity->CalculateTransformMatrix();
-//			auto transformMatrix = s_SceneData.TerrainEntity->GetTransform().CalculateTransformMatrix();
 			auto& transformMatrix = s_SceneData.TerrainEntity->GetComponent<TransformComponent>().CalculateTransformMatrix();
 			s_SceneData.EntityTransformUniformBuffer->SetData(&transformMatrix, sizeof(glm::mat4));
 
@@ -318,29 +306,19 @@ namespace Nut
 			glBindBufferRange(GL_UNIFORM_BUFFER, 1, s_SceneData.EntityTransformUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 
-//			auto& terrainModel = AssetManager<Scope<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
-//			auto& terrainMesh = AssetManager<Scope<Mesh>>::Get(terrainModel->MeshIDs().at(0));
 			auto& terrainMesh = s_SceneData.TerrainEntity->GetComponent<MeshComponent>();
 
-//			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
 			program->SetUniform("u_GrassTexture", 0);
 			program->SetUniform("u_RockTexture", 1);
 
-//			auto& textures = terrainModel->GetTextures();
 
 			auto& terrainMaterial = AssetManager<Material>::Get(s_SceneData.TerrainEntity->GetComponent<MaterialComponent>().MaterialID).GetTextures();
 
 			if (terrainMaterial.Albedo)
 				terrainMaterial.Albedo->BindToSlot(0);
 
-//			if (textures.contains(TextureType::Albedo))
-			{
-//				textures.at(TextureType::Albedo)->BindToSlot(0);
-			}
-
-			Renderer::DrawMesh(AssetManager<TerrainMesh>::Get(terrainMesh.MeshName), program->GetLayout());
+			Renderer::DrawMesh(AssetManager<Mesh>::Get(terrainMesh.MeshName), program->GetLayout());
 		}
-//#endif
 
 		// Draw scene entities
 		{
@@ -367,34 +345,6 @@ namespace Nut
 						material.Shader()->SetUniform("u_Texture", albedoSlot);
 						material.GetTextures().Albedo->BindToSlot(albedoSlot);
 					}
-#if 0
-					for (auto& [type, textureIDs] : materialComponent.Textures)
-					{
-						uint32_t slot{};
-
-						switch (type)
-						{
-						case MaterialType::AlbedoTexture: slot = albedoSlot; break;
-						case MaterialType::NormalMap: slot = normalSlot; break;
-						case MaterialType::MetalnessMap: slot = metalnessSlot; break;
-						case MaterialType::RoughnessMap: slot = roughnessSlot; break;
-
-							//						case MaterialType::TerrainDirt: slot = terrainDirtSlot; break;
-							//						case MaterialType::TerrainGrass: slot = albedoSlot; break;
-							//						case MaterialType::TerrainStone: slot = albedoSlot; break;
-							//						case MaterialType::TerrainSnow: slot = albedoSlot; break;
-						}
-
-						materialComponent.Shader->SetUniform("u_Texture", slot);
-
-						for (auto& textureID : textureIDs)
-						{
-							auto& texture = AssetManager<Scope<Texture2D>>::Get(textureID);
-							texture->BindToSlot(slot);
-						}
-
-					}
-#endif
 					Renderer::DrawInstanced(meshID, transformMatrices, material.Shader()->GetLayout());
 				}
 
@@ -434,11 +384,6 @@ namespace Nut
 	{
 		s_SceneData.Entities.emplace_back(entity);
 
-	}
-
-	auto Scene::SetTerrainModel(Ref<Model> terrainModel) -> void
-	{
-//		s_SceneData.TerrainModel = terrainModel;
 	}
 
 	auto Scene::SetTerrainEntity(Ref<Entity> terrainEntity) -> void

@@ -21,8 +21,6 @@ namespace Nut
 
 		auto AddEntity(Ref<Entity> entity) -> void;
 		auto SetTerrainEntity(Ref<Entity> terrainEntity) -> void;
-
-		auto SetTerrainModel(Ref<Model> terrainModel) -> void;
 	};
 
 

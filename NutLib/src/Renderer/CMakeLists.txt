@@ -10,6 +10,5 @@ target_sources(NutLib PRIVATE
 	Shader.cpp
 	Renderer.cpp
 	RendererContext.cpp
-	TerrainMesh.cpp
 	Texture.cpp
 )

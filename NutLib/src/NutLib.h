@@ -20,7 +20,6 @@
 #include "Renderer/Framebuffer.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/TerrainMesh.h"
 #include "Renderer/Texture.h"
 
 #include "Scene/Components.h"

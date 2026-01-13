@@ -21,6 +21,27 @@ namespace Nut
 {
 
 
+	struct HeightmapSpecification
+	{
+		bool UseNoise{ true };
+
+		float NoiseDivider1{ 64.0f };
+		float NoiseDivider2{ 32.0f };
+		float NoiseDivider3{ 16.0f };
+		float Divider{ 1.75f };
+		float Scale{ 1.0f };
+
+		float Amplitude{ 255.0f };
+
+		float TextureMultiplier{ 1.0f };
+
+		std::filesystem::path Filepath{};
+
+		uint32_t Width{ 512u };
+		uint32_t Height{ 512u };
+	};
+
+
 	struct AABB
 	{
 		glm::vec3 Center{ 0.0f };
@@ -35,13 +56,18 @@ namespace Nut
 	public:
 		static auto Create(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name = "<mesh>") -> Mesh;
 
+		static auto CreateFromHeightmapData(const HeightmapSpecification& heightmapSpecification) -> Mesh;
+
 		static auto CreateTriangle() -> Mesh;
 		static auto CreateRectangle() -> Mesh;
+
+		static auto UpdateFromHeightmapData(Mesh& mesh, const HeightmapSpecification& heightmapSpecification) -> void;
 
 		Mesh() = default;
 		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name = "<mesh>");
 		virtual ~Mesh();
 
+		auto GetVertices() -> std::vector<Vertex>& { return m_Vertices; }
 		auto GetVertices() const -> const std::vector<Vertex>& { return m_Vertices; }
 		auto GetIndices() const -> const std::vector<uint32_t>& { return m_Indices; }
 

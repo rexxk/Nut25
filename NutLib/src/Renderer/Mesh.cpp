@@ -15,6 +15,53 @@
 namespace Nut
 {
 
+	auto CalculateNormals(uint32_t width, uint32_t height, std::vector<Vertex>& vertices) -> void
+	{
+		for (auto z = 0u; z < height - 1; z++)
+		{
+			for (auto x = 0u; x < width - 1; x++)
+			{
+				auto v1 = (width * z) + x;
+				auto v2 = (width * z) + (x + 1);
+				auto v3 = (width * (z + 1)) + x;
+				auto v4 = (width * (z + 1)) + (x + 1);
+
+				{
+					glm::vec3& p1 = vertices[v1].Position;
+					glm::vec3& p2 = vertices[v2].Position;
+					glm::vec3& p3 = vertices[v3].Position;
+
+					auto normal = glm::normalize(glm::cross(p3 - p1, p2 - p1));
+
+					vertices[v1].Normal += normal;
+					vertices[v2].Normal += normal;
+					vertices[v3].Normal += normal;
+
+					vertices[v1].Normal /= 2.0f;
+					vertices[v2].Normal /= 2.0f;
+					vertices[v3].Normal /= 2.0f;
+				}
+
+				{
+					glm::vec3& p1 = vertices[v4].Position;
+					glm::vec3& p2 = vertices[v3].Position;
+					glm::vec3& p3 = vertices[v2].Position;
+
+					auto normal = glm::normalize(glm::cross(p3 - p1, p2 - p1));
+
+					vertices[v4].Normal += normal;
+					vertices[v3].Normal += normal;
+					vertices[v2].Normal += normal;
+
+					vertices[v4].Normal /= 2.0f;
+					vertices[v3].Normal /= 2.0f;
+					vertices[v2].Normal /= 2.0f;
+				}
+			}
+		}
+
+	}
+
 	auto AABB::CreateDebugLineMesh(std::vector<LineVertex>& lineVertices, const glm::mat4& transformMatrix, bool OnFrustum) const -> void
 	{
 		LineVertex newVertex{ .Color = {0.0f, 1.0f, 0.0f, 1.0f} };
@@ -102,6 +149,67 @@ namespace Nut
 		return Mesh{ vertices, indices, name };
 	}
 
+	auto Mesh::CreateFromHeightmapData(const HeightmapSpecification& heightmapSpecification) -> Mesh
+	{
+		uint32_t index{ 0l };
+
+		std::vector<Vertex> vertices(heightmapSpecification.Width * heightmapSpecification.Height);
+		size_t position = 0;
+
+		const float& div1 = heightmapSpecification.NoiseDivider1;
+		const float& div2 = heightmapSpecification.NoiseDivider2;
+		const float& div3 = heightmapSpecification.NoiseDivider3;
+
+		for (auto z = 0u; z < heightmapSpecification.Height; z++)
+		{
+			for (auto x = 0u; x < heightmapSpecification.Width; x++)
+			{
+				auto xScaled = x / heightmapSpecification.Scale;
+				auto zScaled = z / heightmapSpecification.Scale;
+
+				float noise = (PerlinNoise::GetNoise(xScaled / div1, zScaled / div1) + PerlinNoise::GetNoise(xScaled / div2, zScaled / div2) * 0.5f + PerlinNoise::GetNoise(xScaled / div3, zScaled / div3) * 0.25f) / heightmapSpecification.Divider;
+				float brightness = (noise * 0.5f + 0.5f) * heightmapSpecification.Amplitude - (heightmapSpecification.Amplitude / 2);
+//				float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
+
+				Vertex v{};
+				v.Position = glm::vec3{ static_cast<float>(x) - heightmapSpecification.Width / 2, brightness, static_cast<float>(z) - heightmapSpecification.Height / 2 };
+
+				v.TexCoord = glm::vec2{ x / static_cast<float>(heightmapSpecification.Width), 1.0f - (z / static_cast<float>(heightmapSpecification.Height)) };
+				v.TexCoord *= heightmapSpecification.TextureMultiplier;
+				v.Normal = glm::vec3{ 0.0f };
+				v.Color = glm::vec4{ 1.0f };
+
+				vertices[position++] = v;
+			}
+		}
+
+		std::vector<uint32_t> indices(heightmapSpecification.Width * heightmapSpecification.Height * 6);
+		index = 0u;
+
+		for (auto z = 0u; z < heightmapSpecification.Height - 1; z++)
+		{
+			for (auto x = 0u; x < heightmapSpecification.Width - 1; x++)
+			{
+				auto v1 = (heightmapSpecification.Width * z) + x;
+				auto v2 = (heightmapSpecification.Width * z) + (x + 1);
+				auto v3 = (heightmapSpecification.Width * (z + 1)) + x;
+				auto v4 = (heightmapSpecification.Width * (z + 1)) + (x + 1);
+
+				indices[index++] = v1;
+				indices[index++] = v2;
+				indices[index++] = v3;
+
+				indices[index++] = v4;
+				indices[index++] = v3;
+				indices[index++] = v2;
+			}
+		}
+
+		CalculateNormals(heightmapSpecification.Width, heightmapSpecification.Height, vertices);
+
+		return Mesh{ vertices, indices, "Terrain" };
+	}
+
 	auto Mesh::CreateTriangle() -> Mesh
 	{
 		std::vector<Nut::Vertex> vertices{
@@ -135,6 +243,42 @@ namespace Nut
 		return Mesh{ vertices, indices, "Rectangle" };
 
 	}
+
+	auto Mesh::UpdateFromHeightmapData(Mesh& mesh, const HeightmapSpecification& heightmapSpecification) -> void
+	{
+		uint32_t index{ 0u };
+
+		size_t position = 0;
+
+		auto& vertices = mesh.GetVertices();
+
+		const float& div1 = heightmapSpecification.NoiseDivider1;
+		const float& div2 = heightmapSpecification.NoiseDivider2;
+		const float& div3 = heightmapSpecification.NoiseDivider3;
+
+		for (auto z = 0u; z < heightmapSpecification.Height; z++)
+		{
+			for (auto x = 0u; x < heightmapSpecification.Width; x++)
+			{
+				auto xScaled = x / heightmapSpecification.Scale;
+				auto zScaled = z / heightmapSpecification.Scale;
+
+				float noise = (PerlinNoise::GetNoise(xScaled / div1, zScaled / div1) + PerlinNoise::GetNoise(xScaled / div2, zScaled / div2) * 0.5f + PerlinNoise::GetNoise(xScaled / div3, zScaled / div3) * 0.25f) / heightmapSpecification.Divider;
+				float brightness = (noise * 0.5f + 0.5f) * heightmapSpecification.Amplitude - (heightmapSpecification.Amplitude / 2);
+				//				float brightness = (noise * 0.5f + 0.5f) * 255.0f - 128.0f;
+
+				Vertex& v = vertices[z * heightmapSpecification.Width + x];
+				//				v.Position = glm::vec3{ static_cast<float>(x) - width / 2, brightness, static_cast<float>(z) - height / 2 };
+				v.Position.y = brightness;
+
+				v.TexCoord = glm::vec2{ x / static_cast<float>(heightmapSpecification.Width), 1.0f - (z / static_cast<float>(heightmapSpecification.Height)) };
+				v.TexCoord *= heightmapSpecification.TextureMultiplier;
+			}
+		}
+
+		CalculateNormals(heightmapSpecification.Width, heightmapSpecification.Height, vertices);
+	}
+
 
 	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& name)
 		: m_Vertices(vertices), m_Indices(indices), m_Name(name)
