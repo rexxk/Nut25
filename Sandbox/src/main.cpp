@@ -45,7 +45,7 @@ public:
 			//		heightmapSpecification.UseNoise = false;
 			//		heightmapSpecification.Filepath = "Assets/Textures/terrain.png";
 
-//			Nut::AssetManager<Nut::Mesh>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
+			Nut::AssetManager<Nut::Mesh>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
 			//		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
 			//		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
 		}
@@ -63,6 +63,7 @@ public:
 		m_Entity3->AddComponent<Nut::MeshComponent>("Mesh_Rectangle", Nut::TransformComponent{});
 
 		m_Terrain = Nut::Entity::Create("Terrain");
+		m_Terrain->AddComponent<Nut::MeshComponent>("Mesh_Terrain", Nut::TransformComponent{});
 
 		Nut::TextureLibrary::Add("Logo", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA }));
 		Nut::TextureLibrary::Add("Grass", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA }));
@@ -115,7 +116,9 @@ public:
 
 		transform.Position = glm::vec3{ 0.0f, -2.0f, 0.0f };
 		m_Terrain->AddComponent<Nut::TransformComponent>(transform);
-//		m_Terrain->GetTransform().Position = glm::vec3{ 0.0f, -2.0f, 0.0f };
+		auto& terrainTransform = m_Terrain->GetComponent<Nut::TransformComponent>();
+		m_Terrain->AddComponent<Nut::MaterialComponent>("mtlGrass", Nut::AssetManager<Nut::Material>::Get("mtlGrass").ID());
+		terrainTransform.Position = glm::vec3{ 0.0f, -2.0f, 0.0f };
 
 		m_Scene.SetTerrainEntity(m_Terrain);
 

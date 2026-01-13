@@ -297,7 +297,7 @@ namespace Nut
 		s_SceneData.FlatFramebuffer->Clear();
 
 		// Draw scene terrain
-#if 0
+//#if 0
 		{
 			auto program = ShaderLibrary::GetProgram("TerrainShader");
 			program->Bind();
@@ -313,23 +313,29 @@ namespace Nut
 			glBindBufferRange(GL_UNIFORM_BUFFER, 1, s_SceneData.EntityTransformUniformBuffer->Handle(), 0, sizeof(glm::mat4));
 			glBindBufferRange(GL_UNIFORM_BUFFER, 2, s_SceneData.DirectionalLightUniformBuffer->Handle(), 0, sizeof(DirectionalLight));
 
-			auto& terrainModel = AssetManager<Scope<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
-			auto& terrainMesh = AssetManager<Scope<Mesh>>::Get(terrainModel->MeshIDs().at(0));
+//			auto& terrainModel = AssetManager<Scope<Model>>::Get(s_SceneData.TerrainEntity->ModelID());
+//			auto& terrainMesh = AssetManager<Scope<Mesh>>::Get(terrainModel->MeshIDs().at(0));
+			auto& terrainMesh = s_SceneData.TerrainEntity->GetComponent<MeshComponent>();
 
 //			auto albedoSlot = std::underlying_type<TextureSlot>::type(TextureSlot::Albedo);
 			program->SetUniform("u_GrassTexture", 0);
 			program->SetUniform("u_RockTexture", 1);
 
-			auto& textures = terrainModel->GetTextures();
+//			auto& textures = terrainModel->GetTextures();
 
-			if (textures.contains(TextureType::Albedo))
+			auto& terrainMaterial = AssetManager<Material>::Get(s_SceneData.TerrainEntity->GetComponent<MaterialComponent>().MaterialID).GetTextures();
+
+			if (terrainMaterial.Albedo)
+				terrainMaterial.Albedo->BindToSlot(0);
+
+//			if (textures.contains(TextureType::Albedo))
 			{
-				textures.at(TextureType::Albedo)->BindToSlot(0);
+//				textures.at(TextureType::Albedo)->BindToSlot(0);
 			}
 
-			Renderer::DrawMesh(terrainMesh, program->GetLayout());
+			Renderer::DrawMesh(AssetManager<Mesh>::Get(terrainMesh.MeshName), program->GetLayout());
 		}
-#endif
+//#endif
 
 		// Draw scene entities
 		{
