@@ -84,12 +84,6 @@ namespace Nut
 
 	};
 
-	struct TerrainComponent
-	{
-
-	};
-
-
 
 }
 

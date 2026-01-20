@@ -18,7 +18,7 @@ public:
 	SandboxLayer(const std::string& debugName)
 		: Layer(debugName)
 	{
-
+		
 	}
 
 	virtual auto OnAttach() -> void override
@@ -28,11 +28,7 @@ public:
 		m_RendererContext = Nut::Application::Get().GetWindow()->GetRendererContext();
 		ASSERT(m_RendererContext, "Application: Could not create renderer context");
 
-//		auto mesh = Nut::Mesh::CreateTriangle("FlatShader");
-//		auto mesh = Nut::Mesh::CreateTriangle();
-//		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateTriangle());
-//		auto meshID = Nut::AssetManager::AddMesh(Nut::Mesh::CreateRectangle());
-		auto meshID = Nut::AssetManager<Nut::Mesh>::Add("Mesh_Rectangle", std::move(Nut::Mesh::CreateRectangle()));
+		Nut::AssetManager<Nut::Mesh>::Add("Mesh_Rectangle", std::move(Nut::Mesh::CreateRectangle()));
 
 		{
 			Nut::HeightmapSpecification heightmapSpecification{};
@@ -46,13 +42,8 @@ public:
 			//		heightmapSpecification.Filepath = "Assets/Textures/terrain.png";
 
 			Nut::AssetManager<Nut::Mesh>::Add("Mesh_Terrain", std::move(Nut::Mesh::CreateFromHeightmapData(heightmapSpecification)));
-//			Nut::AssetManager<Nut::Mesh>::Add("Mesh_Terrain", std::move(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification)));
-			//		auto terrainID = Nut::AssetManager<Ref<Nut::Mesh>>::Add(Nut::TerrainMesh::Create(256u, 256u, heightmapSpecification));
-			//		auto terrainID = Nut::AssetManager::AddMesh(Nut::TerrainMesh::Create(16u, 16u, heightmapSpecification));
 		}
 
-//		auto triangleModelID = Nut::AssetManager<Scope<Nut::Model>>::Add("Model_Rectangle", std::move(Nut::Model::Create({meshID}, { {Nut::TextureType::Albedo, Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Logo")}})));
-//		auto terrainModelID = Nut::AssetManager<Scope<Nut::Model>>::Add("Model_Terrain", std::move(Nut::Model::Create({ Nut::AssetManager<Scope<Nut::Mesh>>::Get("Mesh_Terrain")->ID()}, {{Nut::TextureType::Albedo, Nut::AssetManager<Scope<Nut::Texture2D>>::Get("Texture_Grass")}})));
 
 		m_TestEntity = Nut::Entity::Create("TestEntity");
 		m_TestEntity->AddComponent<Nut::MeshComponent>("Mesh_Rectangle", Nut::TransformComponent{});
@@ -69,8 +60,6 @@ public:
 		Nut::TextureLibrary::Add("Logo", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA }));
 		Nut::TextureLibrary::Add("Grass", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA }));
 		Nut::TextureLibrary::Add("Fortress", Nut::Texture2D::Create({ .Filepath = "Assets/Textures/fortress.png", .Format = GL_RGBA }));
-//		auto texLogoID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Logo", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/texture.png", .Format = GL_RGBA })));
-//		auto texGrassID = Nut::AssetManager<Scope<Nut::Texture2D>>::Add("Texture_Grass", std::move(Nut::Texture2D::Create({ .Filepath = "Assets/Textures/grass.jpg", .Format = GL_RGBA })));
 
 		{
 			Nut::MaterialSpecification matSpec{};
@@ -100,22 +89,14 @@ public:
 		Nut::TransformComponent transform{};
 		m_TestEntity->AddComponent<Nut::TransformComponent>(transform);
 		m_TestEntity->AddComponent<Nut::MaterialComponent>("mtlFortress", Nut::AssetManager<Nut::Material>::Get("mtlFortress").ID());
-//		m_TestEntity->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"), 
-//			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texGrassID }} });
-//		auto& materialComponent = m_TestEntity->GetComponent<Nut::MaterialComponent>();
-//		materialComponent.AddTexture(Nut::MaterialType::AlbedoTexture, texLogoID);
 
 		transform.Position = glm::vec3{ 5.0f, 0.0f, 0.0f };
 		m_Entity2->AddComponent<Nut::TransformComponent>(transform);
 		m_Entity2->AddComponent<Nut::MaterialComponent>("mtlGrass", Nut::AssetManager<Nut::Material>::Get("mtlGrass").ID());
-//		m_Entity2->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"),
-//			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texLogoID }} });
 
 		transform.Position = glm::vec3{ -5.0f, 0.0f, 0.0f };
 		m_Entity3->AddComponent<Nut::TransformComponent>(transform);
 		m_Entity3->AddComponent<Nut::MaterialComponent>("mtlLogo", Nut::AssetManager<Nut::Material>::Get("mtlLogo").ID());
-//		m_Entity3->AddComponent<Nut::MaterialComponent>(Nut::ShaderLibrary::GetProgram("FlatShader"),
-//			std::unordered_map<Nut::MaterialType, std::vector<Nut::UUID>>{ {Nut::MaterialType::AlbedoTexture, { texLogoID }} });
 
 
 		m_Scene.AddEntity(m_TestEntity);

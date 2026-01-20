@@ -19,6 +19,8 @@ namespace Nut
 			return CreateRef<Buffer>(data, size, stride);
 		}
 
+		Buffer() = default;
+
 		Buffer(const void* data, size_t size, size_t stride)
 			: m_Size(size), m_Stride(stride)
 		{
